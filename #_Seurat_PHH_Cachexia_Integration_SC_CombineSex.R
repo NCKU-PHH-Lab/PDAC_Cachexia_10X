@@ -1,0 +1,292 @@
+##### Presetting ######
+  rm(list = ls()) # Clean variable
+  memory.limit(150000)
+
+##### Version information ######
+  # platform       x86_64-w64-mingw32          
+  # arch           x86_64                      
+  # os             mingw32                     
+  # system         x86_64, mingw32             
+  # status                                     
+  # major          4                           
+  # minor          1.2                         
+  # year           2021                        
+  # month          11                          
+  # day            01                          
+  # svn rev        81115                       
+  # language       R                           
+  # version.string R version 4.1.2 (2021-11-01)
+  # nickname       Bird Hippie 
+
+# Load Seurat_PHH_Cachexia_Integration_SC_04_FindCTMarkers&CTAno.RData
+
+#####  Current path and new folder setting ##### 
+  PathName = setwd(getwd())
+  RVersion = "20220119_GSEA_GO_SC"
+  dir.create(paste0(PathName,"/",RVersion))
+
+##### Define group by different phenotype #####
+  SC.combined$celltype <- Idents(SC.combined)
+  SC.combined$celltype.Cachexia <- paste(Idents(SC.combined), SC.combined$Cachexia, sep = "_")
+  SC.combined$celltype.Cachexia.gender <- paste(Idents(SC.combined), SC.combined$Cachexia, SC.combined$Sex, sep = "_")
+  Idents(SC.combined) <- "celltype.Cachexia.gender"
+
+  SC.combined$Cachexia.gender <- paste(SC.combined$Cachexia, SC.combined$Sex, sep = "_")
+
+
+  Idents(SC.combined) <- "celltype.Cachexia"
+
+######## Find Cachexia marker in different Cell type ########
+  ## Ch 2*Start ##
+  
+  DefaultAssay(SC.combined) <- "RNA"
+  
+  ##-------------- Find Marker gene --------------##
+  CellType.list <- as.character(unique(SC.combined@meta.data[["celltype"]]))
+  # CellType.list <- CellType.list[-9] 
+  
+  Cachexia.Marker <- list()
+  for(i in c(1:length(CellType.list))){ 
+    try({
+      Cachexia.Marker[[i]] <- Find_Markers(SC.combined, 
+                                                paste0(CellType.list[i],"_EO"), 
+                                                paste0(CellType.list[i],"_LO"),
+                                                "Cachexia.gender")
+      # names(Cachexia.Marker)[[i]] <- paste0("Cachexia.Marker.",CellType.list[i])
+      names(Cachexia.Marker)[[i]] <- paste0(CellType.list[i])
+    })
+  }
+  
+  Cachexia.Marker <- Cachexia.Marker[!unlist(lapply(Cachexia.Marker,is.null))]
+
+
+# Test
+# Cachexia.Marker[[14]] <-Cachexia.Marker.CellType
+# names(Cachexia.Marker)[[14]] <- paste0("Cachexia.Marker_14")
+
+## Generate pdf and tif file for VolcanoPlot 
+dir.create(paste0(PathName,"/",RVersion,"/SC_VolcanoPlot/"))
+
+pdf(file = paste0(PathName,"/",RVersion,"/SC_VolcanoPlot.pdf"),width = 7, height = 7 )
+for (i in 1:length(CellType.list)) {
+  try({
+    #print(Cachexia.Marker[[paste0("Cachexia.Marker.",CellType.list[i])]][["VolcanoPlot"]]+ ggtitle(paste0("SC_",CellType.list[i])))
+    #print(Cachexia.Marker[[paste0(CellType.list[i])]][["VolcanoPlot"]]+ ggtitle(paste0("SC_",CellType.list[i])))
+    print(VolcanoPlot(Cachexia.Marker[[i]][["Cachexia.Marker.S"]],
+                      Cachexia.Marker[[i]][["Cachexia.Marker.S_Pos_List"]],
+                      Cachexia.Marker[[i]][["Cachexia.Marker.S_Neg_List"]], ShowGeneNum = 6)+ ggtitle(paste0("SC_",CellType.list[i]))
+    )
+  })
+}
+# graphics.off()
+dev.off()
+
+for (i in 1:length(CellType.list)) {
+  try({
+    tiff(file = paste0(PathName,"/",RVersion,"/SC_VolcanoPlot/",CellType.list[i],".tif"), width = 17, height = 17, units = "cm", res = 200)
+    #print(Cachexia.Marker[[paste0("Cachexia.Marker.",CellType.list[i])]][["VolcanoPlot"]]+ ggtitle(paste0("SC_",CellType.list[i])))
+    #print(Cachexia.Marker[[paste0(CellType.list[i])]][["VolcanoPlot"]]+ ggtitle(paste0("SC_",CellType.list[i])))
+    print(VolcanoPlot(Cachexia.Marker[[i]][["Cachexia.Marker.S"]],
+                      Cachexia.Marker[[i]][["Cachexia.Marker.S_Pos_List"]],
+                      Cachexia.Marker[[i]][["Cachexia.Marker.S_Neg_List"]])+ ggtitle(paste0("SC_",CellType.list[i]))
+    )
+    
+    graphics.off()
+  })
+}
+
+##-------------------------------------------------------------------------------------------------------------------------
+
+  
+##### Candidate genes #####
+##-------------- Pos --------------##
+Cachexia.Marker_Pos <- list()
+for(i in c(1:length(CellType.list))){ 
+  try({
+    Cachexia.Marker_Pos[[i]] <- Cachexia.Marker[[paste0(CellType.list[i])]][["Cachexia.Marker.S_Pos_List"]]
+    
+    names(Cachexia.Marker_Pos)[[i]] <- paste0("Cachexia.Marker.",CellType.list[i],"_Pos")
+  })
+}
+
+##-------------- Neg --------------##
+Cachexia.Marker_Neg <- list()
+for(i in c(1:length(CellType.list))){ 
+  try({
+    Cachexia.Marker_Neg[[i]] <- Cachexia.Marker[[paste0(CellType.list[i])]][["Cachexia.Marker.S_Neg_List"]]
+    
+    names(Cachexia.Marker_Neg)[[i]] <- paste0("Cachexia.Marker.",CellType.list[i],"_Neg")
+  })
+}
+
+## Export tsv
+CC.marker.df.Pos = as.data.frame(matrix(nrow=length(names(Cachexia.Marker_Pos)),ncol= 1))
+row.names(CC.marker.df.Pos) <- names(Cachexia.Marker_Pos)
+colnames(CC.marker.df.Pos) <- c("Marker")
+#CC.marker.df.Pos %>% as.matrix()
+
+
+LenPos <- length(Cachexia.Marker_Pos)
+
+for (i in 1:LenPos) {
+  CC.marker.df.Pos[i,1] <- paste(c(Cachexia.Marker_Pos[[i]]), collapse = ", ")
+
+}
+
+
+
+
+CC.marker.df.Neg = as.data.frame(matrix(nrow=length(names(Cachexia.Marker_Neg)),ncol= 1))
+row.names(CC.marker.df.Neg) <- names(Cachexia.Marker_Neg)
+colnames(CC.marker.df.Neg) <- c("Marker")
+#CC.marker.df.Neg %>% as.matrix()
+
+LenNeg <- length(Cachexia.Marker_Neg)
+
+for (i in 1:LenNeg) {
+  CC.marker.df.Neg[i,1] <- paste(c(Cachexia.Marker_Neg[[i]]), collapse = ", ")
+
+}
+
+CC.marker.df <- rbind(CC.marker.df.Pos,CC.marker.df.Neg)
+
+CC.marker.df <- data.frame(Type = row.names(CC.marker.df),CC.marker.df)
+
+write.table( CC.marker.df ,
+             file = paste0(PathName,"/",RVersion,"/SC_CCMarker.CombineSex.tsv"),
+             sep = "\t",
+             quote = F,
+             row.names = F
+)
+
+##-------------------------------------------------------------------------------------------------------------------------
+
+##### RNA-seq analysis in R #####
+# https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
+# install # https://bioconductor.org/packages/release/bioc/html/GSEABase.html
+library(fgsea)
+source("FUN_GSEA_LargeGeneSet.R")
+source("FUN_HSsymbol2MMsymbol.R")
+
+
+# Geneset from GSEA
+# Pathway.all <- read.delim(paste0(PathName,"/Pathway.all.v7.4.symbols.gmt"),header = F)
+Pathway.all <- read.delim2(paste0(PathName,"/GSEA_Geneset_GOBP_AllIndexWithoutFilter.txt"),
+                           col.names = 1:max(count.fields(paste0(PathName,"/GSEA_Geneset_GOBP_AllIndexWithoutFilter.txt"))),
+                           header = F,sep = "\t")
+
+Pathway.all.MM = as.data.frame(matrix(nrow=nrow(Pathway.all),ncol=ncol(Pathway.all)*1.5))
+for (i in 1:nrow(Pathway.all)) {
+  #Pathway.all[,i] <- data.frame(colnames(Pathway.all)[i]=Pathway.all[,i]) %>% HSsymbol2MMsymbol(.,colnames(Pathway.all)[i])
+  PathwayN <- data.frame(Pathway.all[i,3:ncol(Pathway.all)]) %>% t() 
+  colnames(PathwayN)="Test"
+  PathwayN <- HSsymbol2MMsymbol(PathwayN,"Test")
+  Pathway.all.MM[i,1:length(unique(PathwayN$MM.symbol))] <- unique(PathwayN$MM.symbol)
+  
+}
+
+Pathway.all.MM <- data.frame(Pathway.all[,1:2],Pathway.all.MM)
+colnames(Pathway.all.MM) <- seq(1:ncol(Pathway.all.MM))
+
+
+##### GSEA.Large #####
+library(fgsea)
+source("FUN_GSEA_LargeGeneSet.R")
+source("FUN_HSsymbol2MMsymbol.R")
+
+GSEA.Large <- list()
+GSEA.Large.df <- as.data.frame(matrix(nrow=0,ncol=10))
+colnames(GSEA.Large.df) <- c("GeneType","PhenoType","pathway","pval","padj","log2err","ES", "NES" ,"size","leadingEdge")
+GSEA.Large.df.TOP <- GSEA.Large.df
+
+
+pdf(file = paste0(PathName,"/",RVersion,"/SC_GSEA_CombineSex.pdf"),width = 15, height = 7 )
+
+for(i in 1:length(CellType.list)){
+  
+  gseaDat <- Cachexia.Marker[[paste0(CellType.list[i])]][["Cachexia.Marker.All"]]
+  gseaDat <- data.frame(row.names(gseaDat),gseaDat)
+  colnames(gseaDat)[[1]] <- c("Gene")
+  ranks <- gseaDat$avg_log2FC
+  names(ranks) <- gseaDat$Gene
+  # head(ranks)
+  # barplot(sort(ranks, decreasing = T))
+  
+  
+  #GSEA.Large.Output <- FUN_GSEA_LargeGeneSet(ranks,Pathway.all,10)
+  GSEA.Large.Output <- FUN_GSEA_LargeGeneSet(ranks,Pathway.all.MM,10)
+  
+  fgseaRes <- GSEA.Large.Output[["fgseaRes"]]
+  # head(fgseaRes[order(padj, -abs(NES)), ], n=10)
+  
+  pathwaysH <- GSEA.Large.Output[["Pathway.all.list"]] 
+  
+  # plot.new()
+  # plotEnrichment(pathwaysH[[as.character(fgseaRes$pathway[1])]], ranks)
+  
+  topPathways <- GSEA.Large.Output[["topPathways"]]
+  
+  library(ggplot2)
+  plot.new()
+  plotGseaTable(pathwaysH[topPathways$pathway], 
+                ranks, 
+                fgseaRes, 
+                gseaParam = 0.5) + title( paste0("SC.",CellType.list[i]), adj = 0, line =3 ,cex=0.5)
+
+    
+  plotEnrichment_Pos1 <- plotEnrichment(pathwaysH[[as.character(topPathways[1,1])]], ranks)+ labs(title= paste0("SC.",CellType.list[i],": ",as.character(topPathways[1,1])))
+  #plotEnrichment_Pos1
+  plotEnrichment_Neg1 <- plotEnrichment(pathwaysH[[as.character(topPathways[length(as.data.frame(topPathways)[,1]),1])]], ranks)+ labs(title= paste0("SC.",CellType.list[i],": ",as.character(topPathways[length(as.data.frame(topPathways)[,1]),1])))
+  #plotEnrichment_Neg1
+  
+  Sum <- list(gseaDat,ranks,pathwaysH,fgseaRes,plotEnrichment_Pos1,plotEnrichment_Neg1)
+  names(Sum) <- c("gseaDat","ranks","pathwaysH","fgseaRes","plotEnrichment_Pos1","plotEnrichment_Neg1")
+  GSEA.Large[[i]] <- Sum
+  names(GSEA.Large)[[i]] <- paste0(CellType.list[i])
+  
+  fgseaRes2 <- data.frame(paste0(CellType.list[i]),fgseaRes)
+  colnames(fgseaRes2)[[1]] <- c("PhenoType")
+  GSEA.Large.df <- rbind(GSEA.Large.df,fgseaRes2 )
+  
+  topPathways2 <- data.frame(paste0(CellType.list[i]),topPathways)
+  colnames(topPathways2)[[1]] <- c("PhenoType")
+  GSEA.Large.df.TOP <- rbind(GSEA.Large.df.TOP,topPathways2 )
+  
+  rm(gseaDat,ranks,pathwaysH,fgseaRes,fgseaRes2,plotEnrichmen,Sum,topPathways,topPathways2)
+  
+}
+
+
+
+##### GSEA.Large.Sum.TOP #####
+GSEA.Large.Sum.TOP <- rbind(GSEA.Large.df.TOP)
+GSEA.Large.Sum.TOP <- GSEA.Large.Sum.TOP[,!colnames(GSEA.Large.Sum.TOP) %in% c("leadingEdge")]
+write.table(GSEA.Large.Sum.TOP, file=paste0(PathName,"/",RVersion,"/Cachexia_SC_GSEA_Pathway_LargeTOP_CombineSex.txt"),sep="\t",
+            row.names=F, quote = FALSE)
+
+
+##### Bubble plot #####
+GSEA.Large.Sum.TOP.S <- GSEA.Large.Sum.TOP[abs(GSEA.Large.Sum.TOP$NES) > 1,]
+GSEA.Large.Sum.TOP.S <- GSEA.Large.Sum.TOP.S[abs(GSEA.Large.Sum.TOP.S$padj) < 0.05,]
+# GSEA.Large.Sum.TOP.S <- GSEA.Large.Sum.TOP[abs(GSEA.Large.Sum.TOP$padj) < 0.25,]
+# GSEA.Large.Sum.TOP.S <- GSEA.Large.Sum.TOP.S[abs(GSEA.Large.Sum.TOP.S$pval) < 0.05,]
+library(ggplot2)
+library(scales)
+ggplot(GSEA.Large.Sum.TOP.S,aes(x=PhenoType, y = pathway, color = padj, size = abs(NES))) + 
+  geom_point() +
+  scale_color_distiller()
+
+ggplot(GSEA.Large.Sum.TOP.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) + 
+  geom_point() +
+  scale_colour_gradient2(low = "#2d76e3", mid = "white", high = "#e32dc2", 
+                         guide = "colourbar",midpoint = 0)
+
+BBPlot <- ggplot(GSEA.Large.Sum.TOP.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) + 
+  geom_point() +
+  scale_colour_gradient2(low = "#04873f", mid = "white", high = "#e3672d", 
+                         guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")
+BBPlot %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
+                          XtextSize=10,  YtextSize=5,AxisTitleSize=1, AspRat=2, XaThick=0.8, YaThick=0.8)
+
+print(BBPlot)
+dev.off()
