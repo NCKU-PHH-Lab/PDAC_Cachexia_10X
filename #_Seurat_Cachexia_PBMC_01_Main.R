@@ -1160,8 +1160,8 @@
 
   # Geneset from GSEA
   # Pathway.all <- read.delim(paste0(getwd(),"/Pathway.all.v7.4.symbols.gmt"),header = F)
-  Pathway.all <- read.delim2(paste0(getwd(),"/GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"),
-                             col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"))),
+  Pathway.all <- read.delim2(paste0(getwd(),"/GSEA_Geneset/GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"),
+                             col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset/GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"))),
                              header = F,sep = "\t")
 
   # Convert Human gene to mouse
