@@ -19,7 +19,7 @@
   # nickname       Kick Things
 
 ##### Current path and new folder setting #####
-  Save.Path = paste0(getwd(),"/20220210V1_PBMC")
+  Save.Path = paste0(getwd(),"/2022-08-13_PBMC_Main")
   # dir.create(Save.Path)
   SampleType = "PBMC"
 
