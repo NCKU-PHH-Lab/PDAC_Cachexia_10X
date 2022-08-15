@@ -3,25 +3,25 @@
   memory.limit(150000)
 
 ##### Version information ######
-  # platform       x86_64-w64-mingw32          
-  # arch           x86_64                      
-  # os             mingw32                     
-  # system         x86_64, mingw32             
-  # status                                     
-  # major          4                           
-  # minor          1.1                         
-  # year           2021                        
-  # month          08                          
-  # day            10                          
-  # svn rev        80725                       
-  # language       R                           
+  # platform       x86_64-w64-mingw32
+  # arch           x86_64
+  # os             mingw32
+  # system         x86_64, mingw32
+  # status
+  # major          4
+  # minor          1.1
+  # year           2021
+  # month          08
+  # day            10
+  # svn rev        80725
+  # language       R
   # version.string R version 4.1.1 (2021-08-10)
-  # nickname       Kick Things    
+  # nickname       Kick Things
 
 # ##### Current path and new folder setting #####
-#   Save.Path = paste0(getwd(),"/20220214_PBMC")
-#   # dir.create(Save.Path)
-#   SampleType = "PBMC"
+  Save.Path = paste0(getwd(),"/20220214_PBMC")
+  # dir.create(Save.Path)
+  # SampleType = "PBMC"
 
 ##### Load libray #####
   library(dplyr)
@@ -29,8 +29,8 @@
   library(scales)
   library(ggplot2)
 
-##### Function setting  ##### 
-  ## Call function  
+##### Function setting  #####
+  ## Call function
   source("FUN_GSEA_LargeGeneSet.R")
   source("FUN_HSsymbol2MMsymbol.R")
 
@@ -38,14 +38,14 @@
   # CCM: Cancer Cachexia Marker
   # SPA: Sex Pooled Analysis
   # SSA: Sex Separated Analysis
-  # EO: Early Onset    
+  # EO: Early Onset
   # LO: Late Onset
   # CT: Cell Type
-  
+
   # list:lt
   # dataframe: df
 
-##### Load RData  ##### 
+##### Load RData  #####
   load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
 
 
@@ -55,29 +55,29 @@
   library(fgsea)
   source("FUN_GSEA_LargeGeneSet.R")
   source("FUN_HSsymbol2MMsymbol.R")
-  
+
   # Geneset from GSEA
   # Pathway.all <- read.delim(paste0(getwd(),"/Pathway.all.v7.4.symbols.gmt"),header = F)
   Pathway.all <- read.delim2(paste0(getwd(),"/GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"),
                              col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"))),
                              header = F,sep = "\t")
-  
+
   # Convert Human gene to mouse
   Pathway.all.MM = as.data.frame(matrix(nrow=nrow(Pathway.all),ncol=ncol(Pathway.all)*1.5))
   for (i in 1:nrow(Pathway.all)) {
     #Pathway.all[,i] <- data.frame(colnames(Pathway.all)[i]=Pathway.all[,i]) %>% HSsymbol2MMsymbol(.,colnames(Pathway.all)[i])
-    PathwayN <- data.frame(Pathway.all[i,3:ncol(Pathway.all)]) %>% t() 
+    PathwayN <- data.frame(Pathway.all[i,3:ncol(Pathway.all)]) %>% t()
     colnames(PathwayN)="Test"
     PathwayN <- HSsymbol2MMsymbol(PathwayN,"Test")
     Pathway.all.MM[i,1:length(unique(PathwayN$MM.symbol))] <- unique(PathwayN$MM.symbol)
-    
+
   }
-  
+
   Pathway.all.MM <- data.frame(Pathway.all[,1:2],Pathway.all.MM)
   colnames(Pathway.all.MM) <- seq(1:ncol(Pathway.all.MM))
-  
+
   save.image(paste0(Save.Path,"/09_0_GSEA_Analysis(Geneset_Prepare).RData"))
-  
+
   rm(list=setdiff(ls(), "Pathway.all.MM"))
   save.image(paste0(Save.Path,"/GSEA_Analysis_Geneset.RData"))
-  
+
