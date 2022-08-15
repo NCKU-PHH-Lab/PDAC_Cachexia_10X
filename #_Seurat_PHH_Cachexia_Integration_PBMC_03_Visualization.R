@@ -263,8 +263,6 @@ source("FUN_HSsymbol2MMsymbol.R")
 
 
 
-
-
 ##### Export PDF file #####
   pdf(file = paste0(Save.Path,"/PBMC_GSEA_Violin.pdf"),
       width = 7, height = 7 )
@@ -278,38 +276,7 @@ source("FUN_HSsymbol2MMsymbol.R")
     p8
   dev.off() # graphics.off()
 
-##### CCMarker bar plot #####
-  Idents(PBMC.combined) <- PBMC.combined$celltype
-  TTT <- CCM_All_M2.df %>% arrange(desc(Match_Sum))
-  TTT <- TTT[TTT$Match_Sum>=2,]
 
-  TTT$CCState <- ""
-  TTT[TTT$Match_EO_Sum >0,]$CCState <- "EO"
-  TTT[TTT$Match_EO_Sum <=0,]$CCState <- "LO"
 
-  TTT$Genes <- factor(TTT$Genes,levels = TTT$Genes)
-  TTT.p <- ggplot(data=TTT, aes(x=Genes, y=Match_Sum ,fill=CCState))  +
-    geom_bar(stat="identity")+
-    #theme(axis.title.x = element_text(angle = 90,face="italic",colour = "darkred",size=14)) +
-    theme(axis.text.x = element_text(face="bold",  size = 12,angle = 90,
-                                     hjust = 1, vjust = .5)) + # Change the size along the x axis
-    scale_fill_manual(values = c("#ef476f", "#0077b6"))
-  TTT.p
-  TTT.p <- TTT.p %>% BeautifyggPlot(., AspRat=1, LegPos = c(0.9, 0.9), AxisTitleSize=1.5,
-                              XtextSize= 15,  YtextSize= 20, xangle = 90,
-                              LegTitleSize= 20 ,LegTextSize = 17) + labs(x="") +
-    theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank()) # Remove grid
-  TTT.p
 
-  TTT.DotPlot <- DotPlot(PBMC.combined, features = TTT$Genes, cols = c("#ef476f", "#0077b6"), dot.scale = 8, split.by = "Cachexia") + RotatedAxis()
-  TTT.DotPlot <- TTT.DotPlot%>%
-    BeautifyggPlot(.,LegPos = "bottom",AxisTitleSize=1, TitleSize = 20, xangle =90,
-                   LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12)
-  TTT.DotPlot
-
-  pdf(file = paste0(Save.Path,"/PBMC_CCM_Dot.pdf"),
-      width = 10, height = 10 )
-  TTT.p
-  TTT.DotPlot
-  dev.off() # graphics.off()
 
