@@ -52,35 +52,35 @@
   dir.create(Save.Path)
 
 ##### Load datasets  #####
-  SC.data.TN138 <- Read10X(data.dir = paste0(getwd(),"/TN138/monocle/outs/filtered_gene_bc_matrices/mm10"))
-  SC.TN136 <- CreateSeuratObject(counts = SC.data.TN138, project = "EO.M", min.cells = 3, min.features = 200)
+  SC.data.TN136 <- Read10X(data.dir = paste0(getwd(),"/TN136/monocle/outs/filtered_gene_bc_matrices/mm10"))
+  SC.TN136 <- CreateSeuratObject(counts = SC.data.TN136, project = "EO.M", min.cells = 3, min.features = 200)
   SC.TN136
   SC.TN136@meta.data[["sample"]] <- rep(c("EO.M"), times=length(SC.TN136@meta.data[["orig.ident"]]))
-  SC.TN136@meta.data[["ID"]] <- rep(c("TN138"), times=length(SC.TN136@meta.data[["orig.ident"]]))
+  SC.TN136@meta.data[["ID"]] <- rep(c("TN136"), times=length(SC.TN136@meta.data[["orig.ident"]]))
   SC.TN136@meta.data[["Cachexia"]] <- rep(c("EO"), times=length(SC.TN136@meta.data[["orig.ident"]]))  #EO: Early_Onset
   SC.TN136@meta.data[["Sex"]] <- rep(c("Male"), times=length(SC.TN136@meta.data[["orig.ident"]]))
 
-  SC.data.TN139 <- Read10X(data.dir = paste0(getwd(),"/TN139/monocle/outs/filtered_gene_bc_matrices/mm10"))
-  SC.TN137 <- CreateSeuratObject(counts = SC.data.TN139, project = "LO.M", min.cells = 3, min.features = 200)
+  SC.data.TN137 <- Read10X(data.dir = paste0(getwd(),"/TN137/monocle/outs/filtered_gene_bc_matrices/mm10"))
+  SC.TN137 <- CreateSeuratObject(counts = SC.data.TN137, project = "LO.M", min.cells = 3, min.features = 200)
   SC.TN137
   SC.TN137@meta.data[["sample"]] <- rep(c("LO.M"), times=length(SC.TN137@meta.data[["orig.ident"]]))
-  SC.TN137@meta.data[["ID"]] <- rep(c("TN139"), times=length(SC.TN137@meta.data[["orig.ident"]]))
+  SC.TN137@meta.data[["ID"]] <- rep(c("TN137"), times=length(SC.TN137@meta.data[["orig.ident"]]))
   SC.TN137@meta.data[["Cachexia"]] <- rep(c("LO"), times=length(SC.TN137@meta.data[["orig.ident"]]))  #LO: Late_Onset
   SC.TN137@meta.data[["Sex"]] <- rep(c("Male"), times=length(SC.TN137@meta.data[["orig.ident"]]))
 
-  SC.data.TN146 <- Read10X(data.dir = paste0(getwd(),"/TN146/monocle/outs/filtered_gene_bc_matrices/mm10"))
-  SC.TN145 <- CreateSeuratObject(counts = SC.data.TN146, project = "LO.F", min.cells = 3, min.features = 200)
+  SC.data.TN145 <- Read10X(data.dir = paste0(getwd(),"/TN145/monocle/outs/filtered_gene_bc_matrices/mm10"))
+  SC.TN145 <- CreateSeuratObject(counts = SC.data.TN145, project = "LO.F", min.cells = 3, min.features = 200)
   SC.TN145
   SC.TN145@meta.data[["sample"]] <- rep(c("LO.F"), times=length(SC.TN145@meta.data[["orig.ident"]]))
-  SC.TN145@meta.data[["ID"]] <- rep(c("TN146"), times=length(SC.TN145@meta.data[["orig.ident"]]))
+  SC.TN145@meta.data[["ID"]] <- rep(c("TN145"), times=length(SC.TN145@meta.data[["orig.ident"]]))
   SC.TN145@meta.data[["Cachexia"]] <- rep(c("LO"), times=length(SC.TN145@meta.data[["orig.ident"]]))
   SC.TN145@meta.data[["Sex"]] <- rep(c("Female"), times=length(SC.TN145@meta.data[["orig.ident"]]))
 
-  SC.data.TN148 <- Read10X(data.dir = paste0(getwd(),"/TN148/monocle/outs/filtered_gene_bc_matrices/mm10"))
-  SC.TN147 <- CreateSeuratObject(counts = SC.data.TN148, project = "EO.F", min.cells = 3, min.features = 200)
+  SC.data.TN147 <- Read10X(data.dir = paste0(getwd(),"/TN147/monocle/outs/filtered_gene_bc_matrices/mm10"))
+  SC.TN147 <- CreateSeuratObject(counts = SC.data.TN147, project = "EO.F", min.cells = 3, min.features = 200)
   SC.TN147
   SC.TN147@meta.data[["sample"]] <- rep(c("EO.F"), times=length(SC.TN147@meta.data[["orig.ident"]]))
-  SC.TN147@meta.data[["ID"]] <- rep(c("TN148"), times=length(SC.TN147@meta.data[["orig.ident"]]))
+  SC.TN147@meta.data[["ID"]] <- rep(c("TN147"), times=length(SC.TN147@meta.data[["orig.ident"]]))
   SC.TN147@meta.data[["Cachexia"]] <- rep(c("EO"), times=length(SC.TN147@meta.data[["orig.ident"]]))
   SC.TN147@meta.data[["Sex"]] <- rep(c("Female"), times=length(SC.TN147@meta.data[["orig.ident"]]))
 
@@ -99,7 +99,7 @@
 
 ##### 01 Combine different datasets before QC  #####
   SC.list  <- c(SC.TN136,SC.TN137,SC.TN145,SC.TN147)
-  rm(SC.TN136,SC.TN137,SC.TN145,SC.TN147, SC.data.TN138,SC.data.TN139,SC.data.TN146, SC.data.TN148)
+  rm(SC.TN136,SC.TN137,SC.TN145,SC.TN147, SC.data.TN136,SC.data.TN137,SC.data.TN145, SC.data.TN147)
 
   # normalize and identify variable features for each dataset independently
     set.seed(1) # Fix the seed
@@ -292,19 +292,19 @@
     ## Before QC
     Meta.df <- data.frame(matrix(nrow = 0,ncol = 3))
     colnames(Meta.df) <- c("NO.","Cell_Num","Gene_Num")
-    Meta.df[1,1] <- c("EO.M")  # TN138
+    Meta.df[1,1] <- c("EO.M")  # TN136
     Meta.df[1,2] <- ncol(SC.list[[1]]@assays[["RNA"]]@counts)
     Meta.df[1,3] <- nrow(SC.list[[1]]@assays[["RNA"]]@counts)
 
-    Meta.df[2,1] <- c("LO.M")  # TN139
+    Meta.df[2,1] <- c("LO.M")  # TN137
     Meta.df[2,2] <- ncol(SC.list[[2]]@assays[["RNA"]]@counts)
     Meta.df[2,3] <- nrow(SC.list[[2]]@assays[["RNA"]]@counts)
 
-    Meta.df[3,1] <- c("LO.F")  # TN146
+    Meta.df[3,1] <- c("LO.F")  # TN145
     Meta.df[3,2] <- ncol(SC.list[[3]]@assays[["RNA"]]@counts)
     Meta.df[3,3] <- nrow(SC.list[[3]]@assays[["RNA"]]@counts)
 
-    Meta.df[4,1] <- c("EO.F")  # TN148
+    Meta.df[4,1] <- c("EO.F")  # TN147
     Meta.df[4,2] <- ncol(SC.list[[4]]@assays[["RNA"]]@counts)
     Meta.df[4,3] <- nrow(SC.list[[4]]@assays[["RNA"]]@counts)
 
@@ -315,19 +315,19 @@
 
     ## After QC
     colnames(Meta.df) <- c("NO.","Cell_Num","Gene_Num")
-    Meta.df[6,1] <- c("EO.M.QC")  # TN138
+    Meta.df[6,1] <- c("EO.M.QC")  # TN136
     Meta.df[6,2] <- ncol(SC.list_QC[[1]]@assays[["RNA"]]@counts)
     Meta.df[6,3] <- nrow(SC.list_QC[[1]]@assays[["RNA"]]@counts)
 
-    Meta.df[7,1] <- c("LO.M.QC")  # TN139
+    Meta.df[7,1] <- c("LO.M.QC")  # TN137
     Meta.df[7,2] <- ncol(SC.list_QC[[2]]@assays[["RNA"]]@counts)
     Meta.df[7,3] <- nrow(SC.list_QC[[2]]@assays[["RNA"]]@counts)
 
-    Meta.df[8,1] <- c("LO.F.QC")  # TN146
+    Meta.df[8,1] <- c("LO.F.QC")  # TN145
     Meta.df[8,2] <- ncol(SC.list_QC[[3]]@assays[["RNA"]]@counts)
     Meta.df[8,3] <- nrow(SC.list_QC[[3]]@assays[["RNA"]]@counts)
 
-    Meta.df[9,1] <- c("EO.F.QC")  # TN148
+    Meta.df[9,1] <- c("EO.F.QC")  # TN147
     Meta.df[9,2] <- ncol(SC.list_QC[[4]]@assays[["RNA"]]@counts)
     Meta.df[9,3] <- nrow(SC.list_QC[[4]]@assays[["RNA"]]@counts)
 
@@ -1869,4 +1869,4 @@
 # ## Export Seurat Object in 10X format
 # # https://github.com/satijalab/seurat/issues/884
 # library(DropletUtils)
-# write10xCounts(SC.list_QC_Try[["TN138"]]@assays[["RNA"]]@counts, path = paste0(setwd(getwd()),"/Test"))
+# write10xCounts(SC.list_QC_Try[["TN136"]]@assays[["RNA"]]@counts, path = paste0(setwd(getwd()),"/Test"))
