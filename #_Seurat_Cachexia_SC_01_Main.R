@@ -1343,9 +1343,32 @@
           BBPlot_MacB1
         dev.off()
 
-        rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
-           df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
+        ## Fib
+        GSEA_Fib.df <- GSEA_Large.Sum.TOP.S[grep("Fib",GSEA_Large.Sum.TOP.S$PhenoType),]
 
+        BBPlot_Fib <- ggplot(GSEA_Fib.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+          geom_point() +
+          scale_size_area(max_size = 5)+
+          scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
+                                 guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
+          theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+
+        BBPlot_Fib
+
+        BBPlot_FibB <- BBPlot_Fib %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,OL_Thick = 1.5,
+                                                     XtextSize=15,  YtextSize=10, AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
+
+        BBPlot_FibB1 <- BBPlot_FibB %>%
+          insert_left(GSEA_ggplot_SPA.lt[["Y_Order"]],width = 0.2)
+        BBPlot_FibB1
+
+        pdf(file = paste0(Save.Path,"/SC_GSEA/SC_GSEA_Bubble_SPA_SubType_Fib.pdf"),width = 17, height = 20 )
+        BBPlot_FibB
+        BBPlot_FibB1
+        dev.off()
+
+        rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
+           df1.1,df1,BBPlot,BBPlot_Fib,BBPlot_FibB,BBPlot_T,BBPlot_TB)
     ##### save.image #####
     save.image(paste0(Save.Path,"/09_1_GSEA_Analysis_(SPA).RData"))
 
@@ -1495,6 +1518,30 @@
       BBPlot_MacB1
       dev.off()
 
+      ## Fib
+      GSEA_Fib.df <- GSEA_Large.Sum.TOP.S[grep("Fib",GSEA_Large.Sum.TOP.S$PhenoType),]
+
+      BBPlot_Fib <- ggplot(GSEA_Fib.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+        geom_point() +
+        scale_size_area(max_size = 5)+
+        scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
+                               guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
+        theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+
+      BBPlot_Fib
+
+      BBPlot_FibB <- BBPlot_Fib %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
+                                                   XtextSize=15,  YtextSize=10, AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
+      BBPlot_FibB1 <- BBPlot_FibB %>%
+        insert_left(GSEA_ggplot_SSA_Male.lt[["Y_Order"]],width = 0.2)
+      BBPlot_FibB1
+
+      pdf(file = paste0(Save.Path,"/SC_GSEA/SC_GSEA_Bubble_SSA_Male_Fib.pdf"),width = 17, height = 20 )
+      BBPlot_FibB
+      BBPlot_FibB1
+      dev.off()
+
+
       rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
          df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
 
@@ -1643,6 +1690,30 @@
       BBPlot_MacB
       BBPlot_MacB1
       dev.off()
+
+      ## Fib
+      GSEA_Fib.df <- GSEA_Large.Sum.TOP.S[grep("Fib",GSEA_Large.Sum.TOP.S$PhenoType),]
+
+      BBPlot_Fib <- ggplot(GSEA_Fib.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+        geom_point() +
+        scale_size_area(max_size = 5)+
+        scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
+                               guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
+        theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+
+      BBPlot_Fib
+
+      BBPlot_FibB <- BBPlot_Fib %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
+                                                   XtextSize=15,  YtextSize=10, AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
+      BBPlot_FibB1 <- BBPlot_FibB %>%
+        insert_left(GSEA_ggplot_SSA_Female.lt[["Y_Order"]],width = 0.2)
+      BBPlot_FibB1
+
+      pdf(file = paste0(Save.Path,"/SC_GSEA/SC_GSEA_Bubble_SubType_Fib_Female.pdf"),width = 17, height = 20 )
+      BBPlot_FibB
+      BBPlot_FibB1
+      dev.off()
+
 
       rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
          df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
