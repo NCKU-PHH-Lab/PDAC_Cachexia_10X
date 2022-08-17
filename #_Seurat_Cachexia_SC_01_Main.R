@@ -28,6 +28,7 @@
   library(ggplot2)
   library(ggpmisc)
   library(broom)
+  library(aplot)
 
   library("stringr")
   library("magrittr")
@@ -1286,11 +1287,12 @@
 
 
     ##### Extract SubType #####
-        ## T Cell
-        # GSEA_T.df <- GSEA_Large.Sum.TOP.S[grep("T",GSEA_Large.Sum.TOP.S$PhenoType),]
-        GSEA_T.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
+        ## Duc Cell
+        # GSEA_Duc.df <- GSEA_Large.Sum.TOP.S[grep("T",GSEA_Large.Sum.TOP.S$PhenoType),]
+        # GSEA_Duc.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
+        GSEA_Duc.df <- GSEA_Large.Sum.TOP.S[grep("Duc",GSEA_Large.Sum.TOP.S$PhenoType),]
 
-        BBPlot_T <- ggplot(GSEA_T.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+        BBPlot_T <- ggplot(GSEA_Duc.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
           geom_point() +
           scale_size_area(max_size = 7)+
           scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
@@ -1311,7 +1313,7 @@
         BBPlot_TB1
 
 
-        pdf(file = paste0(Save.Path,"/SC_GSEA/SC_GSEA_Bubble_SPA_SubType_T.pdf"),width = 17, height = 7 )
+        pdf(file = paste0(Save.Path,"/SC_GSEA/SC_GSEA_Bubble_SPA_SubType_Duc.pdf"),width = 17, height = 7 )
           BBPlot_TB
           BBPlot_TB1
         dev.off()
@@ -1440,11 +1442,13 @@
 
     ##### Extract SubType #####
 
-      ## T Cell
-      # GSEA_T.df <- GSEA_Large.Sum.TOP.S[grep("T",GSEA_Large.Sum.TOP.S$PhenoType),]
-      GSEA_T.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
+      ## Duc Cell
+      # GSEA_Duc.df <- GSEA_Large.Sum.TOP.S[grep("T",GSEA_Large.Sum.TOP.S$PhenoType),]
+      # GSEA_Duc.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
+      GSEA_Duc.df <- GSEA_Large.Sum.TOP.S[grep("Duc",GSEA_Large.Sum.TOP.S$PhenoType),]
 
-      BBPlot_T <- ggplot(GSEA_T.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+
+      BBPlot_T <- ggplot(GSEA_Duc.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
         geom_point() +
         scale_size_area(max_size = 7)+
         scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
@@ -1462,7 +1466,7 @@
       BBPlot_TB1
 
 
-      pdf(file = paste0(Save.Path,"/SC_GSEA/SC_GSEA_Bubble_SSA_Male_SubType_T.pdf"),width = 17, height = 7 )
+      pdf(file = paste0(Save.Path,"/SC_GSEA/SC_GSEA_Bubble_SSA_Duc_Male_SubType.pdf"),width = 17, height = 7 )
       BBPlot_TB
       BBPlot_TB1
       dev.off()
@@ -1588,11 +1592,13 @@
 
     ##### Extract SubType #####
 
-      ## T Cell
-      # GSEA_T.df <- GSEA_Large.Sum.TOP.S[grep("T",GSEA_Large.Sum.TOP.S$PhenoType),]
-      GSEA_T.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
+      ## Duc Cell
+      # GSEA_Duc.df <- GSEA_Large.Sum.TOP.S[grep("T",GSEA_Large.Sum.TOP.S$PhenoType),]
+      # GSEA_Duc.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
+      GSEA_Duc.df <- GSEA_Large.Sum.TOP.S[grep("Duc",GSEA_Large.Sum.TOP.S$PhenoType),]
 
-      BBPlot_T <- ggplot(GSEA_T.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+
+      BBPlot_T <- ggplot(GSEA_Duc.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
         geom_point() +
         scale_size_area(max_size = 7)+
         scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
@@ -1609,7 +1615,7 @@
         insert_left(GSEA_ggplot_SSA_Female.lt[["Y_Order"]],width = 0.2)
       BBPlot_TB1
 
-      pdf(file = paste0(Save.Path,"/SC_GSEA/SC_GSEA_Bubble_SubType_T_Female.pdf"),width = 17, height = 7 )
+      pdf(file = paste0(Save.Path,"/SC_GSEA/SC_GSEA_Bubble_SSA_Duc_Female_SubType.pdf"),width = 17, height = 7 )
       BBPlot_TB
       BBPlot_TB1
       dev.off()
