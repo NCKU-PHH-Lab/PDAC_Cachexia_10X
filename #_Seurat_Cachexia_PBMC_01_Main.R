@@ -28,6 +28,7 @@
   library(ggplot2)
   library(ggpmisc)
   library(broom)
+  library(aplot)
 
   library("stringr")
   library("magrittr")
