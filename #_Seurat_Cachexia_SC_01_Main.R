@@ -1842,25 +1842,45 @@
         insert_left( GSEA_ggplot_SSA.lt[["Y_Order"]],width = 0.2)
       BBPlot_Mac_B1
 
-      ## Mast
-      GSEA_Large_SumTOP_Mast.df.S <- GSEA_Large_SumTOP_Sex.df.S[grep("Mast",GSEA_Large_SumTOP_Sex.df.S$PhenoType),]
+      ## Duc
+      GSEA_Large_SumTOP_Duc.df.S <- GSEA_Large_SumTOP_Sex.df.S[grep("Duc",GSEA_Large_SumTOP_Sex.df.S$PhenoType),]
 
-      BBPlot_Mast <- ggplot(GSEA_Large_SumTOP_Mast.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+      BBPlot_Duc <- ggplot(GSEA_Large_SumTOP_Duc.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
         geom_point() +
         scale_size_area(max_size = 7)+
         scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
                                guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
         theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
 
-      BBPlot_Mast
+      BBPlot_Duc
 
-      BBPlot_Mast_B <- BBPlot_Mast %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
+      BBPlot_Duc_B <- BBPlot_Duc %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
                                                     XtextSize=15 ,  YtextSize=10,AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
-      BBPlot_Mast_B
+      BBPlot_Duc_B
 
-      BBPlot_Mast_B1 <- BBPlot_Mast_B %>%
+      BBPlot_Duc_B1 <- BBPlot_Duc_B %>%
         insert_left( GSEA_ggplot_SSA.lt[["Y_Order"]],width = 0.2)
-      BBPlot_Mast_B1
+      BBPlot_Duc_B1
+
+      ## Fib
+      GSEA_Large_SumTOP_Fib.df.S <- GSEA_Large_SumTOP_Sex.df.S[grep("Fib",GSEA_Large_SumTOP_Sex.df.S$PhenoType),]
+
+      BBPlot_Fib <- ggplot(GSEA_Large_SumTOP_Fib.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+        geom_point() +
+        scale_size_area(max_size = 7)+
+        scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
+                               guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
+        theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+
+      BBPlot_Fib
+
+      BBPlot_Fib_B <- BBPlot_Fib %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
+                                                    XtextSize=15 ,  YtextSize=10,AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
+      BBPlot_Fib_B
+
+      BBPlot_Fib_B1 <- BBPlot_Fib_B %>%
+        insert_left( GSEA_ggplot_SSA.lt[["Y_Order"]],width = 0.2)
+      BBPlot_Fib_B1
 
       ##
       BBPlotB <- GSEA_ggplot_SSA.lt[["BBPlot"]] %>%
@@ -1890,8 +1910,10 @@
         BBPlot_T_B1
         BBPlot_Mac_B
         BBPlot_Mac_B1
-        BBPlot_Mast_B
-        BBPlot_Mast_B1
+        BBPlot_Duc_B
+        BBPlot_Duc_B1
+        BBPlot_Fib_B
+        BBPlot_Fib_B1
       dev.off()
 
 
