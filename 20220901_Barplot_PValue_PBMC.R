@@ -1,6 +1,10 @@
 ### Ref: Add P-values and Significance Levels to ggplots
 ### http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
 
+## https://www.middleprofessor.com/files/applied-biostatistics_bookdown/_book/plotting-models.html
+## https://github.com/kassambara/ggpubr/issues/111
+
+
 ##### Presetting ######
 rm(list = ls()) # Clean variable
 memory.limit(150000)
@@ -44,30 +48,37 @@ Anno.df <- Anno.df[!grepl("Other", Anno.df$celltype),]
 
 
 ##### Visualize the expression profile ####
+source("FUN_Beautify_ggplot.R")
 
 #### EO LO ####
-p <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
-               color = "Cachexia", palette = "jco",
-               add = "jitter")
+plt.2Group <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
+                        color = "Cachexia", palette = "jco",
+                        add = "jitter")
 #  Add p-value
-p1 <- p + stat_compare_means()
+plt.2Group1 <- plt.2Group + stat_compare_means(label.x = 0.6, label.y = 15, size = 7)
 # Change method
-p2 <- p + stat_compare_means(method = "t.test")
+plt.2Group2 <- plt.2Group + stat_compare_means(method = "t.test")
 
-p1+p2
-p1
+plt.2Group1+plt.2Group2
+plt.2Group1 %>% BeautifyggPlot(LegPos = c(0.9, 0.9),LegTitleSize=17 ,LegTextSize = 15,
+                               XtextSize=25,  YtextSize=25,
+                               AxisTitleSize=2) -> plt.2Group1
+plt.2Group1
 
 #### Cell type & EO LO ####
 # Visualize: Specify the comparisons you want
 Anno.df$sample <- factor(Anno.df$sample ,levels =c("EO.M","EO.F", "LO.M","LO.F"))
 my_comparisons <- list(  c("EO.M", "EO.F"), c("EO.F", "LO.M"), c("LO.M", "LO.F"), c("EO.F", "LO.F"), c("EO.M", "LO.M"), c("EO.M", "LO.F"))
-ggboxplot(Anno.df, x = "sample", y = TarGene,
-          color = "sample", palette = "jco",
-          add = "jitter", legend = "none")+
-  stat_compare_means(comparisons = my_comparisons,method = "wilcox.test",label = "p.signif")+ #, label.y = c(29, 35, 40))+
-  stat_compare_means(label.x = 0.6, label.y = 25)
+plt.FewGroup1 <-  ggboxplot(Anno.df, x = "sample", y = TarGene,
+                            color = "sample", palette = "jco",
+                            add = "jitter", legend = "none")+
+                    stat_compare_means(comparisons = my_comparisons,method = "wilcox.test",label = "p.signif",size = 7)+ #, label.y = c(29, 35, 40))+
+                    stat_compare_means(label.x = 0.8, label.y = 25, size = 7)
 
-
+plt.FewGroup1 %>% BeautifyggPlot(LegPos = c(0.93, 0.9),LegTitleSize=17 ,LegTextSize = 15,
+                                XtextSize=25,  YtextSize=25,
+                                AxisTitleSize=2) -> plt.FewGroup1
+plt.FewGroup1
 
 #### cell type ####
 ggboxplot(Anno.df, x = "celltype", y = TarGene, color = "celltype",
@@ -102,6 +113,11 @@ p <- ggboxplot(Anno.df, x = "sample", y = TarGene,
 p + stat_compare_means(comparisons = my_comparisons,method = "wilcox.test", label = "p.signif")
 
 
+##### Export PDF #####
+pdf(file = paste0(Save.Path,"/",Version,"_Barplot.pdf"),width = 10, height = 10 )
+  plt.2Group1
+  plt.FewGroup1
+dev.off()
 
 
 # ## Example
