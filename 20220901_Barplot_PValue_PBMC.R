@@ -27,7 +27,7 @@ rm(list=setdiff(ls(), "scRNA.SeuObj"))
 
 
 ##### Current path and new folder setting  #####
-TarGene <- "Chil1"
+TarGene <- "Chil3"
 Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
 Save.Path = paste0(getwd(),"/",Version)
 dir.create(Save.Path)
@@ -105,7 +105,10 @@ plt.ManyGroup1
 plt.ManyGroup2 <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
                             color = "Cachexia", palette = "jco",
                             add = "jitter",
-                            facet.by = "celltype", short.panel.labs = T)
+                            facet.by = "celltype", short.panel.labs = T) +
+  ylim(0, LabelY*1.2)+
+  stat_compare_means(label.x = 1.1, label.y = LabelY*1.1, size = 4)
+
 # # Use only p.format as label. Remove method name.
 # p + stat_compare_means(label = "p.format", method = "wilcox.test", size = 7)
 # # Or use significance symbol as label
@@ -114,7 +117,7 @@ plt.ManyGroup2 <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
 plt.ManyGroup2 %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
                                   LegBox = "horizontal",LegDir="horizontal",
                                   XtextSize=17,  YtextSize=17, xangle =0,
-                                  XaThick=0,  YaThick=0,OL_Thick = 1.2,
+                                  XaThick=0,  YaThick=0,OL_Thick = 1.5,
                                   AxisTitleSize=2) -> plt.ManyGroup2
 plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
 
@@ -127,12 +130,14 @@ my_comparisons <- list(  c("EO.M", "EO.F"), c("EO.F", "LO.M"), c("LO.M", "LO.F")
 plt.ManyGroup3 <- ggboxplot(Anno.df, x = "sample", y = TarGene,
                             color = "sample", palette = "jco",
                             add = "jitter",
-                            facet.by = "celltype", short.panel.labs = TRUE)
+                            facet.by = "celltype", short.panel.labs = TRUE) +
+  ylim(0, LabelY*2)+
+  stat_compare_means(label.x = 1.25, label.y = LabelY*1.9, size = 4)
 
 plt.ManyGroup3 %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
                                   LegBox = "horizontal",LegDir="horizontal",
                                   XtextSize=15,  YtextSize=17, xangle =90,
-                                  XaThick=0,  YaThick=0,OL_Thick = 1.2,
+                                  XaThick=0,  YaThick=0,OL_Thick = 1.5,
                                   AxisTitleSize=2) -> plt.ManyGroup3
 
 # Use only p.format as label. Remove method name.
