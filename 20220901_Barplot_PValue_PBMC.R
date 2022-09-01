@@ -158,7 +158,33 @@ save.image(paste0(Save.Path,"/",Version,".RData"))
 
 
 
+##### Plot UMAP #####
 
+DimPlot(scRNA.SeuObj, reduction = "umap", group.by = "celltype",label = T,label.size = 7) %>%
+  BeautifyggPlot(.,LegPos = c(1.1, 0.5),AxisTitleSize=1.1) -> plt.UMAP1
+plt.UMAP1
+
+DimPlot(scRNA.SeuObj, reduction = "umap", group.by = "celltype",
+        split.by = "sample",label = T,label.size = 5, ncol = 2) %>%
+  BeautifyggPlot(.,LegPos = c(1.05, 0.5),AxisTitleSize=1.1 ,TV= 1,TH= 0.3) -> plt.UMAP2
+plt.UMAP2
+
+
+## https://github.com/satijalab/seurat/issues/2937
+FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
+            split.by = "sample",ncol = 2, coord.fixed = 1)  & theme(legend.position = c(0.8,0.3)) -> plt.UMAP3
+
+
+FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
+            split.by = "Cachexia",ncol = 2, coord.fixed = 1) & theme(legend.position = c(0.8,0.2)) -> plt.UMAP4
+
+##### Export PDF #####
+pdf(file = paste0(Save.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 )
+  plt.UMAP1
+  plt.UMAP2
+  plt.UMAP3
+  plt.UMAP4
+dev.off()
 
 # ## Example
 # # Load myeloma data from GitHub
