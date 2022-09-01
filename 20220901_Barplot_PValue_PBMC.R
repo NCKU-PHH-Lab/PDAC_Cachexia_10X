@@ -58,12 +58,12 @@ plt.2Group <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
                         color = "Cachexia", palette = "jco",
                         add = "jitter")
 #  Add p-value
-plt.2Group1 <- plt.2Group + stat_compare_means(label.x = 0.6, label.y = LabelY, size = 7)
+plt.2Group1 <- plt.2Group + stat_compare_means(label.x = 0.6, label.y = LabelY*1.05, size = 7)
 # Change method
 plt.2Group2 <- plt.2Group + stat_compare_means(method = "t.test")
 
 plt.2Group1+plt.2Group2
-plt.2Group1 %>% BeautifyggPlot(LegPos = c(0.9, 0.9),LegTitleSize=17 ,LegTextSize = 15,
+plt.2Group1 %>% BeautifyggPlot(LegPos = c(1.08, 0.5),LegTitleSize=17 ,LegTextSize = 15,
                                XtextSize=25,  YtextSize=25,
                                AxisTitleSize=2) -> plt.2Group1
 plt.2Group1
@@ -80,7 +80,7 @@ plt.FewGroup1 <-  ggboxplot(Anno.df, x = "sample", y = TarGene,
                                        method = "wilcox.test",label = "p.signif",size = 7)+ #, label.y = c(29, 35, 40))+
                     stat_compare_means(label.x = 0.8, label.y = LabelY*1.8, size = 7)
 
-plt.FewGroup1 %>% BeautifyggPlot(LegPos = c(0.93, 0.9),LegTitleSize=17 ,LegTextSize = 15,
+plt.FewGroup1 %>% BeautifyggPlot(LegPos = c(1.08, 0.5),LegTitleSize=17 ,LegTextSize = 15,
                                 XtextSize=25,  YtextSize=25,
                                 AxisTitleSize=2) -> plt.FewGroup1
 plt.FewGroup1
@@ -90,38 +90,62 @@ plt.ManyGroup1 <- ggboxplot(Anno.df, x = "celltype", y = TarGene, color = "cellt
                             add = "jitter", legend = "none") +
                    rotate_x_text(angle = 45)+
                    geom_hline(yintercept = mean(Anno.df[,TarGene]), linetype = 2)+ # Add horizontal line at base mean
-                   stat_compare_means(method = "anova", label.y = LabelY )+        # Add global annova p-value
+                   stat_compare_means(method = "anova", label.x = 1.5, label.y = LabelY*1.05, size = 7)+        # Add global annova p-value
                    stat_compare_means(label = "p.signif", method = "wilcox.test",
-                                      ref.group = ".all.")                      # Pairwise comparison against all
+                                      ref.group = ".all.", size = 7)                      # Pairwise comparison against all
+
+plt.ManyGroup1 %>% BeautifyggPlot(LegPos = c(1.1, 0.5),LegTitleSize=17 ,LegTextSize = 15,
+                                 XtextSize=17,  YtextSize=17, xangle =90,
+                                 AxisTitleSize=2) -> plt.ManyGroup1
 plt.ManyGroup1
+
+
 #### Cell type & EO LO ####
 # Box plot facetted by "celltype"
-p <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
-               color = "Cachexia", palette = "jco",
-               add = "jitter",
-               facet.by = "celltype", short.panel.labs = FALSE)
-# Use only p.format as label. Remove method name.
-p + stat_compare_means(label = "p.format", method = "wilcox.test")
-# Or use significance symbol as label
-p + stat_compare_means(label =  "p.signif", label.x = 1.5, method = "wilcox.test")
+plt.ManyGroup2 <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
+                            color = "Cachexia", palette = "jco",
+                            add = "jitter",
+                            facet.by = "celltype", short.panel.labs = T)
+# # Use only p.format as label. Remove method name.
+# p + stat_compare_means(label = "p.format", method = "wilcox.test", size = 7)
+# # Or use significance symbol as label
+# p + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
+
+plt.ManyGroup2 %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
+                                  LegBox = "horizontal",LegDir="horizontal",
+                                  XtextSize=17,  YtextSize=17, xangle =0,
+                                  XaThick=0,  YaThick=0,OL_Thick = 1.2,
+                                  AxisTitleSize=2) -> plt.ManyGroup2
+plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
+
 
 
 #### Cell type & EO.M EO.F LO.M LO.F ####
 # Box plot facetted by "celltype"
 my_comparisons <- list(  c("EO.M", "EO.F"), c("EO.F", "LO.M"), c("LO.M", "LO.F"), c("EO.F", "LO.F"), c("EO.M", "LO.M"), c("EO.M", "LO.F"))
 
-p <- ggboxplot(Anno.df, x = "sample", y = TarGene,
-               color = "sample", palette = "jco",
-               add = "jitter",
-               facet.by = "celltype", short.panel.labs = FALSE)
-# Use only p.format as label. Remove method name.
-p + stat_compare_means(comparisons = my_comparisons,method = "wilcox.test", label = "p.signif")
+plt.ManyGroup3 <- ggboxplot(Anno.df, x = "sample", y = TarGene,
+                            color = "sample", palette = "jco",
+                            add = "jitter",
+                            facet.by = "celltype", short.panel.labs = TRUE)
 
+plt.ManyGroup3 %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
+                                  LegBox = "horizontal",LegDir="horizontal",
+                                  XtextSize=15,  YtextSize=17, xangle =90,
+                                  XaThick=0,  YaThick=0,OL_Thick = 1.2,
+                                  AxisTitleSize=2) -> plt.ManyGroup3
+
+# Use only p.format as label. Remove method name.
+plt.ManyGroup3 <- plt.ManyGroup3 + stat_compare_means(comparisons = my_comparisons,method = "wilcox.test", label = "p.signif")
+plt.ManyGroup3
 
 ##### Export PDF #####
 pdf(file = paste0(Save.Path,"/",Version,"_Barplot.pdf"),width = 10, height = 10 )
   plt.2Group1
   plt.FewGroup1
+  plt.ManyGroup1
+  plt.ManyGroup2
+  plt.ManyGroup3
 dev.off()
 
 
