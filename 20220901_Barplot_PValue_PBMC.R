@@ -26,8 +26,7 @@ scRNA.SeuObj <- PBMC.combined
 rm(list=setdiff(ls(), "scRNA.SeuObj"))
 
 ##### Current path and new folder setting  #####
-TarGene <- "Chi
-l3"
+TarGene <- "Chil3"
 Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
 Save.Path = paste0(getwd(),"/",Version)
 dir.create(Save.Path)
