@@ -50,12 +50,15 @@ Anno.df <- Anno.df[!grepl("Other", Anno.df$celltype),]
 ##### Visualize the expression profile ####
 source("FUN_Beautify_ggplot.R")
 
+## Set y position
+LabelY <- max(Anno.df[,TarGene])
+
 #### EO LO ####
 plt.2Group <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
                         color = "Cachexia", palette = "jco",
                         add = "jitter")
 #  Add p-value
-plt.2Group1 <- plt.2Group + stat_compare_means(label.x = 0.6, label.y = 15, size = 7)
+plt.2Group1 <- plt.2Group + stat_compare_means(label.x = 0.6, label.y = LabelY, size = 7)
 # Change method
 plt.2Group2 <- plt.2Group + stat_compare_means(method = "t.test")
 
@@ -67,13 +70,15 @@ plt.2Group1
 
 #### Cell type & EO LO ####
 # Visualize: Specify the comparisons you want
+## Ref(size): ## https://github.com/kassambara/ggpubr/issues/65
 Anno.df$sample <- factor(Anno.df$sample ,levels =c("EO.M","EO.F", "LO.M","LO.F"))
-my_comparisons <- list(  c("EO.M", "EO.F"), c("EO.F", "LO.M"), c("LO.M", "LO.F"), c("EO.F", "LO.F"), c("EO.M", "LO.M"), c("EO.M", "LO.F"))
+my_comparisons <- list(  c("EO.M", "EO.F"), c("EO.F", "LO.M"), c("LO.M", "LO.F"), c("EO.M", "LO.M"), c("EO.F", "LO.F"), c("EO.M", "LO.F"))
 plt.FewGroup1 <-  ggboxplot(Anno.df, x = "sample", y = TarGene,
                             color = "sample", palette = "jco",
                             add = "jitter", legend = "none")+
-                    stat_compare_means(comparisons = my_comparisons,method = "wilcox.test",label = "p.signif",size = 7)+ #, label.y = c(29, 35, 40))+
-                    stat_compare_means(label.x = 0.8, label.y = 25, size = 7)
+                    stat_compare_means(comparisons = my_comparisons, line.size=5,
+                                       method = "wilcox.test",label = "p.signif",size = 7)+ #, label.y = c(29, 35, 40))+
+                    stat_compare_means(label.x = 0.8, label.y = LabelY*1.8, size = 7)
 
 plt.FewGroup1 %>% BeautifyggPlot(LegPos = c(0.93, 0.9),LegTitleSize=17 ,LegTextSize = 15,
                                 XtextSize=25,  YtextSize=25,
@@ -81,14 +86,14 @@ plt.FewGroup1 %>% BeautifyggPlot(LegPos = c(0.93, 0.9),LegTitleSize=17 ,LegTextS
 plt.FewGroup1
 
 #### cell type ####
-ggboxplot(Anno.df, x = "celltype", y = TarGene, color = "celltype",
-          add = "jitter", legend = "none") +
-  rotate_x_text(angle = 45)+
-  geom_hline(yintercept = mean(Anno.df[,TarGene]), linetype = 2)+ # Add horizontal line at base mean
-  stat_compare_means(method = "anova", label.y = 400)+        # Add global annova p-value
-  stat_compare_means(label = "p.signif", method = "wilcox.test",
-                     ref.group = ".all.")                      # Pairwise comparison against all
-
+plt.ManyGroup1 <- ggboxplot(Anno.df, x = "celltype", y = TarGene, color = "celltype",
+                            add = "jitter", legend = "none") +
+                   rotate_x_text(angle = 45)+
+                   geom_hline(yintercept = mean(Anno.df[,TarGene]), linetype = 2)+ # Add horizontal line at base mean
+                   stat_compare_means(method = "anova", label.y = LabelY )+        # Add global annova p-value
+                   stat_compare_means(label = "p.signif", method = "wilcox.test",
+                                      ref.group = ".all.")                      # Pairwise comparison against all
+plt.ManyGroup1
 #### Cell type & EO LO ####
 # Box plot facetted by "celltype"
 p <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
