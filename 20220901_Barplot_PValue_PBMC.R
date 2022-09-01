@@ -23,7 +23,7 @@ rm(list=setdiff(ls(), "scRNA.SeuObj"))
 
 
 ##### Current path and new folder setting  #####
-TarGene <- "Chil3"
+TarGene <- "Chil1"
 Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
 Save.Path = paste0(getwd(),"/",Version)
 dir.create(Save.Path)
@@ -44,13 +44,63 @@ Anno.df <- Anno.df[!grepl("Other", Anno.df$celltype),]
 
 
 ##### Visualize the expression profile ####
+
+#### EO LO ####
+p <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
+               color = "Cachexia", palette = "jco",
+               add = "jitter")
+#  Add p-value
+p1 <- p + stat_compare_means()
+# Change method
+p2 <- p + stat_compare_means(method = "t.test")
+
+p1+p2
+p1
+
+#### Cell type & EO LO ####
+# Visualize: Specify the comparisons you want
+Anno.df$sample <- factor(Anno.df$sample ,levels =c("EO.M","EO.F", "LO.M","LO.F"))
+my_comparisons <- list(  c("EO.M", "EO.F"), c("EO.F", "LO.M"), c("LO.M", "LO.F"), c("EO.F", "LO.F"), c("EO.M", "LO.M"), c("EO.M", "LO.F"))
+ggboxplot(Anno.df, x = "sample", y = TarGene,
+          color = "sample", palette = "jco",
+          add = "jitter", legend = "none")+
+  stat_compare_means(comparisons = my_comparisons,method = "wilcox.test",label = "p.signif")+ #, label.y = c(29, 35, 40))+
+  stat_compare_means(label.x = 0.6, label.y = 25)
+
+
+
+#### cell type ####
 ggboxplot(Anno.df, x = "celltype", y = TarGene, color = "celltype",
           add = "jitter", legend = "none") +
   rotate_x_text(angle = 45)+
-  geom_hline(yintercept = mean(myeloma$DEPDC1), linetype = 2)+ # Add horizontal line at base mean
-  stat_compare_means(method = "anova" )+ #, label.y = 1600)+        # Add global annova p-value
-  stat_compare_means(label = "p.signif", method = "t.test",
+  geom_hline(yintercept = mean(Anno.df[,TarGene]), linetype = 2)+ # Add horizontal line at base mean
+  stat_compare_means(method = "anova", label.y = 400)+        # Add global annova p-value
+  stat_compare_means(label = "p.signif", method = "wilcox.test",
                      ref.group = ".all.")                      # Pairwise comparison against all
+
+#### Cell type & EO LO ####
+# Box plot facetted by "celltype"
+p <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
+               color = "Cachexia", palette = "jco",
+               add = "jitter",
+               facet.by = "celltype", short.panel.labs = FALSE)
+# Use only p.format as label. Remove method name.
+p + stat_compare_means(label = "p.format", method = "wilcox.test")
+# Or use significance symbol as label
+p + stat_compare_means(label =  "p.signif", label.x = 1.5, method = "wilcox.test")
+
+
+#### Cell type & EO.M EO.F LO.M LO.F ####
+# Box plot facetted by "celltype"
+my_comparisons <- list(  c("EO.M", "EO.F"), c("EO.F", "LO.M"), c("LO.M", "LO.F"), c("EO.F", "LO.F"), c("EO.M", "LO.M"), c("EO.M", "LO.F"))
+
+p <- ggboxplot(Anno.df, x = "sample", y = TarGene,
+               color = "sample", palette = "jco",
+               add = "jitter",
+               facet.by = "celltype", short.panel.labs = FALSE)
+# Use only p.format as label. Remove method name.
+p + stat_compare_means(comparisons = my_comparisons,method = "wilcox.test", label = "p.signif")
+
 
 
 
