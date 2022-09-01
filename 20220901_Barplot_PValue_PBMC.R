@@ -25,9 +25,9 @@ load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-08-13_PBMC_Main/06_
 scRNA.SeuObj <- PBMC.combined
 rm(list=setdiff(ls(), "scRNA.SeuObj"))
 
-
 ##### Current path and new folder setting  #####
-TarGene <- "Chil3"
+TarGene <- "Chi
+l3"
 Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
 Save.Path = paste0(getwd(),"/",Version)
 dir.create(Save.Path)
@@ -37,6 +37,11 @@ GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
 Anno.df <- scRNA.SeuObj@meta.data
 Anno.df <- data.frame(ID=row.names(Anno.df), Anno.df)
 
+## Save Ori
+GeneExp_Ori.df <- GeneExp.df
+Anno_Ori.df <- Anno.df
+scRNA_Ori.SeuObj <- scRNA.SeuObj
+
 ##### Data preprocessing #####
 ## Extract Target gene and combine to the annotation table
 TarGene.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene,] %>% t() %>% as.data.frame()
@@ -45,6 +50,8 @@ Anno.df <- left_join(Anno.df,TarGene.df)
 
 ## Clean up data
 Anno.df <- Anno.df[!grepl("Other", Anno.df$celltype),]
+GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df$ID]
+scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"]] )]
 
 
 ##### Visualize the expression profile ####
