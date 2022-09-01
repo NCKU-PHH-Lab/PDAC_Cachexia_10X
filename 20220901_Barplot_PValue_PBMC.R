@@ -178,11 +178,11 @@ plt.UMAP2
 
 ## https://github.com/satijalab/seurat/issues/2937
 FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
-            split.by = "sample",ncol = 2, coord.fixed = 1)  & theme(legend.position = c(0.8,0.3)) -> plt.UMAP3
+            split.by = "sample",ncol = 2, coord.fixed = 1)  & theme(legend.position = c(0.9,0.3)) -> plt.UMAP3
 
 
 FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
-            split.by = "Cachexia",ncol = 2, coord.fixed = 1) & theme(legend.position = c(0.8,0.2)) -> plt.UMAP4
+            split.by = "Cachexia",ncol = 2, coord.fixed = 1) & theme(legend.position = c(0.9,0.2)) -> plt.UMAP4
 
 ##### Export PDF #####
 pdf(file = paste0(Save.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 )
