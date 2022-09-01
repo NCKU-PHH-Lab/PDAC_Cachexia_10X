@@ -153,6 +153,12 @@ pdf(file = paste0(Save.Path,"/",Version,"_Barplot.pdf"),width = 10, height = 10 
   plt.ManyGroup3
 dev.off()
 
+##### Save RData #####
+save.image(paste0(Save.Path,"/",Version,".RData"))
+
+
+
+
 
 # ## Example
 # # Load myeloma data from GitHub
@@ -170,3 +176,4 @@ dev.off()
 #   stat_compare_means(label = "p.signif", method = "t.test",
 #                      ref.group = ".all.")                      # Pairwise comparison against all
 #
+
