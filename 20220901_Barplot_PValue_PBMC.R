@@ -106,6 +106,8 @@ plt.ManyGroup1 %>% BeautifyggPlot(LegPos = c(1.1, 0.5),LegTitleSize=17 ,LegTextS
 plt.ManyGroup1
 
 
+
+
 #### Cell type & EO LO ####
 # Box plot facetted by "celltype"
 plt.ManyGroup2 <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
@@ -127,6 +129,31 @@ plt.ManyGroup2 %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextS
                                   AxisTitleSize=2) -> plt.ManyGroup2
 plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
 
+    ## Add all cell type plot to multiple plots
+    Anno_Sum.df <- Anno.df
+    Anno_Sum.df$celltype <- "Total"
+    Anno_Sum.df <- rbind(Anno.df,Anno_Sum.df)
+
+    Anno_Sum.df$sample <- factor(Anno_Sum.df$sample ,levels =c("EO.M","EO.F", "LO.M","LO.F"))
+    Anno_Sum.df$celltype <- factor(Anno_Sum.df$celltype ,
+                                   levels =c("Total","Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
+                                             "NK","B","Mast","Ery"))
+
+    # Box plot facetted by "celltype"
+    plt.ManyGroup2_Sum <- ggboxplot(Anno_Sum.df, x = "Cachexia", y = TarGene,
+                                color = "Cachexia", palette = "jco",
+                                add = "jitter",
+                                facet.by = "celltype", short.panel.labs = T) +
+      ylim(0, LabelY*1.2)+
+      stat_compare_means(label.x = 1.1, label.y = LabelY*1.1, size = 4)
+
+    plt.ManyGroup2_Sum %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
+                                      LegBox = "horizontal",LegDir="horizontal",
+                                      XtextSize=17,  YtextSize=17, xangle =0,
+                                      XaThick=0,  YaThick=0,OL_Thick = 1.5,
+                                      AxisTitleSize=2) -> plt.ManyGroup2_Sum
+    plt.ManyGroup2_Sum <- plt.ManyGroup2_Sum + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
+    plt.ManyGroup2_Sum
 
 
 #### Cell type & EO.M EO.F LO.M LO.F ####
@@ -150,14 +177,44 @@ plt.ManyGroup3 %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextS
 plt.ManyGroup3 <- plt.ManyGroup3 + stat_compare_means(comparisons = my_comparisons,method = "wilcox.test", label = "p.signif")
 plt.ManyGroup3
 
+    ## Add all cell type plot to multiple plots
+    # Box plot facetted by "celltype"
+    plt.ManyGroup3_Sum <- ggboxplot(Anno_Sum.df, x = "sample", y = TarGene,
+                                color = "sample", palette = "jco",
+                                add = "jitter",
+                                facet.by = "celltype", short.panel.labs = TRUE) +
+      ylim(0, LabelY*2)+
+      stat_compare_means(label.x = 1.25, label.y = LabelY*1.9, size = 4)
+
+    plt.ManyGroup3_Sum %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
+                                      LegBox = "horizontal",LegDir="horizontal",
+                                      XtextSize=15,  YtextSize=17, xangle =90,
+                                      XaThick=0,  YaThick=0,OL_Thick = 1.5,
+                                      AxisTitleSize=2) -> plt.ManyGroup3_Sum
+
+    # Use only p.format as label. Remove method name.
+    plt.ManyGroup3_Sum <- plt.ManyGroup3_Sum + stat_compare_means(comparisons = my_comparisons,method = "wilcox.test", label = "p.signif")
+    plt.ManyGroup3_Sum
+
+
+
 ##### Export PDF #####
 pdf(file = paste0(Save.Path,"/",Version,"_Barplot.pdf"),width = 10, height = 10 )
   plt.2Group1
   plt.FewGroup1
   plt.ManyGroup1
   plt.ManyGroup2
+  plt.ManyGroup2_Sum
   plt.ManyGroup3
+  plt.ManyGroup3_Sum
 dev.off()
+
+##### Export PDF #####
+pdf(file = paste0(Save.Path,"/",Version,"_BarplotMulti.pdf"),width = 13, height = 13 )
+  plt.ManyGroup2_Sum
+  plt.ManyGroup3_Sum
+dev.off()
+
 
 ##### Save RData #####
 save.image(paste0(Save.Path,"/",Version,".RData"))
