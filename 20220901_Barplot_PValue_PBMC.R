@@ -26,7 +26,7 @@ scRNA.SeuObj <- PBMC.combined
 rm(list=setdiff(ls(), "scRNA.SeuObj"))
 
 ##### Current path and new folder setting  #####
-TarGene <- "Chil3"
+TarGene <- "Chil1"
 Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
 Save.Path = paste0(getwd(),"/",Version)
 dir.create(Save.Path)
@@ -145,7 +145,7 @@ plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.
                                 add = "jitter",
                                 facet.by = "celltype", short.panel.labs = T) +
       ylim(0, LabelY*1.2)+
-      stat_compare_means(label.x = 1.1, label.y = LabelY*1.1, size = 4)
+      stat_compare_means(label.x = 1.1, label.y = LabelY*1.1, size = 5)
 
     plt.ManyGroup2_Sum %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
                                       LegBox = "horizontal",LegDir="horizontal",
@@ -184,7 +184,7 @@ plt.ManyGroup3
                                 add = "jitter",
                                 facet.by = "celltype", short.panel.labs = TRUE) +
       ylim(0, LabelY*2)+
-      stat_compare_means(label.x = 1.25, label.y = LabelY*1.9, size = 4)
+      stat_compare_means(label.x = 1.25, label.y = LabelY*1.9, size = 5)
 
     plt.ManyGroup3_Sum %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
                                       LegBox = "horizontal",LegDir="horizontal",
