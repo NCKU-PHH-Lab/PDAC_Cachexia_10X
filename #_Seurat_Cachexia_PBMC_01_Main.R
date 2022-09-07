@@ -1161,30 +1161,11 @@
 
   # Geneset from GSEA
   # Pathway.all <- read.delim(paste0(getwd(),"/Pathway.all.v7.4.symbols.gmt"),header = F)
-  Pathway.all <- read.delim2(paste0(getwd(),"/GSEA_Geneset/GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"),
-                             col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset/GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"))),
+    Pathway.all.MM <- read.delim2(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"),
+                             col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"))),
                              header = F,sep = "\t")
 
-  # Convert Human gene to mouse
-  Pathway.all.MM = as.data.frame(matrix(nrow=nrow(Pathway.all),ncol=ncol(Pathway.all)*1.5))
-  for (i in 1:nrow(Pathway.all)) {
-    #Pathway.all[,i] <- data.frame(colnames(Pathway.all)[i]=Pathway.all[,i]) %>% HSsymbol2MMsymbol(.,colnames(Pathway.all)[i])
-    PathwayN <- data.frame(Pathway.all[i,3:ncol(Pathway.all)]) %>% t()
-    colnames(PathwayN)="Test"
-    PathwayN <- HSsymbol2MMsymbol(PathwayN,"Test")
-    Pathway.all.MM[i,1:length(unique(PathwayN$MM.symbol))] <- unique(PathwayN$MM.symbol)
-
-  }
-
-  Pathway.all.MM <- data.frame(Pathway.all[,1:2],Pathway.all.MM)
-  colnames(Pathway.all.MM) <- seq(1:ncol(Pathway.all.MM))
-  Pathway.all.MM[is.na(Pathway.all.MM)] <- ""
-  Pathway.all.MM[Pathway.all.MM == 0] <- ""
-
-    #### Save RData ####
-    save.image(paste0(Save.Path,"/09_0_GSEA_Analysis(Geneset_Prepare).RData"))
-
-
+    #### Update gene name ####
 
 
 
