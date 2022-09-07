@@ -57,26 +57,26 @@
 
   ## ECM-Receptor
   CellChatOne(PBMC_EO.combined,
-              signalingtype = "ECM-Receptor", projectName = "ECM",
+              signalingtype = "ECM-Receptor", projectName = "ECM_EO",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_EO.lt
 
   CellChatOne(PBMC_LO.combined,
-              signalingtype = "ECM-Receptor", projectName = "ECM",
+              signalingtype = "ECM-Receptor", projectName = "ECM_LO",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_LO.lt
 
   ## Cell-Cell Contact
   CellChatOne(PBMC_EO.combined,
-              signalingtype = "Cell-Cell Contact", projectName = "CC",
+              signalingtype = "Cell-Cell Contact", projectName = "CC_EO",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
   ) -> CellChat_CC_EO.lt
 
   CellChatOne(PBMC_LO.combined,
-              signalingtype = "Cell-Cell Contact", projectName = "CC",
+              signalingtype = "Cell-Cell Contact", projectName = "CC_LO",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
   ) -> CellChat_CC_LO.lt
@@ -84,18 +84,19 @@
 
   ## Secreted Signaling
   CellChatOne(PBMC_EO.combined,
-              signalingtype = "Secreted Signaling", projectName = "Secret",
+              signalingtype = "Secreted Signaling", projectName = "Secret_EO",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) -> CellChat_Secret_EO.lt
 
   CellChatOne(PBMC_LO.combined,
-              signalingtype = "Secreted Signaling", projectName = "Secret",
+              signalingtype = "Secreted Signaling", projectName = "Secret_LO",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) -> CellChat_Secret_LO.lt
 
-
+  ##### save.image #####
+  save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction.RData"))
 
 ## Merge cellchat ##
   object.list <- list(EO = PBMC_EO.combined, LO = PBMC_LO.combined )
