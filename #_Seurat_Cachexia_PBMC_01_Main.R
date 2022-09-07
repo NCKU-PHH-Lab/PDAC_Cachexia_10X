@@ -1178,9 +1178,12 @@
 
   Pathway.all.MM <- data.frame(Pathway.all[,1:2],Pathway.all.MM)
   colnames(Pathway.all.MM) <- seq(1:ncol(Pathway.all.MM))
+  Pathway.all.MM[is.na(Pathway.all.MM)] <- ""
 
     #### Save RData ####
     save.image(paste0(Save.Path,"/09_0_GSEA_Analysis(Geneset_Prepare).RData"))
+
+
 
   ##### 09_1 GSEA Analysis (SPA) #####
     GSEA_Large <- list()
