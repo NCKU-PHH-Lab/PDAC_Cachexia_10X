@@ -56,14 +56,14 @@
   CellChatOne(PBMC_EO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
-              groupby = "celltype",species = Species
+              groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_EO.lt
 
   PBMC_LO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "LO"]
   CellChatOne(PBMC_LO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
-              groupby = "celltype",species = Species
+              groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_LO.lt
 
 
