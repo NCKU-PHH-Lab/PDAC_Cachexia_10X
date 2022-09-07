@@ -53,18 +53,47 @@
 
   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/09_4_GSEA_Analysis_(SSA).RData")
   PBMC_EO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "EO"]
+  PBMC_LO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "LO"]
+
+  ## ECM-Receptor
   CellChatOne(PBMC_EO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_EO.lt
 
-  PBMC_LO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "LO"]
   CellChatOne(PBMC_LO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM",
               save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_LO.lt
+
+  ## Cell-Cell Contact
+  CellChatOne(PBMC_EO.combined,
+              signalingtype = "Cell-Cell Contact", projectName = "CC",
+              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              groupby = "celltype",species =  "Mouse"
+  ) -> CellChat_CC_EO.lt
+
+  CellChatOne(PBMC_LO.combined,
+              signalingtype = "Cell-Cell Contact", projectName = "CC",
+              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              groupby = "celltype",species =  "Mouse"
+  ) -> CellChat_CC_LO.lt
+
+
+  ## Secreted Signaling
+  CellChatOne(PBMC_EO.combined,
+              signalingtype = "Secreted Signaling", projectName = "Secret",
+              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              groupby = "celltype",species = "Mouse"
+  ) -> CellChat_Secret_EO.lt
+
+  CellChatOne(PBMC_LO.combined,
+              signalingtype = "Secreted Signaling", projectName = "Secret",
+              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              groupby = "celltype",species = "Mouse"
+  ) -> CellChat_Secret_LO.lt
 
 
 
