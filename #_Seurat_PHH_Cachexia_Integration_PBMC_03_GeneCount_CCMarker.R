@@ -19,8 +19,8 @@
   # nickname       Kick Things
 
 ##### Path and folder setting #####
-  Import.Path = paste0(getwd(),"/20220118_PBMC_CCMarker")
-  Save.Path = paste0(getwd(),"/20220118_PBMC_CCMarker")
+  Import.Path = paste0(getwd(),"/2022-09-07_PBMC_Main")
+  Save.Path = paste0(getwd(),"/2022-09-07_PBMC_Main")
   dir.create(Save.Path)
   SampleType = "PBMC"
 
