@@ -99,7 +99,11 @@
   save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction.RData"))
 
 ## Merge cellchat ##
-  object.list <- list(EO = PBMC_EO.combined, LO = PBMC_LO.combined )
+  cellchat.EO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/B04_CellCell_InteractionCC_EO_CellChat_Example_PRJCA001063.rds")
+  cellchat.LO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/B04_CellCell_InteractionCC_LO_CellChat_Example_PRJCA001063.rds")
+
+
+  object.list <- list(EO = cellchat.EO, LO = cellchat.LO)
   cellchat <- mergeCellChat(object.list, add.names = names(object.list))
 
   cellchat
@@ -285,7 +289,7 @@
 
   ## Identify dysfunctional signaling by using differential expression analysis ##
   # define a positive dataset, i.e., the dataset with positive fold change against the other dataset
-  pos.dataset = "STIM"
+  pos.dataset = "EO"
   # define a char name used for storing the results of differential expression analysis
   features.name = pos.dataset
   # perform differential expression analysis
@@ -293,10 +297,10 @@
   #> Use the joint cell labels from the merged CellChat object
   # map the results of differential expression analysis onto the inferred cell-cell communications to easily manage/subset the ligand-receptor pairs of interest
   net <- netMappingDEG(cellchat, features.name = features.name)
-  # extract the ligand-receptor pairs with upregulated ligands in STIM
-  net.up <- subsetCommunication(cellchat, net = net, datasets = "STIM",ligand.logFC = 0.2, receptor.logFC = NULL)
-  # extract the ligand-receptor pairs with upregulated ligands and upregulated recetptors in CTRL, i.e.,downregulated in LS
-  net.down <- subsetCommunication(cellchat, net = net, datasets = "CTRL",ligand.logFC = -0.1, receptor.logFC = -0.1)
+  # extract the ligand-receptor pairs with upregulated ligands in EO
+  net.up <- subsetCommunication(cellchat, net = net, datasets = "EO",ligand.logFC = 0.2, receptor.logFC = NULL)
+  # extract the ligand-receptor pairs with upregulated ligands and upregulated recetptors in LO, i.e.,downregulated in LS
+  net.down <- subsetCommunication(cellchat, net = net, datasets = "LO",ligand.logFC = -0.1, receptor.logFC = -0.1)
 
   gene.up <- extractGeneSubsetFromPair(net.up, cellchat)
   gene.down <- extractGeneSubsetFromPair(net.down, cellchat)
@@ -309,8 +313,8 @@
     gg3_0 <- netVisual_bubble(cellchat,  comparison = c(1, 2), angle.x = 45)
     print(gg3_0)
 
-    gg3_1 <- netVisual_bubble(cellchat,  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in STIM", angle.x = 45, remove.isolate = T)
-    gg3_2 <- netVisual_bubble(cellchat,  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in STIM", angle.x = 45, remove.isolate = T)
+    gg3_1 <- netVisual_bubble(cellchat,  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in EO", angle.x = 45, remove.isolate = T)
+    gg3_2 <- netVisual_bubble(cellchat,  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in EO", angle.x = 45, remove.isolate = T)
 
     print(gg3_1 + gg3_2)
     gg3_1 %>% print()
@@ -337,9 +341,9 @@
     p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), angle.x = 45)
     print(p)
 
-    p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in STIM", angle.x = 45, remove.isolate = T)
+    p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in EO", angle.x = 45, remove.isolate = T)
     print(p)
-    p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in STIM", angle.x = 45, remove.isolate = T)
+    p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in EO", angle.x = 45, remove.isolate = T)
     print(p)
     p <- netVisual_bubble(cellchat, sources.use = i, pairLR.use = pairLR.use.up, comparison = c(1, 2),  angle.x = 90, remove.isolate = T,title.name = paste0("Up-regulated signaling in ", names(object.list)[2]))
     print(p)
@@ -361,9 +365,9 @@
     netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), angle.x = 45)
     #> Comparing communications on a merged object
 
-    gg3_1 <- netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in CTRL", angle.x = 45, remove.isolate = T)
+    gg3_1 <- netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in LO", angle.x = 45, remove.isolate = T)
     #> Comparing communications on a merged object
-    gg3_2 <- netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in CTRL", angle.x = 45, remove.isolate = T)
+    gg3_2 <- netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in LO", angle.x = 45, remove.isolate = T)
     #> Comparing communications on a merged object
     gg3_1 + gg3_2
 
@@ -494,3 +498,4 @@
 ##### Save the merged CellChat object #####
   saveRDS(cellchat, file = paste0(Save.Path,"/",Version,".rds"))
   save.image(paste0(Save.Path,"/",Version,"_Multi.RData"))
+
