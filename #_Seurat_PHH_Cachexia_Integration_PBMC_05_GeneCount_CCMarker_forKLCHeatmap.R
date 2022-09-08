@@ -19,7 +19,7 @@
   # nickname       Kick Things
 
 ##### Current path and new folder setting #####
-  Save.Path = paste0(getwd(),"/2022-08-13_PBMC_Main")
+  Save.Path = paste0(getwd(),"/2022-09-07_PBMC_Main")
   # dir.create(Save.Path)
   SampleType = "PBMC"
 
@@ -255,3 +255,4 @@
   rm(  CCM_All_SumCT.df,
        CCM_SPA_SumCT.df, CCM_SSA_SumCT.df,
        CCM_SSA_I_SumCT.df, CCM_SSA_F_SumCT.df, CCM_SSA_M_SumCT.df)
+
