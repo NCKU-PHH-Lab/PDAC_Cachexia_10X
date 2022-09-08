@@ -9,8 +9,8 @@
   library(stringr)
 
 ##### Path and folder setting #####
-  Import.Path = paste0(getwd(),"/2022-08-13_PBMC_Main")
-  Save.Path = paste0(getwd(),"/2022-08-13_PBMC_Main")
+  Import.Path = paste0(getwd(),"/2022-09-07_PBMC_Main")
+  Save.Path = paste0(getwd(),"/2022-09-07_PBMC_Main")
   dir.create(Save.Path)
   SampleType = "PBMC"
 
@@ -60,7 +60,7 @@
   # #Genelist %>% as.data.frame() -> Genelist
 
   ##
-    PhenoType_SPA.Set <- colnames(CCM_All.df)[4:27]
+    PhenoType_SPA.Set <- colnames(CCM_All.df)[4:25]
     ncol_Ori <- ncol(CCM_All.df)
     CCM_All_M.df <- CCM_All.df
 
@@ -77,16 +77,16 @@
     # t(CCM_All_M.df) %>% View()
 
   ## Summary
-    CCM_All_M.df$Match_Sum <- rowSums(CCM_All_M.df[,107:130])
-    CCM_All_M.df$Match_EO_Sum <- rowSums(CCM_All_M.df[,107:118])
-    CCM_All_M.df$Match_LO_Sum <- rowSums(CCM_All_M.df[,119:130])
-    CCM_All_M_S.df <- CCM_All_M.df[,c(1,107:133)] %>% arrange(desc(Match_Sum))
+    CCM_All_M.df$Match_Sum <- rowSums(CCM_All_M.df[,98:119])
+    CCM_All_M.df$Match_EO_Sum <- rowSums(CCM_All_M.df[,98:108])
+    CCM_All_M.df$Match_LO_Sum <- rowSums(CCM_All_M.df[,109:119])
+    CCM_All_M_S.df <- CCM_All_M.df[,c(1,98:122)] %>% arrange(desc(Match_Sum))
     CCM_All_M_S.df <- CCM_All_M_S.df[!CCM_All_M_S.df$Match_Sum == 0,]
 
 
     CCM_All_M_S_LO.df <- CCM_All_M_S.df[,grep("_LO",colnames(CCM_All_M_S.df))]
     CCM_All_M_S_LO.df <- -CCM_All_M_S_LO.df
-    CCM_All_M_S.df[,c(14:25,28)] <- CCM_All_M_S_LO.df
+    CCM_All_M_S.df[,c(13:23,26)] <- CCM_All_M_S_LO.df
     rm(CCM_All_M_S_LO.df)
 
   ## Plot Heatmap
@@ -241,3 +241,4 @@
              quote = F,
              row.names = T
   )
+
