@@ -479,8 +479,8 @@
 
   # Cell_Type_Order.set <- c("T", "CD4+T", "CD8+T", "B" , "Mac1", "Mac2", "Mac3", "Mast", "NK", "Neu", "Ery", "Other1", "Other2")
   Cell_Type_Order.set <- c("Mac1", "Mac2", "Mac3","Neu", "T", "CD4+T", "CD8+T", "NK", "B" , "Mast",  "Ery")
-  PBMC.combined$celltype <- factor(PBMC.combined$celltype,
-                                  levels = Cell_Type_Order.set)
+  # PBMC.combined$celltype <- factor(PBMC.combined$celltype,
+  #                                 levels = Cell_Type_Order.set)
 
 
   # Idents(PBMC.combined) <- "celltype"
