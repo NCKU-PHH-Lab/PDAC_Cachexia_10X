@@ -490,8 +490,8 @@
 
   Cell_Type_Order.set <- c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
                            "Fib1", "Fib2", "Fib3")
-  SC.combined$celltype <- factor(SC.combined$celltype,
-                                   levels = Cell_Type_Order.set)
+  # SC.combined$celltype <- factor(SC.combined$celltype,
+  #                                  levels = Cell_Type_Order.set)
 
 
   SC.combined$celltype <- Idents(SC.combined)
