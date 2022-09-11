@@ -2,11 +2,28 @@
 rm(list = ls()) # Clean variable
 memory.limit(150000)
 
-PathName = setwd(getwd())
-RVersion = "2022-09-07_PBMC_Main"
-dir.create(paste0(PathName,"/",RVersion))
+# ##### Load RData  #####
+load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
 
-PBMC.CCMar <- read.delim2(paste0(PathName,"/",RVersion,"/PBMC_CCMarker_SPA.tsv"))
+
+##### Current path and new folder setting #####
+Version = paste0(Sys.Date(),"_","PBMC_MarkerGeneRank")
+Save.Path = paste0(getwd(),"/",Version)
+dir.create(Save.Path)
+SampleType="PBMC"
+
+
+
+# PathName = setwd(getwd())
+# RVersion = "2022-09-07_PBMC_Main"
+# dir.create(paste0(PathName,"/",RVersion))
+#
+# PBMC.CCMar <- read.delim2(paste0(PathName,"/",RVersion,"/PBMC_CCMarker_SPA.tsv"))
+#
+source("#_Seurat_PHH_Cachexia_Integration_PBMC_02_GeneCount_GeneRank.R")
+PBMC.CCMar <- CCMList_SPA.df
+
+
 ##### Load libray #####
 library(dplyr)
 
