@@ -228,7 +228,7 @@ save.image(paste0(Save.Path,"/",Version,".RData"))
 
 ##### Plot UMAP #####
 
-DimPlot(scRNA.SeuObj, reduction = "umap", group.by = "celltype",label = T,label.size = 7) %>%
+DimPlot(scRNA.SeuObj, reduction = "umap", group.by = "celltype",label = T,label.size = 9) %>%
   BeautifyggPlot(.,LegPos = c(1.1, 0.5),AxisTitleSize=1.1) -> plt.UMAP1
 plt.UMAP1
 
