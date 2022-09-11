@@ -19,7 +19,7 @@
   # nickname       Kick Things
 
 ##### Current path and new folder setting #####
-  Version = paste0(Sys.Date(),"_","SC_Main")
+  Version = paste0(Sys.Date(),"_","SC_GeneRank")
   Save.Path = paste0(getwd(),"/",Version)
   dir.create(Save.Path)
 
