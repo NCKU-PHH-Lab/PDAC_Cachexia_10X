@@ -19,11 +19,16 @@ library(ggpubr)
 
 ##### Load RData* #####
 # load("D:/Dropbox/##_GitHub/##_CAESAR/MagicDisc/2022-06-06_CC_PBMC/06_Cell_type_annotation.RData")
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-08-13_PBMC_Main/06_Cell_type_annotation.RData")
+load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
 
 # Clean up
 scRNA.SeuObj <- PBMC.combined
 rm(list=setdiff(ls(), "scRNA.SeuObj"))
+
+# Order the cell type
+scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
+                                               levels =c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
+                                                         "NK","B","Mast","Ery"))
 
 ##### Current path and new folder setting  #####
 TarGene <- "Chil3"
