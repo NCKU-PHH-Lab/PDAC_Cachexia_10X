@@ -87,6 +87,10 @@
 
   rm(CCMarker_SSA_Pos.df,CCMarker_SSA_Neg.df)
 
+  ## Rename (Temp)
+  CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Pos","EO")
+  CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Neg","LO")
+
   ## Export tsv
   write.table( CCMList_SSA.df  ,
                file = paste0(Save.Path,"/",SampleType,"_CCMarker_SSA.tsv"),
@@ -140,6 +144,11 @@
     CCMList_SPA.df  <- data.frame(Type = row.names(CCMList_SPA.df ),CCMList_SPA.df )
 
     rm(CCMarker_SPA_Pos.df,CCMarker_SPA_Neg.df,CCMarker_SPA_Pos.lt,CCMarker_SPA_Neg.lt)
+
+
+  ## Rename (Temp)
+    CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Pos","EO")
+    CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Neg","LO")
 
   ## Export tsv
     write.table( CCMList_SPA.df  ,
