@@ -18,9 +18,15 @@
   # version.string R version 4.1.1 (2021-08-10)
   # nickname       Kick Things
 
+##### Load RData  #####
+  # load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
+  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_SC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
+
 ##### Current path and new folder setting #####
-  Save.Path = paste0(getwd(),"/20220217_SC")
+  # Save.Path = paste0(getwd(),"/20220217_SC")
   # dir.create(Save.Path)
+  Save.Path = paste0(Sys.Date(),"_","SC_GeneCount")
+  dir.create(Save.Path)
   SampleType = "SC"
 
 ##### Load libray #####
@@ -44,8 +50,7 @@
   # list:lt
   # dataframe: df
 
-  ##### Load RData  #####
-  load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
+
 
 ##### SSA CCMarker genes( Exclude genes express opposite in Sex) #####
   ##-------------- Pos --------------##
@@ -81,6 +86,10 @@
   CCMList_SSA.df  <- data.frame(Type = row.names(CCMList_SSA.df ),CCMList_SSA.df )
 
   rm(CCMarker_SSA_Pos.df,CCMarker_SSA_Neg.df)
+
+  ## Rename (Temp)
+  CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Pos","EO")
+  CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Neg","LO")
 
   ## Export tsv
   write.table( CCMList_SSA.df  ,
@@ -135,6 +144,11 @@
     CCMList_SPA.df  <- data.frame(Type = row.names(CCMList_SPA.df ),CCMList_SPA.df )
 
     rm(CCMarker_SPA_Pos.df,CCMarker_SPA_Neg.df,CCMarker_SPA_Pos.lt,CCMarker_SPA_Neg.lt)
+
+
+  ## Rename (Temp)
+    CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Pos","EO")
+    CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Neg","LO")
 
   ## Export tsv
     write.table( CCMList_SPA.df  ,
@@ -627,8 +641,6 @@
      df1, df2, df3, df4, EO1.P, EOSS.P,
      LO1.P, LOSS.P, CCM_All_SumCT.df2)
 
-# ##### Export R.Data ######
-#   save.image(paste0(Save.Path,"/S01_GeneCount.RData"))
 
 
 ##### SPA_SSA_Cell_Type_Match #####
@@ -880,6 +892,7 @@
 
   ##### Export the result #####
 
+
   ##### Export PDF #####
     pdf(file = paste0(Save.Path,"/",SampleType,"_CCMark_CTCount.pdf"),width = 7, height = 7 )
       CCM_CT_Num.p
@@ -918,4 +931,6 @@
                row.names = F
   )
 
+# ##### Export R.Data ######
+#   save.image(paste0(Save.Path,"/S01_GeneCount.RData"))
 
