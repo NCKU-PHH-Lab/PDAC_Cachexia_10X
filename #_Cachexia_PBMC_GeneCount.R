@@ -18,10 +18,15 @@
   # version.string R version 4.1.1 (2021-08-10)
   # nickname       Kick Things
 
+##### Load RData  #####
+  # load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
+  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
+
 ##### Current path and new folder setting #####
   # Save.Path = paste0(getwd(),"/20220217_PBMC")
   # dir.create(Save.Path)
-  Save.Path = paste0(getwd(),"/2022-09-07_PBMC_Main")
+  Save.Path = paste0(Sys.Date(),"_","PBMC_GeneCount")
+  dir.create(Save.Path)
   SampleType = "PBMC"
 
 ##### Load libray #####
@@ -45,8 +50,7 @@
   # list:lt
   # dataframe: df
 
-  ##### Load RData  #####
-  load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
+
 
 ##### SSA CCMarker genes( Exclude genes express opposite in Sex) #####
   ##-------------- Pos --------------##
