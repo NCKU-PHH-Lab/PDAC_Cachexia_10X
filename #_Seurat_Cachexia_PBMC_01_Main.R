@@ -922,6 +922,7 @@
   Test <- intersect(row.names(PBMC.combined@assays[["RNA"]]@counts) ,  c("Top2a", "Ptk2"))
   Test2 <- intersect(row.names(PBMC.combined@assays[["integrated"]]@data) ,  c("Top2a", "Ptk2"))
   FeaturePlot(PBMC.combined, features = c("Kras", "Braf", "Myc","Egfr","Pik3ca"), min.cutoff = "q9",ncol = 3)
+  FeaturePlot(PBMC.combined, features = c("Il4"), min.cutoff = "q9",ncol = 3)
 
 # -------------------------------------- #
 
