@@ -1,5 +1,6 @@
 GSEA_ExtractSubType = function(GSEA_Large.Sum.TOP.S,
                                KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")), ## Mode =c("KWSet","Grep")
+                               Order.lt = GSEA_ggplot_SPA.lt,
                                GSEA_Color = list(high = "#ef476f",mid = "white",low = "#0077b6",
                                Save.Path = "")
 ){
@@ -30,7 +31,7 @@ GSEA_ExtractSubType = function(GSEA_Large.Sum.TOP.S,
 
   ## Sort the plot
   BBPlot_SubB_Sort <- BBPlot_SubB %>%
-                insert_left(GSEA_ggplot_SPA.lt[["Y_Order"]],width = 0.2)
+                insert_left(Order.lt[["Y_Order"]],width = 0.2)
   BBPlot_SubB_Sort
 
   ## Export pdf
