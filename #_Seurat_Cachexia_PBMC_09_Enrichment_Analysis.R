@@ -23,6 +23,7 @@ if (!dir.exists(Subfolder.Path)){
   # install # https://bioconductor.org/packages/release/bioc/html/GSEABase.html
   library(tidyverse)
   library(fgsea)
+  library(aplot)
   source("FUN_GSEA_LargeGeneSet.R")
   source("FUN_HSsymbol2MMsymbol.R")
   source("FUN_GSEA_ggplot.R")
