@@ -7,8 +7,6 @@ memory.limit(150000)
 load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
 
 ##### ***Current path and new folder setting if necessary*** #####
-# Save.Path = paste0(getwd(),"/20220217_PBMC")
-# dir.create(Save.Path)
 Save.Path = paste0(Sys.Date(),"_","PBMC_GSEA")
 dir.create(Save.Path)
 SampleType = "PBMC"
@@ -152,8 +150,6 @@ GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
                                  FileName = "/PBMC_GSEA_Bubble_SPA_SubType_T.pdf")
-BBPlot_TB <- GSEA_T.lt[["BBPlot_SubB"]]
-BBPlot_TB1 <- GSEA_T.lt[["BBPlot_SubB_Sort"]]
 
 ## Mac
 GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
@@ -163,11 +159,9 @@ GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
                                  Save.Path = paste0(Subfolder.Path),
                                  FileName = "/PBMC_GSEA_Bubble_SPA_SubType_Mac.pdf")
 
-BBPlot_MacB <- GSEA_Mac.lt[["BBPlot_SubB"]]
-BBPlot_MacB1 <- GSEA_Mac.lt[["BBPlot_SubB_Sort"]]
 
-
-rm(BBPlot_T,BBPlot_TB,BBPlot_MacB,BBPlot_MacB1)
+rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
+   df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
 
 ##### save.image #####
 save.image(paste0(Subfolder.Path,"/09_1_GSEA_Analysis_(SPA).RData"))
