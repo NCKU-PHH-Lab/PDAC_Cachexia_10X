@@ -103,8 +103,8 @@
 ##### Merge cellchat #####
 
   ##### Load rds #####
-  cellchat.EO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_SC_Main/B04_CellCell_InteractionECM_EO_CellChat_Example_PRJCA001063.rds")
-  cellchat.LO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_SC_Main/B04_CellCell_InteractionECM_LO_CellChat_Example_PRJCA001063.rds")
+  cellchat.EO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_SC_Main/CellCell_InteractionECM_EO_CellChat_Example_PRJCA001063.rds")
+  cellchat.LO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_SC_Main/CellCell_InteractionECM_LO_CellChat_Example_PRJCA001063.rds")
 
 
   object.list <- list(EO = cellchat.EO, LO = cellchat.LO)
