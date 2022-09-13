@@ -146,7 +146,7 @@ source("FUN_GSEA_ExtractSubType.R")
 ## T Cell
 GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
                                  KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
-                                 Order.lt = GSEA_ggplot_SPA.lt,
+                                 OrderSet = GSEA_ggplot_SPA.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
                                  FileName = "/PBMC_GSEA_Bubble_SPA_SubType_T.pdf")
@@ -154,7 +154,7 @@ GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
 ## Mac
 GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
                                  KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
-                                 Order.lt = GSEA_ggplot_SPA.lt,
+                                 OrderSet = GSEA_ggplot_SPA.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
                                  FileName = "/PBMC_GSEA_Bubble_SPA_SubType_Mac.pdf")
@@ -263,7 +263,7 @@ source("FUN_GSEA_ExtractSubType.R")
 ## T Cell
 GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
                                  KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
-                                 Order.lt = GSEA_ggplot_SSA_Male.lt,
+                                 OrderSet = GSEA_ggplot_SSA_Male.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
                                  FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_T.pdf")
@@ -272,7 +272,7 @@ GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
 ## Mac
 GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
                                    KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
-                                   Order.lt = GSEA_ggplot_SSA_Male.lt,
+                                   OrderSet = GSEA_ggplot_SSA_Male.lt[["Y_Order"]],
                                    GSEA_Color = GSEA_Color.lt,
                                    Save.Path = paste0(Subfolder.Path),
                                    FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_Mac.pdf")
@@ -378,7 +378,7 @@ source("FUN_GSEA_ExtractSubType.R")
 ## T Cell
 GSEA_T_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.Sum.TOP.S,
                                       KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
-                                      Order.lt = GSEA_ggplot_SSA_Female.lt,
+                                      OrderSet = GSEA_ggplot_SSA_Female.lt[["Y_Order"]],
                                       GSEA_Color = GSEA_Color.lt,
                                       Save.Path = paste0(Subfolder.Path),
                                       FileName = "/PBMC_GSEA_Bubble_SSA_Female_SubType_T.pdf")
@@ -386,7 +386,7 @@ GSEA_T_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.Sum.TOP.S,
 ## Mac
 GSEA_Mac_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.Sum.TOP.S,
                                         KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
-                                        Order.lt = GSEA_ggplot_SSA_Female.lt,
+                                        OrderSet = GSEA_ggplot_SSA_Female.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
                                         FileName = "/PBMC_GSEA_Bubble_SSA_Female_SubType_Mac.pdf")
@@ -485,7 +485,7 @@ source("FUN_GSEA_ExtractSubType.R")
 ## T Cell
 GSEA_T_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                      KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
-                                     Order.lt = GSEA_ggplot_SSA.lt,
+                                     OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                      GSEA_Color = GSEA_Color.lt,
                                      Save.Path = paste0(Subfolder.Path),
                                      FileName = "/PBMC_GSEA_Bubble_Sum_SubType_T.pdf")
@@ -496,7 +496,7 @@ BBPlot_T_B1 <- GSEA_T_Sum.lt[["BBPlot_SubB_Sort"]]
 ## Mac
 GSEA_Mac_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                        KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
-                                       Order.lt = GSEA_ggplot_SSA.lt,
+                                       OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                        GSEA_Color = GSEA_Color.lt,
                                        Save.Path = paste0(Subfolder.Path),
                                        FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Mac.pdf")
@@ -506,7 +506,7 @@ BBPlot_Mac_B1 <- GSEA_Mac_Sum.lt[["BBPlot_SubB_Sort"]]
 ## Mast
 GSEA_Mast_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                         KeyWordSet.lt = list(Mode = "Grep", KW = c("Mast")),
-                                        Order.lt = GSEA_ggplot_SSA.lt,
+                                        OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
                                         FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Mast.pdf")
