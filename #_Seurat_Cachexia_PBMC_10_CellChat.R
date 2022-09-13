@@ -98,15 +98,29 @@
   ##### save.image #####
   save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction.RData"))
 
-## Merge cellchat ##
-  cellchat.EO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/B04_CellCell_InteractionCC_EO_CellChat_Example_PRJCA001063.rds")
-  cellchat.LO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/B04_CellCell_InteractionCC_LO_CellChat_Example_PRJCA001063.rds")
+##***************************************************************************##
+
+##### Merge cellchat #####
+
+  ##### Load rds #####
+  cellchat.EO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/B04_CellCell_InteractionECM_EO_CellChat_Example_PRJCA001063.rds")
+  cellchat.LO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/B04_CellCell_InteractionECM_LO_CellChat_Example_PRJCA001063.rds")
 
 
   object.list <- list(EO = cellchat.EO, LO = cellchat.LO)
   cellchat <- mergeCellChat(object.list, add.names = names(object.list))
 
   cellchat
+
+  ##### Current path and new folder setting*  #####
+  ProjectName = "PBMC_CellChat_Multi_ECM," # Secret, ECM, CC
+  Version = paste0(Sys.Date(),"_",ProjectName)
+  Save.Path = paste0(getwd(),"/",Version)
+  ## Create new folder
+  if (!dir.exists(Save.Path)){
+    dir.create(Save.Path)
+  }
+
 
 #### Part I: Predict general principles of cell-cell communication #####
   CellType.set <- cellchat@meta[["celltype"]] %>% unique()
@@ -217,12 +231,20 @@
     cellchat <- netEmbedding(cellchat, type = "functional")
     #> Classification learning of the signaling networks for datasets 1 2
     cellchat <- netClustering(cellchat, type = "functional")
+
     #> 2D visualization of signaling networks from datasets 1 2
-    gg2_1 <- netVisual_embeddingPairwise(cellchat, type = "functional", label.size = 3.5)
-    gg2_1 %>% print()
+    try({
+      gg2_1 <- netVisual_embeddingPairwise(cellchat, type = "functional", label.size = 3.5)
+      gg2_1 %>% print()
+    })
+
+
     # ZoomIn
+    try({
     gg2_2 <- netVisual_embeddingPairwiseZoomIn(cellchat, type = "functional", nCol = 2)
     gg2_2 %>% print()
+    })
+
     ## Compute and visualize the pathway distance in the learned joint manifold
     #> Compute the distance of signaling networks between datasets 1 2
     gg2_3 <- rankSimilarity(cellchat, type = "functional")
@@ -259,7 +281,8 @@
     # Compare the overall information flow of each signaling pathway
     gg2_8 <- rankNet(cellchat, mode = "comparison", stacked = T, do.stat = TRUE)
     gg2_9 <- rankNet(cellchat, mode = "comparison", stacked = F, do.stat = TRUE)
-    gg2_8 + gg2_9
+    gg2_8_9 <- gg2_8 + gg2_9
+    gg2_8_9 %>% print()
 
     ## Compare outgoing (or incoming) signaling associated with each cell population
     library(ComplexHeatmap)
