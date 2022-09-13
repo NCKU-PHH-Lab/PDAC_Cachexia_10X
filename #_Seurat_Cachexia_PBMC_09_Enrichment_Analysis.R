@@ -1,6 +1,14 @@
 # ##### Load data if necessary #####
 # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
 
+load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
+
+## Create folder
+if (!dir.exists(paste0(Save.Path,"/PBMC_GSEA"))){
+  dir.create(paste0(Save.Path,"/PBMC_GSEA"))
+}
+
+
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
   # https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
   # install # https://bioconductor.org/packages/release/bioc/html/GSEABase.html
@@ -9,23 +17,32 @@
   source("FUN_HSsymbol2MMsymbol.R")
   source("FUN_GSEA_ggplot.R")
 
-# Geneset from GSEA
-# Pathway.all <- read.delim(paste0(getwd(),"/Pathway.all.v7.4.symbols.gmt"),header = F)
-Pathway.all.MM <- read.delim2(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"),
-                              col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"))),
-                              header = F,sep = "\t")
+  #### Load Geneset ####
+  ## Geneset from GSEA
+  # Pathway.all <- read.delim(paste0(getwd(),"/Pathway.all.v7.4.symbols.gmt"),header = F)
+  Pathway.all.MM <- read.delim2(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"),
+                                col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"))),
+                                header = F,sep = "\t")
+
+
+
+
+  #### Genename convert ####
+
 
   #### Update gene name ####
 
 
-
 ##### 09_1 GSEA Analysis (SPA) #####
+## Create folder
+dir.create(paste0(Save.Path,"/PBMC_GSEA"))
+
 GSEA_Large <- list()
 GSEA_Large.df <- as.data.frame(matrix(nrow=0,ncol=10))
 colnames(GSEA_Large.df) <- c("GeneType","PhenoType","pathway","pval","padj","log2err","ES", "NES" ,"size","leadingEdge")
 GSEA_Large.df.TOP <- GSEA_Large.df
 
-dir.create(paste0(Save.Path,"/PBMC_GSEA"))
+
 
 
 pdf(file = paste0(Save.Path, "/PBMC_GSEA/PBMC_GSEA_SPA.pdf"),width = 15, height = 7 )
