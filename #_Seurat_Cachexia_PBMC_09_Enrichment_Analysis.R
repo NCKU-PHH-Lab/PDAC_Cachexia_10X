@@ -333,12 +333,22 @@ BBPlot_Neu_B1  <- GSEA_Neu_Sum.lt[["BBPlot_SubB_Sort"]]
 
 
 ##### Export Bubble plot #####
+BBPlotB2 <- GSEA_ggplot_SSA.lt[["BBPlot"]]
+BBPlotB2 <- BBPlotB2 + theme(axis.title.y=element_blank(),
+                             axis.text.y=element_blank(),
+                             axis.ticks.y=element_blank())
+## Sort the plot
+BBPlotB2 <- BBPlotB2 %>% insert_left(GSEA_ggplot_SSA.lt[["Y_Order"]], width = 0.2)
+BBPlotB2
 
 pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_Sum.pdf"),width = 35, height = 17 )
-GSEA_ggplot_SSA.lt[["BBPlotB1"]]
-  BBPlotB1
+  GSEA_ggplot_SSA.lt[["BBPlot"]]
+  GSEA_ggplot_SSA.lt[["BBPlotB1"]]
+  BBPlotB2
+
   BBPlot_SPA_B
   BBPlot_SPA_B1
+
   BBPlot_F_B
   BBPlot_F_B1
   BBPlot_M_B
