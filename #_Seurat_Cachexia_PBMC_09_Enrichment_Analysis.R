@@ -66,17 +66,17 @@ library(ggplot2)
 library(scales)
 GSEA_Color.lt = list(high = "#ef476f",mid = "white",low = "#0077b6")
 
-GSEA_Large.Sum.TOP$PhenoType <- factor(GSEA_Large.Sum.TOP$PhenoType,
+GSEA_Large.df.TOP$PhenoType <- factor(GSEA_Large.df.TOP$PhenoType,
                                        levels = Cell_Type_Order.set)
 
-GSEA_ggplot_SPA.lt <- GSEA_ggplot(GSEA_Large.Sum.TOP, NES_Th = 1.5, padj_Th = 0.01)
-GSEA_Large.Sum.TOP.S <- GSEA_ggplot_SPA.lt[["GSEA_TOP.df"]]
+GSEA_ggplot_SPA.lt <- GSEA_ggplot(GSEA_Large.df.TOP, NES_Th = 1.5, padj_Th = 0.01)
+GSEA_Large.df.TOP.S <- GSEA_ggplot_SPA.lt[["GSEA_TOP.df"]]
 
-# GSEA_Large.Sum.TOP.S <- GSEA_Large.Sum.TOP[abs(GSEA_Large.Sum.TOP$NES) > 1,]
-# GSEA_Large.Sum.TOP.S <- GSEA_Large.Sum.TOP.S[abs(GSEA_Large.Sum.TOP.S$padj) < 0.05,]
+# GSEA_Large.df.TOP.S <- GSEA_Large.df.TOP[abs(GSEA_Large.df.TOP$NES) > 1,]
+# GSEA_Large.df.TOP.S <- GSEA_Large.df.TOP.S[abs(GSEA_Large.df.TOP.S$padj) < 0.05,]
 
-# GSEA_Large.Sum.TOP.S <- GSEA_Large.Sum.TOP[abs(GSEA_Large.Sum.TOP$padj) < 0.25,]
-# GSEA_Large.Sum.TOP.S <- GSEA_Large.Sum.TOP.S[abs(GSEA_Large.Sum.TOP.S$pval) < 0.05,]
+# GSEA_Large.df.TOP.S <- GSEA_Large.df.TOP[abs(GSEA_Large.df.TOP$padj) < 0.25,]
+# GSEA_Large.df.TOP.S <- GSEA_Large.df.TOP.S[abs(GSEA_Large.df.TOP.S$pval) < 0.05,]
 
 pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SPA.pdf"),width = 17, height = 12 )
   GSEA_ggplot_SPA.lt[["BBPlot_Ori"]]
@@ -90,7 +90,7 @@ dev.off()
 source("FUN_GSEA_ExtractSubType.R")
 
 ## T Cell
-GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
+GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.df.TOP,
                                  KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
                                  OrderSet = GSEA_ggplot_SPA.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
@@ -98,7 +98,7 @@ GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
                                  FileName = "/PBMC_GSEA_Bubble_SPA_SubType_T.pdf")
 
 ## Mac
-GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
+GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.df.TOP.S,
                                  KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
                                  OrderSet = GSEA_ggplot_SPA.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
@@ -128,11 +128,11 @@ write.table(GSEA_Large_Male.df.TOP, file=paste0(Subfolder.Path,"/PBMC_GSEA_Pathw
 library(ggplot2)
 library(scales)
 
-GSEA_Large_Male.Sum.TOP$PhenoType <- factor(GSEA_Large_Male.Sum.TOP$PhenoType,
+GSEA_Large_Male.df.TOP$PhenoType <- factor(GSEA_Large_Male.df.TOP$PhenoType,
                                             levels = Cell_Type_Order.set)
 
-GSEA_ggplot_SSA_Male.lt <- GSEA_ggplot(GSEA_Large_Male.Sum.TOP,NES_Th = 1.5, padj_Th = 0.01)
-GSEA_Large_Male.Sum.TOP.S <- GSEA_ggplot_SSA_Male.lt[["GSEA_TOP.df"]]
+GSEA_ggplot_SSA_Male.lt <- GSEA_ggplot(GSEA_Large_Male.df.TOP,NES_Th = 1.5, padj_Th = 0.01)
+GSEA_Large_Male.df.TOP.S <- GSEA_ggplot_SSA_Male.lt[["GSEA_TOP.df"]]
 
 pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SSA_Male.pdf"),width = 17, height = 12 )
   GSEA_ggplot_SSA_Male.lt[["BBPlot_Ori"]]
@@ -145,7 +145,7 @@ dev.off()
 source("FUN_GSEA_ExtractSubType.R")
 
 ## T Cell
-GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
+GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.df.TOP.S,
                                  KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
                                  OrderSet = GSEA_ggplot_SSA_Male.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
@@ -153,7 +153,7 @@ GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
                                  FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_T.pdf")
 
 ## Mac
-GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
+GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.df.TOP.S,
                                    KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
                                    OrderSet = GSEA_ggplot_SSA_Male.lt[["Y_Order"]],
                                    GSEA_Color = GSEA_Color.lt,
@@ -182,11 +182,11 @@ write.table(GSEA_Large_Female.df.TOP, file=paste0(Subfolder.Path,"/PBMC_GSEA_Pat
 library(ggplot2)
 library(scales)
 
-GSEA_Large_Female.Sum.TOP$PhenoType <- factor(GSEA_Large_Female.Sum.TOP$PhenoType,
+GSEA_Large_Female.df.TOP$PhenoType <- factor(GSEA_Large_Female.df.TOP$PhenoType,
                                               levels = Cell_Type_Order.set)
 
-GSEA_ggplot_SSA_Female.lt <- GSEA_ggplot(GSEA_Large_Female.Sum.TOP,NES_Th = 1.5, padj_Th = 0.01)
-GSEA_Large_Female.Sum.TOP.S <- GSEA_ggplot_SSA_Female.lt[["GSEA_TOP.df"]]
+GSEA_ggplot_SSA_Female.lt <- GSEA_ggplot(GSEA_Large_Female.df.TOP,NES_Th = 1.5, padj_Th = 0.01)
+GSEA_Large_Female.df.TOP.S <- GSEA_ggplot_SSA_Female.lt[["GSEA_TOP.df"]]
 
 pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SSA_Female.pdf"),width = 17, height = 12 )
   GSEA_ggplot_SSA_Female.lt[["BBPlot_Ori"]]
@@ -200,7 +200,7 @@ dev.off()
 source("FUN_GSEA_ExtractSubType.R")
 
 ## T Cell
-GSEA_T_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.Sum.TOP.S,
+GSEA_T_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.df.TOP.S,
                                       KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
                                       OrderSet = GSEA_ggplot_SSA_Female.lt[["Y_Order"]],
                                       GSEA_Color = GSEA_Color.lt,
@@ -208,7 +208,7 @@ GSEA_T_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.Sum.TOP.S,
                                       FileName = "/PBMC_GSEA_Bubble_SSA_Female_SubType_T.pdf")
 
 ## Mac
-GSEA_Mac_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.Sum.TOP.S,
+GSEA_Mac_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.df.TOP.S,
                                         KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
                                         OrderSet = GSEA_ggplot_SSA_Female.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
