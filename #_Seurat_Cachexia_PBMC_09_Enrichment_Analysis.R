@@ -155,31 +155,17 @@ GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
 BBPlot_TB <- GSEA_T.lt[["BBPlot_SubB"]]
 BBPlot_TB1 <- GSEA_T.lt[["BBPlot_SubB_Sort"]]
 
-
-
 ## Mac
-GSEA_Mac.df <- GSEA_Large.Sum.TOP.S[grep("Mac",GSEA_Large.Sum.TOP.S$PhenoType),]
+GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
+                                 KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
+                                 Order.lt = GSEA_ggplot_SPA.lt,
+                                 GSEA_Color = GSEA_Color.lt,
+                                 Save.Path = paste0(Subfolder.Path),
+                                 FileName = "/PBMC_GSEA_Bubble_SPA_SubType_Mac.pdf")
 
-BBPlot_Mac <- ggplot(GSEA_Mac.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
-  geom_point() +
-  scale_size_area(max_size = 5)+
-  scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
-                         guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+BBPlot_MacB <- GSEA_Mac.lt[["BBPlot_SubB"]]
+BBPlot_MacB1 <- GSEA_Mac.lt[["BBPlot_SubB_Sort"]]
 
-BBPlot_Mac
-
-BBPlot_MacB <- BBPlot_Mac %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,OL_Thick = 1.5,
-                                             XtextSize=15,  YtextSize=10, AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
-
-BBPlot_MacB1 <- BBPlot_MacB %>%
-  insert_left(GSEA_ggplot_SPA.lt[["Y_Order"]],width = 0.2)
-BBPlot_MacB1
-
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Bubble_SPA_SubType_Mac.pdf"),width = 17, height = 20 )
-  BBPlot_MacB
-  BBPlot_MacB1
-dev.off()
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
    df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
