@@ -402,14 +402,14 @@ pdf(file = paste0(Subfolder.Path,"/SC_GSEA_Bubble_Sum.pdf"),width = 35, height =
   BBPlot_F_B1
   BBPlot_M_B
   BBPlot_M_B1
-  BBPlot_T_B
-  BBPlot_T_B1
+  # BBPlot_T_B
+  # BBPlot_T_B1
   BBPlot_Mac_B
   BBPlot_Mac_B1
-  BBPlot_Mast_B
-  BBPlot_Mast_B1
-  BBPlot_Neu_B
-  BBPlot_Neu_B1
+  BBPlot_Fib_B
+  BBPlot_Fib_B1
+  BBPlot_Duc_B
+  BBPlot_Duc_B1
 dev.off()
 
 
