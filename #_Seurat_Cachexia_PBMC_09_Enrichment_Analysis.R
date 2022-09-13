@@ -46,17 +46,16 @@ if (!dir.exists(Subfolder.Path)){
 
 ##### 09_1 GSEA Analysis (SPA) #####
 ## Create folder
-dir.create(paste0(Subfolder.Path,"/PBMC_GSEA"))
+dir.create(paste0(Subfolder.Path))
 
+
+## GSEA analysis
 GSEA_Large <- list()
 GSEA_Large.df <- as.data.frame(matrix(nrow=0,ncol=10))
 colnames(GSEA_Large.df) <- c("GeneType","PhenoType","pathway","pval","padj","log2err","ES", "NES" ,"size","leadingEdge")
 GSEA_Large.df.TOP <- GSEA_Large.df
 
-
-
-
-pdf(file = paste0(Subfolder.Path, "/PBMC_GSEA/PBMC_GSEA_SPA.pdf"),width = 15, height = 7 )
+pdf(file = paste0(Subfolder.Path, "/PBMC_GSEA_SPA.pdf"),width = 15, height = 7 )
 
 for(i in 1:length(CellType.list)){
 
@@ -114,7 +113,7 @@ dev.off()
 ## GSEA_Large.Sum.TOP ##
 GSEA_Large.Sum.TOP <- rbind(GSEA_Large.df.TOP)
 GSEA_Large.Sum.TOP <- GSEA_Large.Sum.TOP[,!colnames(GSEA_Large.Sum.TOP) %in% c("leadingEdge")]
-write.table(GSEA_Large.Sum.TOP, file=paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Pathway_LargeTOP_SPA.txt"),sep="\t",
+write.table(GSEA_Large.Sum.TOP, file=paste0(Subfolder.Path,"/PBMC_GSEA_Pathway_LargeTOP_SPA.txt"),sep="\t",
             row.names=F, quote = FALSE)
 
 ##### Bubble plot #####
@@ -125,19 +124,21 @@ GSEA_Color.lt = list(high = "#ef476f",mid = "white",low = "#0077b6")
 GSEA_Large.Sum.TOP$PhenoType <- factor(GSEA_Large.Sum.TOP$PhenoType,
                                        levels = Cell_Type_Order.set)
 
-GSEA_ggplot_SPA.lt <- GSEA_ggplot(GSEA_Large.Sum.TOP,NES_Th = 1.5, padj_Th = 0.01)
+GSEA_ggplot_SPA.lt <- GSEA_ggplot(GSEA_Large.Sum.TOP, NES_Th = 1.5, padj_Th = 0.01)
 GSEA_Large.Sum.TOP.S <- GSEA_ggplot_SPA.lt[["GSEA_TOP.df"]]
+
 # GSEA_Large.Sum.TOP.S <- GSEA_Large.Sum.TOP[abs(GSEA_Large.Sum.TOP$NES) > 1,]
 # GSEA_Large.Sum.TOP.S <- GSEA_Large.Sum.TOP.S[abs(GSEA_Large.Sum.TOP.S$padj) < 0.05,]
+
 # GSEA_Large.Sum.TOP.S <- GSEA_Large.Sum.TOP[abs(GSEA_Large.Sum.TOP$padj) < 0.25,]
 # GSEA_Large.Sum.TOP.S <- GSEA_Large.Sum.TOP.S[abs(GSEA_Large.Sum.TOP.S$pval) < 0.05,]
 
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Bubble_SPA.pdf"),width = 17, height = 12 )
-GSEA_ggplot_SPA.lt[["BBPlot_Ori"]]
-GSEA_ggplot_SPA.lt[["BBPlot"]]
-GSEA_ggplot_SPA.lt[["BBPlot2"]]
-GSEA_ggplot_SPA.lt[["BBPlotB1"]]
-GSEA_ggplot_SPA.lt[["BBPlotB1"]]
+pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SPA.pdf"),width = 17, height = 12 )
+  GSEA_ggplot_SPA.lt[["BBPlot_Ori"]]
+  GSEA_ggplot_SPA.lt[["BBPlot"]]
+  GSEA_ggplot_SPA.lt[["BBPlot2"]]
+  GSEA_ggplot_SPA.lt[["BBPlotB1"]]
+  GSEA_ggplot_SPA.lt[["BBPlotB1"]]
 dev.off()
 
 
@@ -147,11 +148,10 @@ dev.off()
 GSEA_T.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
 
 BBPlot_T <- ggplot(GSEA_T.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
-  geom_point() +
-  scale_size_area(max_size = 7)+
-  scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
-                         guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+            geom_point() +scale_size_area(max_size = 7)+
+            scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
+                                   guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
+            theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
 
 BBPlot_T
 
@@ -168,8 +168,8 @@ BBPlot_TB1
 
 
 pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Bubble_SPA_SubType_T.pdf"),width = 17, height = 7 )
-BBPlot_TB
-BBPlot_TB1
+  BBPlot_TB
+  BBPlot_TB1
 dev.off()
 
 
@@ -193,8 +193,8 @@ BBPlot_MacB1 <- BBPlot_MacB %>%
 BBPlot_MacB1
 
 pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Bubble_SPA_SubType_Mac.pdf"),width = 17, height = 20 )
-BBPlot_MacB
-BBPlot_MacB1
+  BBPlot_MacB
+  BBPlot_MacB1
 dev.off()
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
