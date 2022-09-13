@@ -546,8 +546,8 @@ CellChatOne <- function(seuratObject,
     #   ggsave(filename=paste0(Version,"/",pathways.show.all[i], "_L-R_contribution.pdf"), plot=gg, width = 3, height = 2, units = 'in', dpi = 300)
     # }
 
-    #### Save the RData ####
-    save.image(paste0(Save_Path, ProjectName,"_CellChat_Example_PRJCA001063.RData"))
+    # #### Save the RData ####
+    # save.image(paste0(Save_Path,"/", ProjectName, "_CellChat.RData"))
 
     CellChat.lt <- list(CellChatObj = cellchat,
                         DataBase_Use = CellChatDB.use,
