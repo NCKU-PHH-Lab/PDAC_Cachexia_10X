@@ -36,7 +36,7 @@ GSEA_ExtractSubType = function(GSEA_Large.Sum.TOP.S,
   BBPlot_SubB_Sort
 
   ## Export pdf
-  pdf(file = paste0(Save.Path,"/PBMC_GSEA_Bubble_SPA_SubType_T.pdf"), width = PDFwidth, height = PDFheight )
+  pdf(file = paste0(Save.Path, FileName), width = PDFwidth, height = PDFheight )
     BBPlot_SubB %>% print()
     BBPlot_SubB_Sort %>% print()
   dev.off()
