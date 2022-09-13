@@ -150,7 +150,8 @@ GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
                                  KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
                                  Order.lt = GSEA_ggplot_SPA.lt,
                                  GSEA_Color = GSEA_Color.lt,
-                                 Save.Path = paste0(Subfolder.Path))
+                                 Save.Path = paste0(Subfolder.Path),
+                                 FileName = "/PBMC_GSEA_Bubble_SPA_SubType_T.pdf")
 BBPlot_TB <- GSEA_T.lt[["BBPlot_SubB"]]
 BBPlot_TB1 <- GSEA_T.lt[["BBPlot_SubB_Sort"]]
 
