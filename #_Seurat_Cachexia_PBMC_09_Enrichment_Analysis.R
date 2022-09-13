@@ -263,7 +263,7 @@ source("FUN_GSEA_ExtractSubType.R")
 ## T Cell
 GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
                                  KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
-                                 Order.lt = GSEA_ggplot_SPA.lt,
+                                 Order.lt = GSEA_ggplot_SSA_Male.lt,
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
                                  FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_T.pdf")
@@ -272,7 +272,7 @@ GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
 ## Mac
 GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
                                    KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
-                                   Order.lt = GSEA_ggplot_SPA.lt,
+                                   Order.lt = GSEA_ggplot_SSA_Male.lt,
                                    GSEA_Color = GSEA_Color.lt,
                                    Save.Path = paste0(Subfolder.Path),
                                    FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_Mac.pdf")
@@ -373,25 +373,23 @@ dev.off()
 
 
 ##### Extract SubType #####
-
-## T Cell
 source("FUN_GSEA_ExtractSubType.R")
 
 ## T Cell
 GSEA_T_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.Sum.TOP.S,
                                       KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
-                                      Order.lt = GSEA_ggplot_SPA.lt,
+                                      Order.lt = GSEA_ggplot_SSA_Female.lt,
                                       GSEA_Color = GSEA_Color.lt,
                                       Save.Path = paste0(Subfolder.Path),
-                                      FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_T.pdf")
+                                      FileName = "/PBMC_GSEA_Bubble_SSA_Female_SubType_T.pdf")
 
 ## Mac
 GSEA_Mac_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.Sum.TOP.S,
                                         KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
-                                        Order.lt = GSEA_ggplot_SPA.lt,
+                                        Order.lt = GSEA_ggplot_SSA_Female.lt,
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
-                                        FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_Mac.pdf")
+                                        FileName = "/PBMC_GSEA_Bubble_SSA_Female_SubType_Mac.pdf")
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
    df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
@@ -481,77 +479,40 @@ BBPlot_M_B1 <- BBPlot_M_B %>%
   insert_left( GSEA_ggplot_SSA.lt[["Y_Order"]],width = 0.2)
 BBPlot_M_B1
 
+
+source("FUN_GSEA_ExtractSubType.R")
+
 ## T Cell
-GSEA_Large_SumTOP_T.df.S <- GSEA_Large_SumTOP_Sex.df.S[grep("T$",GSEA_Large_SumTOP_Sex.df.S$PhenoType),]
+GSEA_T_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
+                                     KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
+                                     Order.lt = GSEA_ggplot_SSA.lt,
+                                     GSEA_Color = GSEA_Color.lt,
+                                     Save.Path = paste0(Subfolder.Path),
+                                     FileName = "/PBMC_GSEA_Bubble_Sum_SubType_T.pdf")
 
-BBPlot_T <- ggplot(GSEA_Large_SumTOP_T.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
-  geom_point() +
-  scale_size_area(max_size = 7)+
-  scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
-                         guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+BBPlot_T_B <- GSEA_T_Sum.lt[["BBPlot_SubB"]]
+BBPlot_T_B1 <- GSEA_T_Sum.lt[["BBPlot_SubB_Sort"]]
 
-BBPlot_T
-
-BBPlot_T_B <- BBPlot_T %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
-                                          XtextSize=15 ,  YtextSize=10,AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
-BBPlot_T_B
-
-BBPlot_T_B1 <- BBPlot_T_B %>%
-  insert_left( GSEA_ggplot_SSA.lt[["Y_Order"]],width = 0.2)
-BBPlot_T_B1
-
-## Macrophage
-GSEA_Large_SumTOP_Mac.df.S <- GSEA_Large_SumTOP_Sex.df.S[grep("Mac",GSEA_Large_SumTOP_Sex.df.S$PhenoType),]
-
-BBPlot_Mac <- ggplot(GSEA_Large_SumTOP_Mac.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
-  geom_point() +
-  scale_size_area(max_size = 7)+
-  scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
-                         guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
-
-BBPlot_Mac
-
-BBPlot_Mac_B <- BBPlot_Mac %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
-                                              XtextSize=15 ,  YtextSize=10,AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
-BBPlot_Mac_B
-
-BBPlot_Mac_B1 <- BBPlot_Mac_B %>%
-  insert_left( GSEA_ggplot_SSA.lt[["Y_Order"]],width = 0.2)
-BBPlot_Mac_B1
+## Mac
+GSEA_Mac_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
+                                       KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
+                                       Order.lt = GSEA_ggplot_SSA.lt,
+                                       GSEA_Color = GSEA_Color.lt,
+                                       Save.Path = paste0(Subfolder.Path),
+                                       FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Mac.pdf")
+BBPlot_Mac_B <- GSEA_Mac_Sum.lt[["BBPlot_SubB"]]
+BBPlot_Mac_B1 <- GSEA_Mac_Sum.lt[["BBPlot_SubB_Sort"]]
 
 ## Mast
-GSEA_Large_SumTOP_Mast.df.S <- GSEA_Large_SumTOP_Sex.df.S[grep("Mast",GSEA_Large_SumTOP_Sex.df.S$PhenoType),]
+GSEA_Mast_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
+                                        KeyWordSet.lt = list(Mode = "Grep", KW = c("Mast")),
+                                        Order.lt = GSEA_ggplot_SSA.lt,
+                                        GSEA_Color = GSEA_Color.lt,
+                                        Save.Path = paste0(Subfolder.Path),
+                                        FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Mast.pdf")
 
-BBPlot_Mast <- ggplot(GSEA_Large_SumTOP_Mast.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
-  geom_point() +
-  scale_size_area(max_size = 7)+
-  scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
-                         guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
-
-BBPlot_Mast
-
-BBPlot_Mast_B <- BBPlot_Mast %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
-                                                XtextSize=15 ,  YtextSize=10,AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
-BBPlot_Mast_B
-
-BBPlot_Mast_B1 <- BBPlot_Mast_B %>%
-  insert_left( GSEA_ggplot_SSA.lt[["Y_Order"]],width = 0.2)
-BBPlot_Mast_B1
-
-##
-BBPlotB <- GSEA_ggplot_SSA.lt[["BBPlot"]] %>%
-  BeautifyggPlot(LegPos = c(-0.5, -0.05),LegBox = "horizontal",LegDir="horizontal", xangle =90,
-                 XtextSize=10,  YtextSize=7,AxisTitleSize=1, AspRat=0.8, XaThick=0.6, YaThick=0.6,
-                 LegTextSize = 12,LegTitleSize=13)
-BBPlotB
-#BBPlotB <- GSEA_ggplot_SSA.lt[["BBPlot"]] + theme(aspect.ratio=1)
-
-BBPlotB1 <- BBPlotB %>%
-  insert_left(GSEA_ggplot_SSA.lt[["Y_Order"]],width = 0.5)
-BBPlotB1
+BBPlot_Mast_B <- GSEA_Mast_Sum.lt[["BBPlot_SubB"]]
+BBPlot_Mast_B1  <- GSEA_Mast_Sum.lt[["BBPlot_SubB_Sort"]]
 
 
 ##### Export Bubble plot #####
@@ -603,6 +564,9 @@ BBPlot %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horiz
 
 dev.off()
 
+
+rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
+   df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
 ##### save.image #####
 save.image(paste0(Subfolder.Path,"/09_4_GSEA_Analysis_(SSA).RData"))
 
