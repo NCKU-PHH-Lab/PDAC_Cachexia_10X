@@ -1,13 +1,23 @@
 GSEA_ExtractSubType = function(GSEA_Large.Sum.TOP.S,
-                               KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
+                               KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")), ## Mode =c("KWSet","Grep")
                                GSEA_Color = list(high = "#ef476f",mid = "white",low = "#0077b6")
 ){
 
-  ## T Cell
-  # GSEA_T.df <- GSEA_Large.Sum.TOP.S[grep("T",GSEA_Large.Sum.TOP.S$PhenoType),]
-  GSEA_T.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
+  ## Extract Cell Type
+  if(KeyWordSet.lt[["Mode"]]=="KWSet"){
+    GSEA_Sub.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% KeyWordSet.lt[["KW"]],]
 
-  BBPlot_T <- ggplot(GSEA_T.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+  }else{
+    GSEA_Sub.df <- GSEA_Large.Sum.TOP.S[grep(KeyWordSet.lt[["KW"]],GSEA_Large.Sum.TOP.S$PhenoType),]
+
+  }
+
+
+  # ## T Cell
+  # # GSEA_Sub.df <- GSEA_Large.Sum.TOP.S[grep("T",GSEA_Large.Sum.TOP.S$PhenoType),]
+  # GSEA_Sub.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
+
+  BBPlot_T <- ggplot(GSEA_Sub.df,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
     geom_point() +scale_size_area(max_size = 7)+
     scale_colour_gradient2(low = GSEA_Color.lt[["low"]], mid = GSEA_Color.lt[["mid"]], high = GSEA_Color.lt[["high"]],
                            guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")+ theme_bw()+
