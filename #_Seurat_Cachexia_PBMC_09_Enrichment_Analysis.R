@@ -290,7 +290,7 @@ colnames(GSEA_Large_Female.df) <- c("GeneType","PhenoType","pathway","pval","pad
 GSEA_Large_Female.df.TOP <- GSEA_Large_Female.df
 
 
-pdf(file = paste0(Subfolder.Path, "/PBMC_GSEA/PBMC_GSEA_SSA_Female.pdf"),width = 15, height = 7 )
+pdf(file = paste0(Subfolder.Path, "/PBMC_GSEA_SSA_Female.pdf"),width = 15, height = 7 )
 
 for(i in 1:length(CellType.list)){
 
@@ -350,7 +350,7 @@ dev.off()
 ## GSEA_Large_Female.Sum.TOP ##
 GSEA_Large_Female.Sum.TOP <- rbind(GSEA_Large_Female.df.TOP)
 GSEA_Large_Female.Sum.TOP <- GSEA_Large_Female.Sum.TOP[,!colnames(GSEA_Large_Female.Sum.TOP) %in% c("leadingEdge")]
-write.table(GSEA_Large_Female.Sum.TOP, file=paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Pathway_LargeTOP_SSA_Female.txt"),sep="\t",
+write.table(GSEA_Large_Female.Sum.TOP, file=paste0(Subfolder.Path,"/PBMC_GSEA_Pathway_LargeTOP_SSA_Female.txt"),sep="\t",
             row.names=F, quote = FALSE)
 
 ##### Bubble plot #####
@@ -363,7 +363,7 @@ GSEA_Large_Female.Sum.TOP$PhenoType <- factor(GSEA_Large_Female.Sum.TOP$PhenoTyp
 GSEA_ggplot_SSA_Female.lt <- GSEA_ggplot(GSEA_Large_Female.Sum.TOP,NES_Th = 1.5, padj_Th = 0.01)
 GSEA_Large_Female.Sum.TOP.S <- GSEA_ggplot_SSA_Female.lt[["GSEA_TOP.df"]]
 
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Bubble_SSA_Female.pdf"),width = 17, height = 12 )
+pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SSA_Female.pdf"),width = 17, height = 12 )
 GSEA_ggplot_SSA_Female.lt[["BBPlot_Ori"]]
 GSEA_ggplot_SSA_Female.lt[["BBPlot"]]
 GSEA_ggplot_SSA_Female.lt[["BBPlot2"]]
@@ -414,7 +414,7 @@ GSEA_Large_SumTOP_Sex.df <- GSEA_Large_SumTOP_Sex.df[,!colnames(GSEA_Large_SumTO
 GSEA_ggplot_SSA.lt <- GSEA_ggplot(GSEA_Large_SumTOP_Sex.df,NES_Th = 1.5, padj_Th = 0.01)
 GSEA_Large_SumTOP_Sex.df.S <- GSEA_ggplot_SSA.lt[["GSEA_TOP.df"]]
 
-write.table(GSEA_Large_SumTOP_Sex.df, file=paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Pathway_3Dataset_SSA.txt"),sep="\t",
+write.table(GSEA_Large_SumTOP_Sex.df, file=paste0(Subfolder.Path,"/PBMC_GSEA_Pathway_3Dataset_SSA.txt"),sep="\t",
             row.names=F, quote = FALSE)
 
 ##### Extract SubType (PBMC) #####
@@ -517,7 +517,7 @@ BBPlot_Mast_B1  <- GSEA_Mast_Sum.lt[["BBPlot_SubB_Sort"]]
 
 ##### Export Bubble plot #####
 
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Bubble_Sum.pdf"),width = 35, height = 17 )
+pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_Sum.pdf"),width = 35, height = 17 )
 GSEA_ggplot_SSA.lt[["BBPlotB1"]]
 BBPlotB1
 BBPlot_SPAB
@@ -544,7 +544,7 @@ GSEA_Large_SumTOP_Sex.df.S <- GSEA_Large_SumTOP_Sex.df.S[abs(GSEA_Large_SumTOP_S
 library(ggplot2)
 library(scales)
 
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Bubble_SSA.pdf"),width = 17, height = 20 )
+pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SSA.pdf"),width = 17, height = 20 )
 
 
 ggplot(GSEA_Large_SumTOP_Sex.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
