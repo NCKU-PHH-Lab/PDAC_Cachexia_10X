@@ -143,6 +143,16 @@ dev.off()
 
 
 ##### Extract SubType #####
+source("FUN_GSEA_ExtractSubType.R")
+
+## T Cell
+GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
+                    KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
+                    GSEA_Color = GSEA_Color.lt,
+                    Save.Path = Subfolder.Path)
+
+
+
 ## T Cell
 # GSEA_T.df <- GSEA_Large.Sum.TOP.S[grep("T",GSEA_Large.Sum.TOP.S$PhenoType),]
 GSEA_T.df <- GSEA_Large.Sum.TOP.S[GSEA_Large.Sum.TOP.S$PhenoType %in% c("CD4+T","CD8+T","T"),]
