@@ -148,6 +148,7 @@ source("FUN_GSEA_ExtractSubType.R")
 ## T Cell
 GSEA_ExtractSubType(GSEA_Large.Sum.TOP.S,
                     KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
+                    Order.lt = GSEA_ggplot_SPA.lt,
                     GSEA_Color = GSEA_Color.lt,
                     Save.Path = Subfolder.Path)
 
