@@ -1,8 +1,14 @@
 
 GSEA_Run_Multi <- function(CCMarker_SPA.lt,
                            GeneSets = Pathway.all.MM, TopNum = 10,
-                           Save.Path = Subfolder.Path, FileName = "/PBMC_GSEA_EnrichPlot.pdf",
+                           Save.Path = Subfolder.Path, FileName = "/PBMC_GSEA_EnrichPlot.pdf"
                            ) {
+
+  GSEA_Large.lt <- list()
+  GSEA_Large.df <- as.data.frame(matrix(nrow=0,ncol=10))
+  colnames(GSEA_Large.df) <- c("GeneType","PhenoType","pathway","pval","padj","log2err","ES", "NES" ,"size","leadingEdge")
+  GSEA_Large.df.TOP <- GSEA_Large.df
+
 
   pdf(file = paste0(Save.Path, FileName),width = 15, height = 7 )
 
@@ -42,8 +48,8 @@ GSEA_Run_Multi <- function(CCMarker_SPA.lt,
 
     Sum <- list(gseaDat,ranks,pathwaysH,fgseaRes,plotEnrichment_Pos1,plotEnrichment_Neg1)
     names(Sum) <- c("gseaDat","ranks","pathwaysH","fgseaRes","plotEnrichment_Pos1","plotEnrichment_Neg1")
-    GSEA_Large[[i]] <- Sum
-    names(GSEA_Large)[[i]] <- paste0(CellType.list[i])
+    GSEA_Large.lt[[i]] <- Sum
+    names(GSEA_Large.lt)[[i]] <- paste0(CellType.list[i])
 
     fgseaRes2 <- data.frame(paste0(CellType.list[i]),fgseaRes)
     colnames(fgseaRes2)[[1]] <- c("PhenoType")
@@ -60,8 +66,9 @@ GSEA_Run_Multi <- function(CCMarker_SPA.lt,
   dev.off()
 
   #####------------------------ Output ------------------------ #####
-  OUTPUT <- list(GSEA_Large)
-  names(OUTPUT) <- c("Pathway.all.list","pathwaysH","fgseaRes","topPathways")
+  OUTPUT <- list(GSEA_Large.lt, GSEA_Large.df, GSEA_Large.df.TOP)
+  names(OUTPUT) <- c("GSEA_Large.lt","GSEA_Large.df","GSEA_Large.df.TOP")
+
 return(OUTPUT)
 }
 
