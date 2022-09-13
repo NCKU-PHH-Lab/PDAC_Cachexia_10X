@@ -113,7 +113,7 @@
   cellchat
 
   ##### Current path and new folder setting*  #####
-  ProjectName = "PBMC_CellChat_Multi_ECM," # Secret, ECM, CC
+  ProjectName = "PBMC_CellChat_Multi_ECM" # Secret, ECM, CC
   Version = paste0(Sys.Date(),"_",ProjectName)
   Save.Path = paste0(getwd(),"/",Version)
   ## Create new folder
@@ -534,7 +534,7 @@
   #> Scale for 'y' is already present. Adding another scale for 'y', which will
   #> replace the existing scale.
 
-##### Save the merged CellChat object #####
-  saveRDS(cellchat, file = paste0(Save.Path,"/",Version,".rds"))
-  save.image(paste0(Save.Path,"/",Version,"_Multi.RData"))
+# ##### Save the merged CellChat object #####
+#   saveRDS(cellchat, file = paste0(Save.Path,"/",Version,".rds"))
+#   save.image(paste0(Save.Path,"/",Version,"_Multi.RData"))
 
