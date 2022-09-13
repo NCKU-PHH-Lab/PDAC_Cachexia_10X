@@ -24,7 +24,7 @@ if (!dir.exists(Subfolder.Path)){
   library(tidyverse)
   library(fgsea)
   library(aplot)
-  source("FUN_GSEA_LargeGeneSet.R")
+  source("FUN_GSEA_Run_LargeGeneSet.R")
   source("FUN_HSsymbol2MMsymbol.R")
   source("FUN_GSEA_ggplot.R")
 
@@ -66,7 +66,7 @@ for(i in 1:length(CellType.list)){
   # head(ranks)
   # barplot(sort(ranks, decreasing = T))
 
-  GSEA_Large.Output <- FUN_GSEA_LargeGeneSet(ranks,Pathway.all.MM,10)
+  GSEA_Large.Output <- GSEA_Run_LargeGeneSet(ranks,Pathway.all.MM,10)
 
   fgseaRes <- GSEA_Large.Output[["fgseaRes"]]
   # head(fgseaRes[order(padj, -abs(NES)), ], n=10)
@@ -187,8 +187,8 @@ for(i in 1:length(CellType.list)){
   # barplot(sort(ranks, decreasing = T))
 
 
-  #GSEA_Large_Male.Output <- FUN_GSEA_Large_MaleGeneSet(ranks,Pathway.all,10)
-  GSEA_Large_Male.Output <- FUN_GSEA_LargeGeneSet(ranks,Pathway.all.MM,10)
+  #GSEA_Large_Male.Output <- GSEA_Run_LargeGeneSet(ranks,Pathway.all,10)
+  GSEA_Large_Male.Output <- GSEA_Run_LargeGeneSet(ranks,Pathway.all.MM,10)
 
   fgseaRes <- GSEA_Large_Male.Output[["fgseaRes"]]
   # head(fgseaRes[order(padj, -abs(NES)), ], n=10)
@@ -302,8 +302,8 @@ for(i in 1:length(CellType.list)){
   # barplot(sort(ranks, decreasing = T))
 
 
-  #GSEA_Large_Female.Output <- FUN_GSEA_Large_FemaleGeneSet(ranks,Pathway.all,10)
-  GSEA_Large_Female.Output <- FUN_GSEA_LargeGeneSet(ranks,Pathway.all.MM,10)
+  #GSEA_Large_Female.Output <- GSEA_Run_LargeGeneSet(ranks,Pathway.all,10)
+  GSEA_Large_Female.Output <- GSEA_Run_LargeGeneSet(ranks,Pathway.all.MM,10)
 
   fgseaRes <- GSEA_Large_Female.Output[["fgseaRes"]]
   # head(fgseaRes[order(padj, -abs(NES)), ], n=10)
