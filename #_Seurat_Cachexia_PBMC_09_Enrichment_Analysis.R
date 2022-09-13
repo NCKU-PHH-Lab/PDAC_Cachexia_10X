@@ -268,7 +268,6 @@ GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
                                  Save.Path = paste0(Subfolder.Path),
                                  FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_T.pdf")
 
-
 ## Mac
 GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.Sum.TOP.S,
                                    KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
@@ -514,24 +513,37 @@ GSEA_Mast_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
 BBPlot_Mast_B <- GSEA_Mast_Sum.lt[["BBPlot_SubB"]]
 BBPlot_Mast_B1  <- GSEA_Mast_Sum.lt[["BBPlot_SubB_Sort"]]
 
+## Neu
+GSEA_Neu_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
+                                        KeyWordSet.lt = list(Mode = "Grep", KW = c("Neu")),
+                                        OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
+                                        GSEA_Color = GSEA_Color.lt,
+                                        Save.Path = paste0(Subfolder.Path),
+                                        FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Neu.pdf")
+
+BBPlot_Neu_B <- GSEA_Neu_Sum.lt[["BBPlot_SubB"]]
+BBPlot_Neu_B1  <- GSEA_Neu_Sum.lt[["BBPlot_SubB_Sort"]]
+
 
 ##### Export Bubble plot #####
 
 pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_Sum.pdf"),width = 35, height = 17 )
 GSEA_ggplot_SSA.lt[["BBPlotB1"]]
-BBPlotB1
-BBPlot_SPAB
-BBPlot_SPAB1
-BBPlot_F_B
-BBPlot_F_B1
-BBPlot_M_B
-BBPlot_M_B1
-BBPlot_T_B
-BBPlot_T_B1
-BBPlot_Mac_B
-BBPlot_Mac_B1
-BBPlot_Mast_B
-BBPlot_Mast_B1
+  BBPlotB1
+  BBPlot_SPAB
+  BBPlot_SPAB1
+  BBPlot_F_B
+  BBPlot_F_B1
+  BBPlot_M_B
+  BBPlot_M_B1
+  BBPlot_T_B
+  BBPlot_T_B1
+  BBPlot_Mac_B
+  BBPlot_Mac_B1
+  BBPlot_Mast_B
+  BBPlot_Mast_B1
+  BBPlot_Neu_B
+  BBPlot_Neu_B1
 dev.off()
 
 
