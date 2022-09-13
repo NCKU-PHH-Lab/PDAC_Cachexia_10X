@@ -44,7 +44,7 @@
   source("FUN_HSsymbol2MMsymbol.R")
   source("FUN_Beautify_ggplot.R")
   source("FUN_Beautify_UMAP.R")
-  source("FUN_GSEA_LargeGeneSet.R")
+  source("FUN_GSEA_Run_LargeGeneSet.R")
   source("FUN_GSEA_ggplot.R")
 
 ##### Current path and new folder setting  #####
