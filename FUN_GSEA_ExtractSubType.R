@@ -1,6 +1,7 @@
 GSEA_ExtractSubType = function(GSEA_Large.Sum.TOP.S,
                                KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")), ## Mode =c("KWSet","Grep")
-                               GSEA_Color = list(high = "#ef476f",mid = "white",low = "#0077b6")
+                               GSEA_Color = list(high = "#ef476f",mid = "white",low = "#0077b6",
+                               Save.Path = "")
 ){
 
   ## Extract Cell Type
@@ -33,7 +34,7 @@ GSEA_ExtractSubType = function(GSEA_Large.Sum.TOP.S,
   BBPlot_SubB_Sort
 
 
-  pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA/PBMC_GSEA_Bubble_SPA_SubType_T.pdf"),width = 17, height = 7 )
+  pdf(file = paste0(Save.Path,"/PBMC_GSEA_Bubble_SPA_SubType_T.pdf"),width = 17, height = 7 )
     BBPlot_SubB
     BBPlot_SubB_Sort
   dev.off()
