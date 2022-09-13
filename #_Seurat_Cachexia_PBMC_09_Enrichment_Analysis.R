@@ -483,7 +483,9 @@ source("FUN_GSEA_ExtractSubType.R")
 
 ## T Cell
 GSEA_T_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
-                                     KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
+                                     KeyWordSet.lt = list(Mode = "KWSet", KW = c("F_CD4+T","F_CD8+T","F_T",
+                                                                                 "M_CD4+T","M_CD8+T","M_T",
+                                                                                 "SPA_CD4+T","SPA_CD8+T","SPA_T")),
                                      OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                      GSEA_Color = GSEA_Color.lt,
                                      Save.Path = paste0(Subfolder.Path),
@@ -579,6 +581,7 @@ dev.off()
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
    df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
+
 ##### save.image #####
 save.image(paste0(Subfolder.Path,"/09_4_GSEA_Analysis_(SSA).RData"))
 
