@@ -23,6 +23,7 @@ if (!dir.exists(Subfolder.Path)){
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
   # https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
   # install # https://bioconductor.org/packages/release/bioc/html/GSEABase.html
+  library(tidyverse)
   library(fgsea)
   source("FUN_GSEA_LargeGeneSet.R")
   source("FUN_HSsymbol2MMsymbol.R")
@@ -35,14 +36,13 @@ if (!dir.exists(Subfolder.Path)){
                                 col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"))),
                                 header = F,sep = "\t")
 
-
-
-
   #### Genename convert ####
 
 
   #### Update gene name ####
 
+# ##### save.image #####
+# save.image(paste0(Save.Path,"/09_0_GSEA_Analysis_(Geneset Prepare).RData"))
 
 ##### 09_1 GSEA Analysis (SPA) #####
 ## Create folder
