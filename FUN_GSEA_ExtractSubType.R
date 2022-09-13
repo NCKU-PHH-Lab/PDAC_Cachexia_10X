@@ -21,7 +21,7 @@ GSEA_ExtractSubType = function(GSEA_Large.Sum.TOP.S,
               theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
 
   BBPlot_SubB <- BBPlot_Sub %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,OL_Thick = 1.5,
-                                           XtextSize=15 ,  YtextSize=10,AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
+                                               XtextSize=15 ,  YtextSize=10,AxisTitleSize=1, AspRat=4, XaThick=0.8, YaThick=0.8)
   # BBPlot_SubB <- BBPlot_SubB +theme(axis.title.y=element_blank(),
   #                  axis.text.y=element_blank(),
   #                  axis.ticks.y=element_blank())
@@ -33,11 +33,16 @@ GSEA_ExtractSubType = function(GSEA_Large.Sum.TOP.S,
                 insert_left(GSEA_ggplot_SPA.lt[["Y_Order"]],width = 0.2)
   BBPlot_SubB_Sort
 
-
+  ## Export pdf
   pdf(file = paste0(Save.Path,"/PBMC_GSEA_Bubble_SPA_SubType_T.pdf"),width = 17, height = 7 )
     BBPlot_SubB
     BBPlot_SubB_Sort
   dev.off()
 
-  return(GSEA_BBPlot.lt)
+  ## Output
+  OUTPUT <- list(GSEA_Sub.df, BBPlot_SubB, BBPlot_SubB_Sort)
+  names(OUTPUT) <- c("GSEA_Sub.df", "BBPlot_SubB", "BBPlot_SubB_Sort")
+
+  return(OUTPUT)
+
 }
