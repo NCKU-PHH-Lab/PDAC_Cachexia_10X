@@ -6,7 +6,7 @@
   memory.limit(150000)
 
 ##### Current path and new folder setting*  #####
-  ProjectName = "PBMC_Main_CellChat" # Secret, ECM, CC
+  ProjectName = "PBMC_CellChat_Multi" # Secret, ECM, CC
   Version = paste0(Sys.Date(),"_",ProjectName)
   Save.Path = paste0(getwd(),"/",Version)
   ## Create new folder
@@ -58,26 +58,26 @@
   ## ECM-Receptor
   CellChatOne(PBMC_EO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM_EO",
-              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_EO.lt
 
   CellChatOne(PBMC_LO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM_LO",
-              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_LO.lt
 
   ## Cell-Cell Contact
   CellChatOne(PBMC_EO.combined,
               signalingtype = "Cell-Cell Contact", projectName = "CC_EO",
-              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
   ) -> CellChat_CC_EO.lt
 
   CellChatOne(PBMC_LO.combined,
               signalingtype = "Cell-Cell Contact", projectName = "CC_LO",
-              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
   ) -> CellChat_CC_LO.lt
 
@@ -85,13 +85,13 @@
   ## Secreted Signaling
   CellChatOne(PBMC_EO.combined,
               signalingtype = "Secreted Signaling", projectName = "Secret_EO",
-              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) -> CellChat_Secret_EO.lt
 
   CellChatOne(PBMC_LO.combined,
               signalingtype = "Secreted Signaling", projectName = "Secret_LO",
-              save.path = paste0(Save.Path,"/B04_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) -> CellChat_Secret_LO.lt
 
@@ -109,8 +109,8 @@
   cellchat
 
 #### Part I: Predict general principles of cell-cell communication #####
-  CellType.set <- cellchat@meta[["Cell_type"]] %>% unique()
-  Pathway.set <- c(cellchat@netP[["CTRL"]][["pathways"]],cellchat@netP[["STIM"]][["pathways"]]) %>% unique()
+  CellType.set <- cellchat@meta[["celltype"]] %>% unique()
+  Pathway.set <- c(cellchat@netP[["EO"]][["pathways"]],cellchat@netP[["LO"]][["pathways"]]) %>% unique()
 
   pdf(file = paste0(Save.Path,"/",ProjectName,"_01_Predict_general_principles.pdf"),
       width = 12,  height = 7
@@ -411,64 +411,71 @@
   pdf(file = paste0(Save.Path,"/",ProjectName,"_04_Visually_compare_cell-cell_communication.pdf"),
       width = 12,  height = 7
   )
-    pathways.show <- c("CXCL")
-    weight.max <- getMaxWeight(object.list, slot.name = c("netP"), attribute = pathways.show) # control the edge weights across different datasets
-    par(mfrow = c(1,2), xpd=TRUE)
-    for (i in 1:length(object.list)) {
-      netVisual_aggregate(object.list[[i]], signaling = pathways.show, layout = "circle", edge.weight.max = weight.max[1], edge.width.max = 10, signaling.name = paste(pathways.show, names(object.list)[i]))
-    }
+    # pathways.show <- c("CXCL")
+    pathways.show.lt <- object.list[["EO"]]@netP[["pathways"]]
 
-    #
-    pathways.show <- c("CXCL")
-    par(mfrow = c(1,2), xpd=TRUE)
-    ht <- list()
-    for (i in 1:length(object.list)) {
-      ht[[i]] <- netVisual_heatmap(object.list[[i]], signaling = pathways.show, color.heatmap = "Reds",title.name = paste(pathways.show, "signaling ",names(object.list)[i]))
-    }
-    #> Do heatmap based on a single object
-    #>
-    #> Do heatmap based on a single object
-    ComplexHeatmap::draw(ht[[1]] + ht[[2]], ht_gap = unit(0.5, "cm"))
+    for (j in 1:length(pathways.show.lt)) {
+      pathways.show <- object.list[["EO"]]@netP[["pathways"]][j]
 
 
-    # Chord diagram
-    pathways.show <- c("CXCL")
-    par(mfrow = c(1,2), xpd=TRUE)
-    for (i in 1:length(object.list)) {
-      netVisual_aggregate(object.list[[i]], signaling = pathways.show, layout = "chord", signaling.name = paste(pathways.show, names(object.list)[i]))
-    }
+
+      weight.max <- getMaxWeight(object.list, slot.name = c("netP"), attribute = pathways.show) # control the edge weights across different datasets
+      par(mfrow = c(1,2), xpd=TRUE)
+      for (i in 1:length(object.list)) {
+        netVisual_aggregate(object.list[[i]], signaling = pathways.show, layout = "circle", edge.weight.max = weight.max[1], edge.width.max = 10, signaling.name = paste(pathways.show, names(object.list)[i]))
+      }
+
+      #
+      par(mfrow = c(1,2), xpd=TRUE)
+      ht <- list()
+      for (i in 1:length(object.list)) {
+        ht[[i]] <- netVisual_heatmap(object.list[[i]], signaling = pathways.show, color.heatmap = "Reds",title.name = paste(pathways.show, "signaling ",names(object.list)[i]))
+      }
+      #> Do heatmap based on a single object
+      #>
+      #> Do heatmap based on a single object
+      ComplexHeatmap::draw(ht[[1]] + ht[[2]], ht_gap = unit(0.5, "cm"))
 
 
-    # Chord diagram
-    group.cellType <- c(rep("FIB", 4), rep("DC", 4), rep("TC", 4)) # grouping cell clusters into fibroblast, DC and TC cells
-    names(group.cellType) <- levels(object.list[[1]]@idents)
-    pathways.show <- c("CXCL")
-    par(mfrow = c(1,2), xpd=TRUE)
-    for (i in 1:length(object.list)) {
-      netVisual_chord_cell(object.list[[i]], signaling = pathways.show, group = group.cellType, title.name = paste0(pathways.show, " signaling network - ", names(object.list)[i]))
-    }
-    #> Plot the aggregated cell-cell communication network at the signaling pathway level
-    #> Plot the aggregated cell-cell communication network at the signaling pathway level
-    #>
-
-    par(mfrow = c(1, 2), xpd=TRUE)
-    # compare all the interactions sending from Inflam.FIB to DC cells
-    for (i in 1:length(object.list)) {
-      netVisual_chord_gene(object.list[[i]], sources.use = 4, targets.use = c(5:8), lab.cex = 0.5, title.name = paste0("Signaling from Inflam.FIB - ", names(object.list)[i]))
-    }
+      # Chord diagram
+      par(mfrow = c(1,2), xpd=TRUE)
+      for (i in 1:length(object.list)) {
+        netVisual_aggregate(object.list[[i]], signaling = pathways.show, layout = "chord", signaling.name = paste(pathways.show, names(object.list)[i]))
+      }
 
 
-    # compare all the interactions sending from fibroblast to inflamatory immune cells
-    par(mfrow = c(1, 2), xpd=TRUE)
-    for (i in 1:length(object.list)) {
-      netVisual_chord_gene(object.list[[i]], sources.use = c(1,2, 3, 4), targets.use = c(8,10),  title.name = paste0("Signaling received by Inflam.DC and .TC - ", names(object.list)[i]), legend.pos.x = 10)
-    }
+      # # Chord diagram
+      # group.cellType <- c(rep("FIB", 4), rep("DC", 4), rep("TC", 4)) # grouping cell clusters into fibroblast, DC and TC cells
+      # names(group.cellType) <- levels(object.list[[1]]@idents)
+      # par(mfrow = c(1,2), xpd=TRUE)
+      # for (i in 1:length(object.list)) {
+      #   netVisual_chord_cell(object.list[[i]], signaling = pathways.show, group = group.cellType, title.name = paste0(pathways.show, " signaling network - ", names(object.list)[i]))
+      # }
+      # #> Plot the aggregated cell-cell communication network at the signaling pathway level
+      # #> Plot the aggregated cell-cell communication network at the signaling pathway level
+      # #>
+      #
+      # par(mfrow = c(1, 2), xpd=TRUE)
+      # # compare all the interactions sending from Inflam.FIB to DC cells
+      # for (i in 1:length(object.list)) {
+      #   netVisual_chord_gene(object.list[[i]], sources.use = 4, targets.use = c(5:8), lab.cex = 0.5, title.name = paste0("Signaling from Inflam.FIB - ", names(object.list)[i]))
+      # }
+      #
+      #
+      # # compare all the interactions sending from fibroblast to inflamatory immune cells
+      # par(mfrow = c(1, 2), xpd=TRUE)
+      # for (i in 1:length(object.list)) {
+      #   netVisual_chord_gene(object.list[[i]], sources.use = c(1,2, 3, 4), targets.use = c(8,10),  title.name = paste0("Signaling received by Inflam.DC and .TC - ", names(object.list)[i]), legend.pos.x = 10)
+      # }
+      #
+      #
+      # # show all the significant signaling pathways from fibroblast to immune cells
+      # par(mfrow = c(1, 2), xpd=TRUE)
+      # for (i in 1:length(object.list)) {
+      #   netVisual_chord_gene(object.list[[i]], sources.use = c(1,2,3,4), targets.use = c(5:11),slot.name = "netP", title.name = paste0("Signaling pathways sending from fibroblast - ", names(object.list)[i]), legend.pos.x = 10)
+      # }
 
 
-    # show all the significant signaling pathways from fibroblast to immune cells
-    par(mfrow = c(1, 2), xpd=TRUE)
-    for (i in 1:length(object.list)) {
-      netVisual_chord_gene(object.list[[i]], sources.use = c(1,2,3,4), targets.use = c(5:11),slot.name = "netP", title.name = paste0("Signaling pathways sending from fibroblast - ", names(object.list)[i]), legend.pos.x = 10)
     }
 
   dev.off()
@@ -478,8 +485,17 @@
   pdf(file = paste0(Save.Path,"/",ProjectName,"_05_Compare_the_signaling_gene_expression_distribution.pdf"),
       width = 10,  height = 7
   )
-    cellchat@meta$datasets = factor(cellchat@meta$datasets, levels = c("NL", "LS")) # set factor level
-    plotGeneExpression(cellchat, signaling = "CXCL", split.by = "datasets", colors.ggplot = T)
+    # pathways.show <- c("CXCL")
+    pathways.show.lt <- object.list[["EO"]]@netP[["pathways"]]
+
+    for (j in 1:length(pathways.show.lt)) {
+      pathways.show <- object.list[["EO"]]@netP[["pathways"]][j]
+
+      cellchat@meta$datasets = factor(cellchat@meta$datasets, levels = c("EO", "LO")) # set factor level
+      plotGeneExpression(cellchat, signaling = pathways.show, split.by = "datasets",
+                         colors.ggplot = T) + ggtitle(pathways.show) -> P
+      P %>% print()
+    }
 
   dev.off()
   #> The default behaviour of split.by has changed.
