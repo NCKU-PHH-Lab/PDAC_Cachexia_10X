@@ -136,7 +136,6 @@ pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SPA.pdf"),width = 17, height
   GSEA_ggplot_SPA.lt[["BBPlot"]]
   GSEA_ggplot_SPA.lt[["BBPlot2"]]
   GSEA_ggplot_SPA.lt[["BBPlotB1"]]
-  GSEA_ggplot_SPA.lt[["BBPlotB1"]]
 dev.off()
 
 
@@ -254,7 +253,6 @@ pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SSA_Male.pdf"),width = 17, h
   GSEA_ggplot_SSA_Male.lt[["BBPlot"]]
   GSEA_ggplot_SSA_Male.lt[["BBPlot2"]]
   GSEA_ggplot_SSA_Male.lt[["BBPlotB1"]]
-  GSEA_ggplot_SSA_Male.lt[["BBPlotB1"]]
 dev.off()
 
 ##### Extract SubType #####
@@ -364,11 +362,10 @@ GSEA_ggplot_SSA_Female.lt <- GSEA_ggplot(GSEA_Large_Female.Sum.TOP,NES_Th = 1.5,
 GSEA_Large_Female.Sum.TOP.S <- GSEA_ggplot_SSA_Female.lt[["GSEA_TOP.df"]]
 
 pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SSA_Female.pdf"),width = 17, height = 12 )
-GSEA_ggplot_SSA_Female.lt[["BBPlot_Ori"]]
-GSEA_ggplot_SSA_Female.lt[["BBPlot"]]
-GSEA_ggplot_SSA_Female.lt[["BBPlot2"]]
-GSEA_ggplot_SSA_Female.lt[["BBPlotB1"]]
-GSEA_ggplot_SSA_Female.lt[["BBPlotB1"]]
+  GSEA_ggplot_SSA_Female.lt[["BBPlot_Ori"]]
+  GSEA_ggplot_SSA_Female.lt[["BBPlot"]]
+  GSEA_ggplot_SSA_Female.lt[["BBPlot2"]]
+  GSEA_ggplot_SSA_Female.lt[["BBPlotB1"]]
 dev.off()
 
 
@@ -557,7 +554,6 @@ BBPlot %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horiz
                           XtextSize=10,  YtextSize=5,AxisTitleSize=1, AspRat=1, XaThick=0.8, YaThick=0.8 ,OL_Thick = 1.5)
 
 dev.off()
-
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
    df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
