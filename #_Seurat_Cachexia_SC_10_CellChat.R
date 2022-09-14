@@ -5,16 +5,6 @@
   rm(list = ls()) # Clean variable
   memory.limit(150000)
 
-##### Current path and new folder setting*  #####
-  ProjectName = "SC_CellChat_Multi" # Secret, ECM, CC
-  Version = paste0(Sys.Date(),"_",ProjectName)
-  Save.Path = paste0(getwd(),"/",Version)
-  ## Create new folder
-  if (!dir.exists(Save.Path)){
-    dir.create(Save.Path)
-  }
-
-
 #### Installation and load the required libraries ####
   #### Basic installation ####
   ## Package.set
@@ -46,9 +36,6 @@
   rm(Package.set,i)
 
 ##### Load CellChat object of each dataset and then merge together #####
-  # cellchat.CTRL <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/CellChat_Demo/2022-06-17_All_SeuratObj_Demo_CTRL/2022-06-17_All_SeuratObj_Demo_CTRL.rds")
-  # cellchat.STIM <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/CellChat_Demo/2022-06-17_All_SeuratObj_Demo_STIM/2022-06-17_All_SeuratObj_Demo_STIM.rds")
-
   source("FUN_CellChatOne.R")
 
   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_SC_Main/09_4_GSEA_Analysis_(SSA).RData")
