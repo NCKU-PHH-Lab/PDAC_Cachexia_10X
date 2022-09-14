@@ -17,20 +17,22 @@ if (!dir.exists(Subfolder.Path)){
   dir.create(Subfolder.Path)
 }
 
+##### Load packages ####
+# https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
+# install # https://bioconductor.org/packages/release/bioc/html/GSEABase.html
+library(tidyverse)
+library(fgsea)
+library(aplot)
+
+##### Function setting  #####
+## Call function
+source("FUN_GSEA_Run_LargeGeneSet.R")
+source("FUN_HSsymbol2MMsymbol.R")
+source("FUN_GSEA_ggplot.R")
+source("FUN_GSEA_Run_Multi.R")
+source("FUN_GSEA_ExtractSubType.R")
 
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
-  # https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
-  # install # https://bioconductor.org/packages/release/bioc/html/GSEABase.html
-  library(tidyverse)
-  library(fgsea)
-  library(aplot)
-
-  source("FUN_GSEA_Run_LargeGeneSet.R")
-  source("FUN_HSsymbol2MMsymbol.R")
-  source("FUN_GSEA_ggplot.R")
-  source("FUN_GSEA_Run_Multi.R")
-  source("FUN_GSEA_ExtractSubType.R")
-
   #### Load Geneset ####
   ## Geneset from GSEA
   # Pathway.all <- read.delim(paste0(getwd(),"/Pathway.all.v7.4.symbols.gmt"),header = F)
