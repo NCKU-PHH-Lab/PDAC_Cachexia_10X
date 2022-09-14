@@ -34,7 +34,7 @@ source("FUN_GSEA_ExtractSubType.R")
 
 ##### Parameter setting  #####
 GSEATopNum = 10
-
+NES_Th_Set = 1.5
 
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
   #### Load Geneset ####
@@ -75,7 +75,7 @@ GSEA_Color.lt = list(high = "#ef476f",mid = "white",low = "#0077b6")
 GSEA_Large.df.TOP$PhenoType <- factor(GSEA_Large.df.TOP$PhenoType,
                                        levels = Cell_Type_Order.set)
 
-GSEA_ggplot_SPA.lt <- GSEA_ggplot(GSEA_Large.df.TOP, NES_Th = 1.5, padj_Th = 0.01)
+GSEA_ggplot_SPA.lt <- GSEA_ggplot(GSEA_Large.df.TOP, NES_Th = NES_Th_Set, padj_Th = 0.01)
 GSEA_Large.df.TOP.S <- GSEA_ggplot_SPA.lt[["GSEA_TOP.df"]]
 
 # GSEA_Large.df.TOP.S <- GSEA_Large.df.TOP[abs(GSEA_Large.df.TOP$NES) > 1,]
@@ -153,7 +153,7 @@ library(scales)
 GSEA_Large_Male.df.TOP$PhenoType <- factor(GSEA_Large_Male.df.TOP$PhenoType,
                                             levels = Cell_Type_Order.set)
 
-GSEA_ggplot_SSA_Male.lt <- GSEA_ggplot(GSEA_Large_Male.df.TOP,NES_Th = 1.5, padj_Th = 0.01)
+GSEA_ggplot_SSA_Male.lt <- GSEA_ggplot(GSEA_Large_Male.df.TOP,NES_Th = NES_Th_Set, padj_Th = 0.01)
 GSEA_Large_Male.df.TOP.S <- GSEA_ggplot_SSA_Male.lt[["GSEA_TOP.df"]]
 
 pdf(file = paste0(Subfolder.Path,"/SC_GSEA_Bubble_SSA_Male.pdf"),width = 17, height = 12 )
@@ -223,7 +223,7 @@ library(scales)
 GSEA_Large_Female.df.TOP$PhenoType <- factor(GSEA_Large_Female.df.TOP$PhenoType,
                                               levels = Cell_Type_Order.set)
 
-GSEA_ggplot_SSA_Female.lt <- GSEA_ggplot(GSEA_Large_Female.df.TOP,NES_Th = 1.5, padj_Th = 0.01)
+GSEA_ggplot_SSA_Female.lt <- GSEA_ggplot(GSEA_Large_Female.df.TOP,NES_Th = NES_Th_Set, padj_Th = 0.01)
 GSEA_Large_Female.df.TOP.S <- GSEA_ggplot_SSA_Female.lt[["GSEA_TOP.df"]]
 
 pdf(file = paste0(Subfolder.Path,"/SC_GSEA_Bubble_SSA_Female.pdf"),width = 17, height = 12 )
@@ -290,7 +290,7 @@ GSEA_Large.df.TOP2$PhenoType <- paste0("SPA_", GSEA_Large.df.TOP2$PhenoType)
 GSEA_Large_SumTOP_Sex.df <- rbind(GSEA_Large.df.TOP2,GSEA_Large_Male.df.TOP2,GSEA_Large_Female.df.TOP2)
 GSEA_Large_SumTOP_Sex.df <- GSEA_Large_SumTOP_Sex.df[,!colnames(GSEA_Large_SumTOP_Sex.df) %in% c("leadingEdge")]
 
-GSEA_ggplot_SSA.lt <- GSEA_ggplot(GSEA_Large_SumTOP_Sex.df,NES_Th = 1.5, padj_Th = 0.01)
+GSEA_ggplot_SSA.lt <- GSEA_ggplot(GSEA_Large_SumTOP_Sex.df,NES_Th = NES_Th_Set, padj_Th = 0.01)
 GSEA_Large_SumTOP_Sex.df.S <- GSEA_ggplot_SSA.lt[["GSEA_TOP.df"]]
 
 write.table(GSEA_Large_SumTOP_Sex.df, file=paste0(Subfolder.Path,"/SC_GSEA_Pathway_3Dataset_All.txt"),sep="\t",
