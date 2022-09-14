@@ -5,16 +5,23 @@ raw.df <- read.csv(
   sep = "\t"
 )
 
+# arrange_celltype <- c("MacM0_F","MacM0_M","MacM1_F","MacM1_M","MacM2_F","MacM2_M","Mon_F","Mon_M",
+#                       "Neu_F","Neu_M","B_F","B_M","NK_F","NK_M","B_F","B_M",
+#                       "CD4T_F","CD4T_M","CD8T_F","CD8T_M","NK_F","NK_M","Ery_F","Ery_M","Thr_F","Thr_M")
+
+arrange_celltype <- c("MacM0_F","MacM0_M","MacM2_F","MacM2_M","Mon_F","Mon_M",
+                      "Neu_F","Neu_M","B_F","B_M", "CD4T_F","CD4T_M","CD8T_F",
+                      "CD8T_M", "NK_F","NK_M","Ery_F","Ery_M","Thr_F","Thr_M")
 
 
-Heatmap_Sort <- function(raw.df ,Mode = "Keyword",  # Mode = ("KeyWordFilter", "LogicalJudgment")
-                      Condition = list(ColNa = "Colname", Value = 1, LogicalSet = ">"))
-  #(for Keyword) Condition  = list(ColNa = "Colname", Exact_Match = "No", KeyWord = "Mac")
+
+Heatmap_Sort <- function(raw.df , arrange_celltype)
+
 {
 
 
   ##### data loading #####
-   raw.df[2,3] <- "CD4T"
+  raw.df[2,3] <- "CD4T"
   raw.df[2,1] <- "M.CD4T"
   raw.df[3,3] <- "CD8T"
   raw.df[3,1] <- "M.CD8T"
@@ -42,13 +49,6 @@ Heatmap_Sort <- function(raw.df ,Mode = "Keyword",  # Mode = ("KeyWordFilter", "
   Sig.df[39,2] <- "F.CD8T"
 
 
-  # arrange_celltype <- c("MacM0_F","MacM0_M","MacM1_F","MacM1_M","MacM2_F","MacM2_M","Mon_F","Mon_M",
-  #                       "Neu_F","Neu_M","B_F","B_M","NK_F","NK_M","B_F","B_M",
-  #                       "CD4T_F","CD4T_M","CD8T_F","CD8T_M","NK_F","NK_M","Ery_F","Ery_M","Thr_F","Thr_M")
-
-  arrange_celltype <- c("MacM0_F","MacM0_M","MacM2_F","MacM2_M","Mon_F","Mon_M",
-                        "Neu_F","Neu_M","B_F","B_M", "CD4T_F","CD4T_M","CD8T_F",
-                        "CD8T_M", "NK_F","NK_M","Ery_F","Ery_M","Thr_F","Thr_M")
 
 
   ##### data arrangement #####
