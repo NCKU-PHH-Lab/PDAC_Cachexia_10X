@@ -287,7 +287,7 @@ GSEA_Large_SumTOP_Sex.df <- GSEA_Large_SumTOP_Sex.df[,!colnames(GSEA_Large_SumTO
 GSEA_ggplot_SSA.lt <- GSEA_ggplot(GSEA_Large_SumTOP_Sex.df,NES_Th = 1.5, padj_Th = 0.01)
 GSEA_Large_SumTOP_Sex.df.S <- GSEA_ggplot_SSA.lt[["GSEA_TOP.df"]]
 
-write.table(GSEA_Large_SumTOP_Sex.df, file=paste0(Subfolder.Path,"/SC_GSEA_Pathway_3Dataset_SSA.txt"),sep="\t",
+write.table(GSEA_Large_SumTOP_Sex.df, file=paste0(Subfolder.Path,"/SC_GSEA_Pathway_3Dataset_All.txt"),sep="\t",
             row.names=F, quote = FALSE)
 
 
