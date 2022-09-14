@@ -51,9 +51,17 @@
 
   source("FUN_CellChatOne.R")
 
-  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_SC_Main/09_4_GSEA_Analysis_(SSA).RData")
+  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_SC_Main/09_4_GSEA_Analysis_(SSA).RData")
   SC_EO.combined <- SC.combined[,SC.combined@meta.data[["Cachexia"]] %in% "EO"]
   SC_LO.combined <- SC.combined[,SC.combined@meta.data[["Cachexia"]] %in% "LO"]
+
+  Cell_Type_Order.set <- c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
+                           "Fib1", "Fib2", "Fib3")
+  SC_EO.combined$celltype <- factor(SC_EO.combined$celltype,
+                                      levels = Cell_Type_Order.set)
+  SC_LO.combined$celltype <- factor(SC_LO.combined$celltype,
+                                      levels = Cell_Type_Order.set)
+
 
   ## ECM-Receptor
   CellChatOne(SC_EO.combined,
