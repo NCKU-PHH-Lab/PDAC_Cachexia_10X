@@ -1,17 +1,20 @@
-Heatmap_Sort <- function(df,Mode = "Keyword",  # Mode = ("KeyWordFilter", "LogicalJudgment")
+raw.df <- read.csv(
+  #  "D:/KLC/### Datasets/Cachexia_differential-gene-heatmap/20210923/202109018_PBMC/PBMC_Cachexia.Marker_Sum_LogFC_M.txt",
+  "D:/Dropbox/Chang Charlene/##_GitHub/0-R/##_PHH_Lab/2021_Cachexia/20211121_PBMC/PBMC_Cachexia.Marker_Sum_LogFC_M.txt",
+
+  sep = "\t"
+)
+
+
+
+Heatmap_Sort <- function(raw.df ,Mode = "Keyword",  # Mode = ("KeyWordFilter", "LogicalJudgment")
                       Condition = list(ColNa = "Colname", Value = 1, LogicalSet = ">"))
   #(for Keyword) Condition  = list(ColNa = "Colname", Exact_Match = "No", KeyWord = "Mac")
 {
 
 
   ##### data loading #####
-  raw.df <- read.csv(
-    #  "D:/KLC/### Datasets/Cachexia_differential-gene-heatmap/20210923/202109018_PBMC/PBMC_Cachexia.Marker_Sum_LogFC_M.txt",
-    "D:/Dropbox/Chang Charlene/##_GitHub/0-R/##_PHH_Lab/2021_Cachexia/20211121_PBMC/PBMC_Cachexia.Marker_Sum_LogFC_M.txt",
-
-    sep = "\t"
-  )
-  raw.df[2,3] <- "CD4T"
+   raw.df[2,3] <- "CD4T"
   raw.df[2,1] <- "M.CD4T"
   raw.df[3,3] <- "CD8T"
   raw.df[3,1] <- "M.CD8T"
