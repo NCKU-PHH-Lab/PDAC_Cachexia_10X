@@ -51,7 +51,7 @@
 
   source("FUN_CellChatOne.R")
 
-  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/09_4_GSEA_Analysis_(SSA).RData")
+  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/09_4_GSEA_Analysis_(SSA).RData")
   PBMC_EO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "EO"]
   PBMC_LO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "LO"]
 
