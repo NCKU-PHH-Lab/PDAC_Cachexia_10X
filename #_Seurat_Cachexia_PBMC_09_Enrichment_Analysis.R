@@ -32,6 +32,10 @@ source("FUN_GSEA_ggplot.R")
 source("FUN_GSEA_Run_Multi.R")
 source("FUN_GSEA_ExtractSubType.R")
 
+##### Parameter setting  #####
+GSEATopNum = 10
+
+
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
   #### Load Geneset ####
   ## Geneset from GSEA
@@ -55,7 +59,7 @@ dir.create(paste0(Subfolder.Path))
 
 ## GSEA analysis
 GSEA_SPA.lt <- GSEA_Run_Multi(CCMarker_SPA.lt,
-                              GeneSets = Pathway.all.MM, TopNum = 10,
+                              GeneSets = Pathway.all.MM, TopNum = GSEATopNum,
                               Save.Path = Subfolder.Path, FileName = "/PBMC_GSEA_SPA_EnrichPlot.pdf")
 
 GSEA_Large.df.TOP <- GSEA_SPA.lt[["GSEA_Large.df.TOP"]]
@@ -118,7 +122,7 @@ save.image(paste0(Subfolder.Path,"/09_1_GSEA_Analysis_(SPA).RData"))
 ##### 09_2 GSEA Analysis (SSA_Male) #####
 ## GSEA analysis
 GSEA_SSA_Male.lt <- GSEA_Run_Multi(CCMarker_Male.lt,
-                              GeneSets = Pathway.all.MM, TopNum = 10,
+                              GeneSets = Pathway.all.MM, TopNum = GSEATopNum,
                               Save.Path = Subfolder.Path, FileName = "/PBMC_GSEA_SSA_Male_EnrichPlot.pdf")
 
 GSEA_Large_Male.df.TOP <- GSEA_SSA_Male.lt[["GSEA_Large.df.TOP"]]
@@ -172,7 +176,7 @@ save.image(paste0(Subfolder.Path,"/09_2_GSEA_Analysis_(SSA_Male).RData"))
 ##### 09_3 GSEA Analysis (SSA_Female) #####
 ## GSEA analysis
 GSEA_SSA_Female.lt <- GSEA_Run_Multi(CCMarker_Female.lt,
-                                   GeneSets = Pathway.all.MM, TopNum = 10,
+                                   GeneSets = Pathway.all.MM, TopNum = GSEATopNum,
                                    Save.Path = Subfolder.Path, FileName = "/PBMC_GSEA_SSA_Female_EnrichPlot.pdf")
 
 GSEA_Large_Female.df.TOP <- GSEA_SSA_Female.lt[["GSEA_Large.df.TOP"]]
