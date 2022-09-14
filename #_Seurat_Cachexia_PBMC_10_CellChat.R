@@ -55,6 +55,13 @@
   PBMC_EO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "EO"]
   PBMC_LO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "LO"]
 
+  Cell_Type_Order.set <- c("Mac1", "Mac2", "Mac3","Neu", "T", "CD4+T", "CD8+T", "NK", "B" , "Mast",  "Ery")
+  PBMC_EO.combined$celltype <- factor(PBMC_EO.combined$celltype,
+                                  levels = Cell_Type_Order.set)
+  PBMC_LO.combined$celltype <- factor(PBMC_LO.combined$celltype,
+                                      levels = Cell_Type_Order.set)
+
+
   ## ECM-Receptor
   CellChatOne(PBMC_EO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM_EO",
@@ -111,6 +118,9 @@
   cellchat <- mergeCellChat(object.list, add.names = names(object.list))
 
   cellchat
+  # Cell_Type_Order.set <- c("Mac1", "Mac2", "Mac3","Neu", "T", "CD4+T", "CD8+T", "NK", "B" , "Mast",  "Ery")
+  # cellchat@meta[["celltype"]] <- factor(cellchat@meta[["celltype"]],
+  #                                     levels = Cell_Type_Order.set)
 
   ##### Current path and new folder setting*  #####
   ProjectName = "PBMC_CellChat_Multi_ECM" # Secret, ECM, CC
