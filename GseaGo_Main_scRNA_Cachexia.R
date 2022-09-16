@@ -213,7 +213,7 @@
                               GroupType = AnnoSet.lt[["GroupType"]], GroupCompare = AnnoSet.lt[["GroupCompare"]],
                               ThrSet = Thr.lt,
                               TarGeneName = TarGene_name, GroupMode = GeneExpSet.lt, SampleID = "ID",
-                              Save.Path = Save.Path, SampleName = ExportName, AnnoName = "AvB")
+                              Save.Path = Save.Path, ExportName = ExportName, AnnoName = "AvB")
   DE_Extract.df <- DEG_ANAL.lt[["DE_Extract.df"]]
 
 
