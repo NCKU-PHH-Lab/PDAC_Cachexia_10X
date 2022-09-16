@@ -42,7 +42,12 @@
   # Sys.setlocale(category = "LC_ALL", locale = "UTF-8")
 
 
-
+##### Function setting #####
+  ## Call function
+  source("FUN_Beautify_ggplot.R")
+  source("FUN_Find_Markers.R")
+  source("FUN_VolcanoPlot.R")
+  source("FUN_ggPlot_vline.R")
 
 ##### Load RData* #####
   # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-08-13_PBMC_Main/06_Cell_type_annotation.RData")
@@ -61,12 +66,7 @@
   ## Clean up data (Delete other type)
 
 
-##### Function setting #####
-  ## Call function
-  source("FUN_Beautify_ggplot.R")
-  source("FUN_Find_Markers.R")
-  source("FUN_VolcanoPlot.R")
-  source("FUN_ggPlot_vline.R")
+
 
 ##### Import setting and Import #####
   GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
@@ -213,10 +213,10 @@
   #### Run DEG ####
   source("FUN_DEG_Analysis.R")
   DEG_ANAL.lt <- DEG_Analysis(GeneExp.df, Anno.df,
-                                  GroupType = AnnoSet.lt[["GroupType"]], GroupCompare = AnnoSet.lt[["GroupCompare"]],
-                                  ThrSet = Thr.lt,
-                                  TarGeneName = TarGene_name, GroupMode = GeneExpSet.lt, SampleID = "ID",
-                                  Save.Path = Save.Path, SampleName = ExportName, AnnoName = "AvB")
+                              GroupType = AnnoSet.lt[["GroupType"]], GroupCompare = AnnoSet.lt[["GroupCompare"]],
+                              ThrSet = Thr.lt,
+                              TarGeneName = TarGene_name, GroupMode = GeneExpSet.lt, SampleID = "ID",
+                              Save.Path = Save.Path, SampleName = ExportName, AnnoName = "AvB")
   DE_Extract.df <- DEG_ANAL.lt[["DE_Extract.df"]]
 
 
