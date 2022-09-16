@@ -68,30 +68,17 @@
   source("FUN_VolcanoPlot.R")
   source("FUN_ggPlot_vline.R")
 
-##### Import setting and Import* #####
-  ## File setting*
-  # InFOLName_GE <- "Input_TCGA"  # Input Folder Name
-  # SampleName <- "Xena_TCGA_LGG_GE"
-  # SamplePhenoName <- "TCGA.LGG.sampleMap_LGG_clinicalMatrix"
-  #
-  # ## Import genetic data file
-  # GeneExp.df <- read.table(paste0(InFOLName_GE,"/",SampleName), header=T, row.names = 1, sep="\t")
-  # colnames(GeneExp.df) <-  gsub("\\.", "-", colnames(GeneExp.df))
-  #
-  #
-  # Anno.df <- read.table(paste0(InFOLName_GE,"/",SamplePhenoName), header=T, row.names = 1, sep="\t")
-
+##### Import setting and Import #####
   GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
   Anno.df <- scRNA.SeuObj@meta.data
   Anno.df <- data.frame(ID=row.names(Anno.df), Anno.df)
   row.names(Anno.df) <- Anno.df[,1]
+
   ## Import GSEA gene sets
   # InputGSEA <- "GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"
-  # InputGSEA <- "m5_go_bp_v0_3_symbols.gmt"
-  # InputGSEA <- "m2.all.v0.3.symbols.gmt"
+  # InputGSEA <- "m5_go_bp_v0_3_symbols.gmt"  # InputGSEA <- "m2.all.v0.3.symbols.gmt"
 
   InputGSEA <- "m5_go_bp_v0_3_symbols.gmt"
-
   InFOLName_GSEA <- "Input_Genesets"
   Pathway.all <- read.delim2(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA),
                              col.names = 1:max(count.fields(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA))),
