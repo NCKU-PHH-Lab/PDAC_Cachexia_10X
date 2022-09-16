@@ -66,8 +66,6 @@
   source("FUN_Beautify_ggplot.R")
   source("FUN_Find_Markers.R")
   source("FUN_VolcanoPlot.R")
-  source("FUN_GSEA_LargeGeneSet.R")
-  source("FUN_GSEA_ggplot.R")
   source("FUN_ggPlot_vline.R")
 
 ##### Import setting and Import* #####
