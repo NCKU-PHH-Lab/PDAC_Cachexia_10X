@@ -53,7 +53,7 @@
   # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-08-13_PBMC_Main/06_Cell_type_annotation.RData")
   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
 
-  # Clean up
+  # Clean up Object
   scRNA.SeuObj <- PBMC.combined
   rm(list=setdiff(ls(), "scRNA.SeuObj"))
 
@@ -66,14 +66,7 @@
   ## Clean up data (Delete other type)
 
 
-
-
 ##### Import setting and Import #####
-  GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
-  Anno.df <- scRNA.SeuObj@meta.data
-  Anno.df <- data.frame(ID=row.names(Anno.df), Anno.df)
-  row.names(Anno.df) <- Anno.df[,1]
-
   ## Import GSEA gene sets
   # InputGSEA <- "GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"
   # InputGSEA <- "m5_go_bp_v0_3_symbols.gmt"  # InputGSEA <- "m2.all.v0.3.symbols.gmt"
@@ -99,10 +92,7 @@
     AnnoSet.lt <- list(GroupType = "sample_type", GroupCompare = c("Primary Tumor","Recurrent Tumor") )
   }
 
-
-
   Thr.lt <- list(LogFC = c("logFC",1), pVal = c("PValue",0.05) )
-
 
 ##### Current path and new folder setting* #####
   ProjectName = "CC10X"
@@ -150,6 +140,12 @@
 
 #************************************************************************************************************************#
 ##### Data preprocess setting #####
+  ## Extract data from scRNA.SeuObj
+  GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
+  Anno.df <- scRNA.SeuObj@meta.data
+  Anno.df <- data.frame(ID=row.names(Anno.df), Anno.df)
+  row.names(Anno.df) <- Anno.df[,1]
+
   ## Select Pheno column
   Anno_Ori.df <- Anno.df
   colnames(Anno.df)
