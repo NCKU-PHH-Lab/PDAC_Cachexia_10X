@@ -225,7 +225,7 @@
 ##### Run Enrichment analysis in R #####
   #### Run DEG ####
   source("FUN_DEG_Analysis.R")
-  DEG_ANAL.lt <- FUN_DEG_Analysis(GeneExp.df, Anno.df,
+  DEG_ANAL.lt <- DEG_Analysis(GeneExp.df, Anno.df,
                                   GroupType = AnnoSet.lt[["GroupType"]], GroupCompare = AnnoSet.lt[["GroupCompare"]],
                                   ThrSet = Thr.lt,
                                   TarGeneName = TarGene_name, GroupMode = GeneExpSet.lt, SampleID = "ID",
@@ -236,7 +236,7 @@
     # #### Test: DEG by GeneExp group ####
     # AnnoSet.lt <- list(GroupType = TarGene_name, GroupCompare = c("High","Low") )
     # source("FUN_DEG_Analysis.R")
-    # DEG_ANAL.lt <- FUN_DEG_Analysis(GeneExp.df, Anno.df,
+    # DEG_ANAL.lt <- DEG_Analysis(GeneExp.df, Anno.df,
     #                                 GroupType = AnnoSet.lt[["GroupType"]], GroupCompare = AnnoSet.lt[["GroupCompare"]],
     #                                 ThrSet = Thr.lt,
     #                                 TarGeneName = TarGene_name, GroupMode = GeneExpSet.lt, SampleID = "X_INTEGRATION",
