@@ -182,8 +182,8 @@
   source("FUN_DistrPlot.R")
   ##### Group by gene expression 1: CutOff by total  #####
   Plot.DistrPlot <- FUN_DistrPlot(GeneExp.df,
-                                  TarGeneName = TarGene_name, GroupMode = GeneExpSet.lt,
-                                  Save.Path = Save.Path, SampleName = ExportName)
+                                  TarGeneName = TarGene_name, GroupSet = GeneExpSet.lt,
+                                  Save.Path = Save.Path, ExportName = ExportName)
   Plot.DistrPlot_SD_Q <- Plot.DistrPlot[["TGeneDen_SD_Q.p"]]
   Plot.DistrPlot_SD_Q
 
