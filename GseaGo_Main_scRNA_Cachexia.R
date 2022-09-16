@@ -49,6 +49,7 @@
   source("FUN_VolcanoPlot.R")
   source("FUN_ggPlot_vline.R")
   source("FUN_GSEA_ANAL.R")
+  source("FUN_DistrPlot.R")
 
 ##### Load RData* #####
   # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-08-13_PBMC_Main/06_Cell_type_annotation.RData")
@@ -209,7 +210,7 @@
 ##### Run Enrichment analysis in R #####
   #### Run DEG ####
   source("FUN_DEG_Analysis.R")
-  DEG_ANAL.lt <- DEG_Analysis(GeneExp.df, Anno.df,
+  DEG_ANAL.lt <- FUN_DEG_Analysis(GeneExp.df, Anno.df,
                               GroupType = AnnoSet.lt[["GroupType"]], GroupCompare = AnnoSet.lt[["GroupCompare"]],
                               ThrSet = Thr.lt,
                               TarGeneName = TarGene_name, GroupMode = GeneExpSet.lt, SampleID = "ID",
