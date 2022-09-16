@@ -532,6 +532,8 @@
   #> replace the existing scale.
 
 # ##### Save the merged CellChat object #####
-#   saveRDS(cellchat, file = paste0(Save.Path,"/",Version,".rds"))
-#   save.image(paste0(Save.Path,"/",Version,"_Multi.RData"))
+  ## save rds
+  saveRDS(cellchat, file = paste0(Save.Path,"/",ProjectName,"Cell_Cell_Interaction_Multi.rds"))
 
+  ## save RData
+  save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction_Multi.RData"))
