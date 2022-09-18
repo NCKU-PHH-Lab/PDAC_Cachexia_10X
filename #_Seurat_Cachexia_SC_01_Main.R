@@ -787,7 +787,7 @@
       theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
 
 
-    CellNum_P3 %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.4, 0.8),AxisTitleSize=1.7,
+    CellNum_P3 %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.8, 0.8),AxisTitleSize=1.7,
                                   XtextSize=18,  YtextSize=18,xangle = 90,
                                   LegTextSize = 15)  +
       theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid")) -> CellNum_P3
@@ -812,7 +812,7 @@
       theme_bw()+
       theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
 
-    CellNum_P4 %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.15, 0.82),AxisTitleSize=1.7,
+    CellNum_P4 %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.85, 0.82),AxisTitleSize=1.7,
                                   XtextSize=18,  YtextSize=,18, xangle = 90,
                                   LegTextSize = 15)  +
       theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid")) -> CellNum_P4
