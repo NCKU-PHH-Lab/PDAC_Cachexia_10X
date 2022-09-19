@@ -31,7 +31,9 @@ cellchat_SC_Secret <- cellchat
 rm(cellchat)
 
 
-rm(list=setdiff(ls(), c("cellchat_PBMC_CC","cellchat_PBMC_ECM","cellchat_PBMC_Secret","netVisual_heatmap_Ch")))
+rm(list=setdiff(ls(), c("cellchat_PBMC_CC","cellchat_PBMC_ECM","cellchat_PBMC_Secret",
+                        "cellchat_SC_CC","cellchat_SC_ECM","cellchat_SC_Secret",
+                        "netVisual_heatmap_Ch")))
 
 ##### Heatmap #####
 #### Ori ####
@@ -82,6 +84,40 @@ ComHeatmap2_PBMC_Secret_Ch
 ComHeatmap2_PBMC_ECM_Ch + ComHeatmap2_PBMC_CC_Ch +  ComHeatmap2_PBMC_Secret_Ch
 
 
+## SC_ECM
+ComHeatmapTest <- netVisual_heatmap(cellchat_SC_ECM, measure = "weight")
+ComHeatmapTest # -1, 2
+
+ComHeatmap2_SC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_SC_ECM, measure = "weight",
+                                              title.name = "ECM-Receptor",
+                                              #color.heatmap = c("#2166ac", "#b2182b"),
+                                              MinSet = -1, MaxSet = 2)
+ComHeatmap2_SC_ECM_Ch
+
+## SC_CC
+ComHeatmapTest<- netVisual_heatmap(cellchat_SC_CC, measure = "weight")
+ComHeatmapTest # -0.2, 0.1
+
+ComHeatmap2_SC_CC_Ch <- netVisual_heatmap_Ch(cellchat_SC_CC, measure = "weight",
+                                             title.name = "Cell-Cell Contact",
+                                             #color.heatmap = c("#2166ac", "#b2182b"),
+                                             MinSet = -0.2, MaxSet = 0.1)
+ComHeatmap2_SC_CC_Ch
+
+
+## SC_Secret
+ComHeatmapTest <- netVisual_heatmap(cellchat_SC_Secret, measure = "weight")
+ComHeatmapTest # -0.2, 0.4
+
+ComHeatmap2_SC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_SC_Secret, measure = "weight",
+                                                 title.name = "Secreted Signaling",
+                                                 #color.heatmap = c("#2166ac", "#b2182b"),
+                                                 MinSet = -0.2, MaxSet = 0.4)
+ComHeatmap2_SC_Secret_Ch
+
+ComHeatmap2_SC_ECM_Ch + ComHeatmap2_SC_CC_Ch +  ComHeatmap2_SC_Secret_Ch
+
+
 ##### Current path and new folder setting*  #####
 ProjectName = "PBMC_CellChat_Beautify_Plot" # Secret, ECM, CC
 Version = paste0(Sys.Date(),"_",ProjectName)
@@ -95,7 +131,6 @@ if (!dir.exists(Save.Path)){
 pdf(file = paste0(Save.Path,"/",ProjectName,"_Compared_Heatmap.pdf"),
     width = 12,  height = 7
 )
-
-ComHeatmap2_PBMC_CC_Ch
-
+ComHeatmap2_PBMC_ECM_Ch + ComHeatmap2_PBMC_CC_Ch +  ComHeatmap2_PBMC_Secret_Ch
+ComHeatmap2_SC_ECM_Ch + ComHeatmap2_SC_CC_Ch +  ComHeatmap2_SC_Secret_Ch
 dev.off()
