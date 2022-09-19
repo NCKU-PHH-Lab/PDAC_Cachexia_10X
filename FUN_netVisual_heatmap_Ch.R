@@ -13,8 +13,8 @@ netVisual_heatmap_Ch <- function (object, comparison = c(1, 2), measure = c("cou
   slot.name <- match.arg(slot.name)
   if (is.list(object@net[[1]])) {
     message("Do heatmap based on a merged object \n")
-    obj1 <- object@net[[comparison[1]]][[measure]]
-    obj2 <- object@net[[comparison[2]]][[measure]]
+    obj1 <- (object@net[[comparison[1]]][[measure]]+1) %>% log()
+    obj2 <- (object@net[[comparison[2]]][[measure]]+1) %>% log()
     net.diff <- obj2 - obj1
     if (measure == "count") {
       if (is.null(title.name)) {
