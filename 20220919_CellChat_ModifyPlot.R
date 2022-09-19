@@ -47,34 +47,39 @@ ComHeatmap2
 ComHeatmap1 + ComHeatmap2
 
 #### Charlene Modify ####
-## PBMC_CC
-ComHeatmapTest<- netVisual_heatmap(cellchat_PBMC_CC, measure = "weight")
-ComHeatmapTest # -0.4, 0.2
-
-ComHeatmap2_PBMC_CC_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_CC, measure = "weight",
-                                    #color.heatmap = c("#2166ac", "#b2182b"),
-                                    MinSet = -0.4, MaxSet = 0.4)
-ComHeatmap2_PBMC_CC_Ch
 
 ## PBMC_ECM
 ComHeatmapTest <- netVisual_heatmap(cellchat_PBMC_ECM, measure = "weight")
 ComHeatmapTest # -0.4, 0.4
 
 ComHeatmap2_PBMC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_ECM, measure = "weight",
+                                                title.name = "ECM-Receptor",
                                                #color.heatmap = c("#2166ac", "#b2182b"),
                                                MinSet = -0.4, MaxSet = 0.4)
 ComHeatmap2_PBMC_ECM_Ch
+
+## PBMC_CC
+ComHeatmapTest<- netVisual_heatmap(cellchat_PBMC_CC, measure = "weight")
+ComHeatmapTest # -0.4, 0.2
+
+ComHeatmap2_PBMC_CC_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_CC, measure = "weight",
+                                               title.name = "Cell-Cell Contact",
+                                               #color.heatmap = c("#2166ac", "#b2182b"),
+                                               MinSet = -0.4, MaxSet = 0.4)
+ComHeatmap2_PBMC_CC_Ch
+
 
 ## PBMC_Secret
 ComHeatmapTest <- netVisual_heatmap(cellchat_PBMC_Secret, measure = "weight")
 ComHeatmapTest # -0.2, 0.4
 
 ComHeatmap2_PBMC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_Secret, measure = "weight",
+                                                   title.name = "Secreted Signaling",
                                                 #color.heatmap = c("#2166ac", "#b2182b"),
                                                 MinSet = -0.4, MaxSet = 0.4)
 ComHeatmap2_PBMC_Secret_Ch
 
-ComHeatmap2_PBMC_CC_Ch + ComHeatmap2_PBMC_ECM_Ch + ComHeatmap2_PBMC_Secret_Ch
+ComHeatmap2_PBMC_ECM_Ch + ComHeatmap2_PBMC_CC_Ch +  ComHeatmap2_PBMC_Secret_Ch
 
 
 ##### Current path and new folder setting*  #####
