@@ -50,11 +50,13 @@ ComHeatmap1 + ComHeatmap2
 
 #### Charlene Modify ####
 source("FUN_netVisual_heatmap_Ch.R")
-ScaleSetMax <- 0.4
-ScaleSetMin <- -0.4
+source("FUN_netVisual_heatmap_ChTryLog.R")
+
+ScaleSetMax <- 0.5
+ScaleSetMin <- -0.5
 
 ## PBMC_ECM
-ComHeatmapTest <- netVisual_heatmap(cellchat_PBMC_ECM, measure = "weight")
+ComHeatmapTest <- netVisual_heatmap_ChTryLog(cellchat_PBMC_ECM, measure = "weight")
 ComHeatmapTest # -0.4, 0.4
 
 ComHeatmap2_PBMC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_ECM, measure = "weight",
@@ -64,7 +66,7 @@ ComHeatmap2_PBMC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_ECM, measure = "we
 ComHeatmap2_PBMC_ECM_Ch
 
 ## PBMC_CC
-ComHeatmapTest<- netVisual_heatmap(cellchat_PBMC_CC, measure = "weight")
+ComHeatmapTest<- netVisual_heatmap_ChTryLog(cellchat_PBMC_CC, measure = "weight")
 ComHeatmapTest # -0.4, 0.2
 
 ComHeatmap2_PBMC_CC_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_CC, measure = "weight",
@@ -75,8 +77,8 @@ ComHeatmap2_PBMC_CC_Ch
 
 
 ## PBMC_Secret
-ComHeatmapTest <- netVisual_heatmap(cellchat_PBMC_Secret, measure = "weight")
-ComHeatmapTest # -0.2, 0.4
+ComHeatmapTest <- netVisual_heatmap_ChTryLog(cellchat_PBMC_Secret, measure = "weight")
+ComHeatmapTest # -0.2, 0.6
 
 ComHeatmap2_PBMC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_Secret, measure = "weight",
                                                    title.name = "Secreted Signaling",
@@ -89,8 +91,8 @@ ComHeatmap1 <- ComHeatmap2_PBMC_ECM_Ch + ComHeatmap2_PBMC_CC_Ch +  ComHeatmap2_P
 ComHeatmap1
 
 ## SC_ECM
-ComHeatmapTest <- netVisual_heatmap(cellchat_SC_ECM, measure = "weight")
-ComHeatmapTest # -1, 2
+ComHeatmapTest <- netVisual_heatmap_ChTryLog(cellchat_SC_ECM, measure = "weight")
+ComHeatmapTest # -1, 1
 
 ComHeatmap2_SC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_SC_ECM, measure = "weight",
                                               title.name = "ECM-Receptor",
@@ -99,8 +101,8 @@ ComHeatmap2_SC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_SC_ECM, measure = "weight
 ComHeatmap2_SC_ECM_Ch
 
 ## SC_CC
-ComHeatmapTest<- netVisual_heatmap(cellchat_SC_CC, measure = "weight")
-ComHeatmapTest # -0.2, 0.1
+ComHeatmapTest<- netVisual_heatmap_ChTryLog(cellchat_SC_CC, measure = "weight")
+ComHeatmapTest # -0.2, 0.2
 
 ComHeatmap2_SC_CC_Ch <- netVisual_heatmap_Ch(cellchat_SC_CC, measure = "weight",
                                              title.name = "Cell-Cell Contact",
@@ -110,8 +112,8 @@ ComHeatmap2_SC_CC_Ch
 
 
 ## SC_Secret
-ComHeatmapTest <- netVisual_heatmap(cellchat_SC_Secret, measure = "weight")
-ComHeatmapTest # -0.2, 0.4
+ComHeatmapTest <- netVisual_heatmap_ChTryLog(cellchat_SC_Secret, measure = "weight")
+ComHeatmapTest # -0.4, 0.4
 
 ComHeatmap2_SC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_SC_Secret, measure = "weight",
                                                  title.name = "Secreted Signaling",
