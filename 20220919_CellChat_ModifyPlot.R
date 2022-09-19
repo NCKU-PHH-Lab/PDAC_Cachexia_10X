@@ -54,7 +54,7 @@ source("FUN_netVisual_heatmap_ChTryLog.R")
 
 ScaleSetMax <- 0.5
 ScaleSetMin <- -0.5
-YlimSet <- c(0,2)
+YlimSet <- c(0,4)
 
 ## PBMC_ECM
 ComHeatmapTest <- netVisual_heatmap_ChTryLog(cellchat_PBMC_ECM, measure = "weight")
