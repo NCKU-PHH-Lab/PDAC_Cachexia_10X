@@ -81,8 +81,9 @@ ComHeatmap2_PBMC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_Secret, measure
                                                 MinSet = -0.4, MaxSet = 0.4)
 ComHeatmap2_PBMC_Secret_Ch
 
-ComHeatmap2_PBMC_ECM_Ch + ComHeatmap2_PBMC_CC_Ch +  ComHeatmap2_PBMC_Secret_Ch
-
+## Compare all in PBMC
+ComHeatmap1 <- ComHeatmap2_PBMC_ECM_Ch + ComHeatmap2_PBMC_CC_Ch +  ComHeatmap2_PBMC_Secret_Ch
+ComHeatmap1
 
 ## SC_ECM
 ComHeatmapTest <- netVisual_heatmap(cellchat_SC_ECM, measure = "weight")
@@ -101,7 +102,7 @@ ComHeatmapTest # -0.2, 0.1
 ComHeatmap2_SC_CC_Ch <- netVisual_heatmap_Ch(cellchat_SC_CC, measure = "weight",
                                              title.name = "Cell-Cell Contact",
                                              #color.heatmap = c("#2166ac", "#b2182b"),
-                                             MinSet = -0.2, MaxSet = 0.1)
+                                             MinSet = -1, MaxSet = 2)
 ComHeatmap2_SC_CC_Ch
 
 
@@ -112,11 +113,12 @@ ComHeatmapTest # -0.2, 0.4
 ComHeatmap2_SC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_SC_Secret, measure = "weight",
                                                  title.name = "Secreted Signaling",
                                                  #color.heatmap = c("#2166ac", "#b2182b"),
-                                                 MinSet = -0.2, MaxSet = 0.4)
+                                                 MinSet = -1, MaxSet = 2)
 ComHeatmap2_SC_Secret_Ch
 
-ComHeatmap2_SC_ECM_Ch + ComHeatmap2_SC_CC_Ch +  ComHeatmap2_SC_Secret_Ch
-
+## Compare all in SC
+ComHeatmap2 <- ComHeatmap2_SC_ECM_Ch + ComHeatmap2_SC_CC_Ch +  ComHeatmap2_SC_Secret_Ch
+ComHeatmap2
 
 ##### Current path and new folder setting*  #####
 ProjectName = "PBMC_CellChat_Beautify_Plot" # Secret, ECM, CC
@@ -131,6 +133,6 @@ if (!dir.exists(Save.Path)){
 pdf(file = paste0(Save.Path,"/",ProjectName,"_Compared_Heatmap.pdf"),
     width = 12,  height = 7
 )
-ComHeatmap2_PBMC_ECM_Ch + ComHeatmap2_PBMC_CC_Ch +  ComHeatmap2_PBMC_Secret_Ch
-ComHeatmap2_SC_ECM_Ch + ComHeatmap2_SC_CC_Ch +  ComHeatmap2_SC_Secret_Ch
+ComHeatmap1
+ComHeatmap2
 dev.off()
