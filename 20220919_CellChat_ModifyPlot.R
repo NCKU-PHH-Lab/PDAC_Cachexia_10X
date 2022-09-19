@@ -53,7 +53,7 @@ ComHeatmapTest # -0.4, 0.2
 
 ComHeatmap2_PBMC_CC_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_CC, measure = "weight",
                                     #color.heatmap = c("#2166ac", "#b2182b"),
-                                    MinSet = -0.4, MaxSet = 0.2)
+                                    MinSet = -0.4, MaxSet = 0.4)
 ComHeatmap2_PBMC_CC_Ch
 
 ## PBMC_ECM
@@ -71,10 +71,10 @@ ComHeatmapTest # -0.2, 0.4
 
 ComHeatmap2_PBMC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_Secret, measure = "weight",
                                                 #color.heatmap = c("#2166ac", "#b2182b"),
-                                                MinSet = -0.2, MaxSet = 0.4)
+                                                MinSet = -0.4, MaxSet = 0.4)
 ComHeatmap2_PBMC_Secret_Ch
 
-
+ComHeatmap2_PBMC_CC_Ch + ComHeatmap2_PBMC_ECM_Ch + ComHeatmap2_PBMC_Secret_Ch
 
 
 ##### Current path and new folder setting*  #####
