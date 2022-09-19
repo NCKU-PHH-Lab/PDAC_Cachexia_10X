@@ -49,6 +49,9 @@ ComHeatmap2
 ComHeatmap1 + ComHeatmap2
 
 #### Charlene Modify ####
+source("FUN_netVisual_heatmap_Ch.R")
+ScaleSetMax <- 0.4
+ScaleSetMin <- -0.4
 
 ## PBMC_ECM
 ComHeatmapTest <- netVisual_heatmap(cellchat_PBMC_ECM, measure = "weight")
@@ -57,7 +60,7 @@ ComHeatmapTest # -0.4, 0.4
 ComHeatmap2_PBMC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_ECM, measure = "weight",
                                                 title.name = "ECM-Receptor",
                                                #color.heatmap = c("#2166ac", "#b2182b"),
-                                               MinSet = -0.4, MaxSet = 0.4)
+                                               MinSet = ScaleSetMin, MaxSet = ScaleSetMax)
 ComHeatmap2_PBMC_ECM_Ch
 
 ## PBMC_CC
@@ -67,7 +70,7 @@ ComHeatmapTest # -0.4, 0.2
 ComHeatmap2_PBMC_CC_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_CC, measure = "weight",
                                                title.name = "Cell-Cell Contact",
                                                #color.heatmap = c("#2166ac", "#b2182b"),
-                                               MinSet = -0.4, MaxSet = 0.4)
+                                               MinSet = ScaleSetMin, MaxSet = ScaleSetMax)
 ComHeatmap2_PBMC_CC_Ch
 
 
@@ -78,7 +81,7 @@ ComHeatmapTest # -0.2, 0.4
 ComHeatmap2_PBMC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_Secret, measure = "weight",
                                                    title.name = "Secreted Signaling",
                                                 #color.heatmap = c("#2166ac", "#b2182b"),
-                                                MinSet = -0.4, MaxSet = 0.4)
+                                                MinSet = ScaleSetMin, MaxSet = ScaleSetMax)
 ComHeatmap2_PBMC_Secret_Ch
 
 ## Compare all in PBMC
@@ -92,7 +95,7 @@ ComHeatmapTest # -1, 2
 ComHeatmap2_SC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_SC_ECM, measure = "weight",
                                               title.name = "ECM-Receptor",
                                               #color.heatmap = c("#2166ac", "#b2182b"),
-                                              MinSet = -1, MaxSet = 2)
+                                              MinSet = ScaleSetMin, MaxSet = ScaleSetMax)
 ComHeatmap2_SC_ECM_Ch
 
 ## SC_CC
@@ -102,7 +105,7 @@ ComHeatmapTest # -0.2, 0.1
 ComHeatmap2_SC_CC_Ch <- netVisual_heatmap_Ch(cellchat_SC_CC, measure = "weight",
                                              title.name = "Cell-Cell Contact",
                                              #color.heatmap = c("#2166ac", "#b2182b"),
-                                             MinSet = -1, MaxSet = 2)
+                                             MinSet = ScaleSetMin, MaxSet = ScaleSetMax)
 ComHeatmap2_SC_CC_Ch
 
 
@@ -113,7 +116,7 @@ ComHeatmapTest # -0.2, 0.4
 ComHeatmap2_SC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_SC_Secret, measure = "weight",
                                                  title.name = "Secreted Signaling",
                                                  #color.heatmap = c("#2166ac", "#b2182b"),
-                                                 MinSet = -1, MaxSet = 2)
+                                                 MinSet = ScaleSetMin, MaxSet = ScaleSetMax)
 ComHeatmap2_SC_Secret_Ch
 
 ## Compare all in SC
@@ -131,7 +134,7 @@ if (!dir.exists(Save.Path)){
 
 ## Export PDF
 pdf(file = paste0(Save.Path,"/",ProjectName,"_Compared_Heatmap.pdf"),
-    width = 12,  height = 7
+    width = 20,  height = 7
 )
 ComHeatmap1
 ComHeatmap2
