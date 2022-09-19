@@ -4,7 +4,8 @@ netVisual_heatmap_Ch <- function (object, comparison = c(1, 2), measure = c("cou
           title.name = NULL, width = NULL, height = NULL, font.size = 8,
           font.size.title = 10, cluster.rows = FALSE, cluster.cols = FALSE,
           sources.use = NULL, targets.use = NULL, remove.isolate = FALSE,
-          row.show = NULL, col.show = NULL)
+          row.show = NULL, col.show = NULL,
+          MinSet = -20, MaxSet = 20)
 {
   if (!is.null(measure)) {
     measure <- match.arg(measure)
@@ -95,7 +96,7 @@ netVisual_heatmap_Ch <- function (object, comparison = c(1, 2), measure = c("cou
     color.use <- color.use[col.show]
   }
   if (min(mat) < 0) {
-    color.heatmap.use = colorRamp3(c(min(mat), 0, max(mat)),
+    color.heatmap.use = colorRamp3(c(MinSet, 0, MaxSet), # color.heatmap.use = colorRamp3(c(min(mat), 0, max(mat)),
                                    c(color.heatmap[1], "#f7f7f7", color.heatmap[2]))
     colorbar.break <- c(round(min(mat, na.rm = T), digits = nchar(sub(".*\\.(0*).*",
                                                                       "\\1", min(mat, na.rm = T))) + 1), 0, round(max(mat,
@@ -104,11 +105,11 @@ netVisual_heatmap_Ch <- function (object, comparison = c(1, 2), measure = c("cou
   }
   else {
     if (length(color.heatmap) == 3) {
-      color.heatmap.use = colorRamp3(c(0, min(mat), max(mat)),
+      color.heatmap.use = colorRamp3(c(0, MinSet, MaxSet),
                                      color.heatmap)
     }
     else if (length(color.heatmap) == 2) {
-      color.heatmap.use = colorRamp3(c(min(mat), max(mat)),
+      color.heatmap.use = colorRamp3(c(MinSet, MaxSet),
                                      color.heatmap)
     }
     else if (length(color.heatmap) == 1) {
