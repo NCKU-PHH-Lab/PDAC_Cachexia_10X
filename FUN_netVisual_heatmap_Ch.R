@@ -5,7 +5,7 @@ netVisual_heatmap_Ch <- function (object, comparison = c(1, 2), measure = c("cou
           font.size.title = 10, cluster.rows = FALSE, cluster.cols = FALSE,
           sources.use = NULL, targets.use = NULL, remove.isolate = FALSE,
           row.show = NULL, col.show = NULL,
-          MinSet = -20, MaxSet = 20)
+          MinSet = -20, MaxSet = 20, ylimSet = c(0,2))
 {
   if (!is.null(measure)) {
     measure <- match.arg(measure)
@@ -129,10 +129,10 @@ netVisual_heatmap_Ch <- function (object, comparison = c(1, 2), measure = c("cou
   row_annotation <- HeatmapAnnotation(df = df, col = list(group = color.use),
                                       which = "row", show_legend = FALSE, show_annotation_name = FALSE,
                                       simple_anno_size = grid::unit(0.2, "cm"))
-  ha1 = rowAnnotation(Strength = anno_barplot(rowSums(abs(mat)),
+  ha1 = rowAnnotation(Strength = anno_barplot(rowSums(abs(mat)),ylim = ylimSet,
                                               border = FALSE, gp = gpar(fill = color.use, col = color.use)),
                       show_annotation_name = FALSE)
-  ha2 = HeatmapAnnotation(Strength = anno_barplot(colSums(abs(mat)),
+  ha2 = HeatmapAnnotation(Strength = anno_barplot(colSums(abs(mat)),ylim = ylimSet,
                                                   border = FALSE, gp = gpar(fill = color.use, col = color.use)),
                           show_annotation_name = FALSE)
   if (sum(abs(mat) > 0) == 1) {
