@@ -54,7 +54,7 @@ source("FUN_netVisual_heatmap_ChTryLog.R")
 
 ScaleSetMax <- 0.5
 ScaleSetMin <- -0.5
-ylimSet <- c(0,2)
+YlimSet <- c(0,2)
 
 ## PBMC_ECM
 ComHeatmapTest <- netVisual_heatmap_ChTryLog(cellchat_PBMC_ECM, measure = "weight")
@@ -63,7 +63,7 @@ ComHeatmapTest # -0.4, 0.4
 ComHeatmap2_PBMC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_ECM, measure = "weight",
                                                 title.name = "ECM-Receptor",
                                                #color.heatmap = c("#2166ac", "#b2182b"),
-                                               MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = c(0,2))
+                                               MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = YlimSet)
 ComHeatmap2_PBMC_ECM_Ch
 
 ## PBMC_CC
@@ -73,7 +73,7 @@ ComHeatmapTest # -0.4, 0.2
 ComHeatmap2_PBMC_CC_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_CC, measure = "weight",
                                                title.name = "Cell-Cell Contact",
                                                #color.heatmap = c("#2166ac", "#b2182b"),
-                                               MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = c(0,2))
+                                               MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = YlimSet)
 ComHeatmap2_PBMC_CC_Ch
 
 
@@ -84,7 +84,7 @@ ComHeatmapTest # -0.2, 0.6
 ComHeatmap2_PBMC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_PBMC_Secret, measure = "weight",
                                                    title.name = "Secreted Signaling",
                                                 #color.heatmap = c("#2166ac", "#b2182b"),
-                                                MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = c(0,2))
+                                                MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = YlimSet)
 ComHeatmap2_PBMC_Secret_Ch
 
 ## Compare all in PBMC
@@ -98,7 +98,7 @@ ComHeatmapTest # -1, 1
 ComHeatmap2_SC_ECM_Ch <- netVisual_heatmap_Ch(cellchat_SC_ECM, measure = "weight",
                                               title.name = "ECM-Receptor",
                                               #color.heatmap = c("#2166ac", "#b2182b"),
-                                              MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = c(0,2))
+                                              MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = YlimSet)
 ComHeatmap2_SC_ECM_Ch
 
 ## SC_CC
@@ -108,7 +108,7 @@ ComHeatmapTest # -0.2, 0.2
 ComHeatmap2_SC_CC_Ch <- netVisual_heatmap_Ch(cellchat_SC_CC, measure = "weight",
                                              title.name = "Cell-Cell Contact",
                                              #color.heatmap = c("#2166ac", "#b2182b"),
-                                             MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = c(0,2))
+                                             MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = YlimSet)
 ComHeatmap2_SC_CC_Ch
 
 
@@ -119,7 +119,7 @@ ComHeatmapTest # -0.4, 0.4
 ComHeatmap2_SC_Secret_Ch <- netVisual_heatmap_Ch(cellchat_SC_Secret, measure = "weight",
                                                  title.name = "Secreted Signaling",
                                                  #color.heatmap = c("#2166ac", "#b2182b"),
-                                                 MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = c(0,2))
+                                                 MinSet = ScaleSetMin, MaxSet = ScaleSetMax, ylimSet = YlimSet)
 ComHeatmap2_SC_Secret_Ch
 
 ## Compare all in SC
