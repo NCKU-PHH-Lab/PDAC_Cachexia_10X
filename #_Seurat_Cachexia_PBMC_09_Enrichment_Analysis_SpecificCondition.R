@@ -68,12 +68,14 @@
   source("FUN_ggPlot_vline.R")
   source("FUN_GSEA_ANAL.R")
   source("FUN_DistrPlot.R")
+
 ##### Import setting and Import #####
   ## Import GSEA gene sets
   # InputGSEA <- "GSEA_Geneset_Pathway_3Database_WithoutFilter.txt"
   # InputGSEA <- "m5_go_bp_v0_3_symbols.gmt"  # InputGSEA <- "m2.all.v0.3.symbols.gmt"
 
-  InputGSEA <- "m5_go_bp_v0_3_symbols.gmt"
+  InputGSEA <- "m2.all.v0.3.symbols.gmt"
+
   InFOLName_GSEA <- "Input_Genesets"
   Pathway.all <- read.delim2(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA),
                              col.names = 1:max(count.fields(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA))),
@@ -123,17 +125,6 @@
   }
 
 ##### Update the genename ####
-  # ## Test
-  # UpdateSymbolList("SEPT1")
-  # A <- UpdateSymbolList(row.names(GeneExp.df))
-  # B <- row.names(GeneExp.df)
-  # # sum(c("a","c")==c("a","b"))
-  # sum(A==B)
-  # summary(A==B)
-  #
-  ## Error: Timeout was reached: [rest.genenames.org] Operation timed out after 10005 milliseconds with 0 bytes received
-
-
   ## Update the genename ##* Take very long time
   UpdateGene <- "No"  # UpdateGene <- c("Yes","No")
   if(UpdateGene == "Yes"){
