@@ -82,7 +82,7 @@
                              header = F,sep = "\t")
 
 ##### Conditions setting* #####
-  Group_Mode <- "GoupByGeneExp"   # c("GoupByPheno","GoupByGeneExp")
+  Group_Mode <- "GoupByPheno"   # c("GoupByPheno","GoupByGeneExp")
   TarGene_name <- "Chil3"
 
   GeneExpSet.lt <- list(GeneExpMode = "Mean", # c("Mean","Mean1SD","Mean2SD","Mean3SD","Median","Quartile","Customize"))
@@ -93,7 +93,7 @@
     AnnoSet.lt <- list(GroupType = TarGene_name, GroupCompare = c("High","Low") )   ## DEG by GeneExp group
   }else{
     ## Group by Pheno
-    AnnoSet.lt <- list(GroupType = "sample_type", GroupCompare = c("Primary Tumor","Recurrent Tumor") )
+    AnnoSet.lt <- list(GroupType = "Cachexia", GroupCompare = c("EO","LO") )
   }
 
   Thr.lt <- list(LogFC = c("logFC",1), pVal = c("PValue",0.05) )
@@ -102,7 +102,7 @@
   ProjectName = "CC10X"
   Sampletype = "PBMC"
 
-  ExportAnno2 = "EO_Neu"
+  ExportAnno2 = "EOLO_Neu"
   if(Group_Mode == "GoupByGeneExp"){
     ExportAnno = paste0(TarGene_name,"_",GeneExpSet.lt$GeneExpMode,"_",ExportAnno2)
 
@@ -137,6 +137,8 @@
   GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
   Anno.df <- scRNA.SeuObj@meta.data
   Anno.df <- data.frame(ID=row.names(Anno.df), Anno.df)
+  Anno.df <- left_join(data.frame("ID"=colnames(GeneExp.df)),
+                       Anno.df)
   row.names(Anno.df) <- Anno.df[,1]
 
   ## Select Pheno column
@@ -149,18 +151,19 @@
   #
   # head(Anno.df)
 
-  ## Select Pheno row
-  PhenoRowKeep.set <- list(col="Cachexia" ,row=c("EO"))
-  Anno.df <- Anno.df[Anno.df[,PhenoRowKeep.set[["col"]]] %in% PhenoRowKeep.set[["row"]], ]
-
-  GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df[,1] ]
+  # ## Select Pheno row
+  # PhenoRowKeep.set <- list(col="Cachexia" ,row=c("EO"))
+  # Anno.df <- Anno.df[Anno.df[,PhenoRowKeep.set[["col"]]] %in% PhenoRowKeep.set[["row"]], ]
+  #
+  # GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df[,1] ]
+  # rm(PhenoRowKeep.set)
 
   ## Select Pheno row2
   PhenoRowKeep.set <- list(col="celltype" ,row=c("Neu"))
   Anno.df <- Anno.df[Anno.df[,PhenoRowKeep.set[["col"]]] %in% PhenoRowKeep.set[["row"]], ]
 
   GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df[,1] ]
-
+  rm(PhenoRowKeep.set)
 
   # ## Delete specific cell type
   # ## Clean up data
