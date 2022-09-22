@@ -24,6 +24,7 @@
   library(dplyr)
   library(stringr)
   library(ggplot2)
+  library(Seurat)
 
 ##### Function setting  #####
   ## Call function
@@ -43,7 +44,7 @@
 
   # ##### Load RData  #####
   # load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
-  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
+  # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
 
 
@@ -947,16 +948,26 @@ SampleType="PBMC"
     theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank()) # Remove grid
   TTT.p
 
+  # DotPlot
   TTT.DotPlot <- DotPlot(PBMC.combined, features = TTT$Genes, cols = c("#ef476f", "#0077b6"), dot.scale = 8, split.by = "Cachexia") + RotatedAxis()
   TTT.DotPlot <- TTT.DotPlot%>%
     BeautifyggPlot(.,LegPos = "bottom",AxisTitleSize=1, TitleSize = 20, xangle =90,
                    LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12)
   TTT.DotPlot
 
+  # DotPlot2
+  TTT.DotPlot2 <- DotPlot(PBMC.combined, features = TTT$Genes, cols = c("#ef476f", "#0077b6", "#0077b6","#ef476f"), dot.scale = 8, split.by = "sample") + RotatedAxis()
+  TTT.DotPlot2 <- TTT.DotPlot2%>%
+    BeautifyggPlot(.,LegPos = "bottom",AxisTitleSize=1, TitleSize = 20, xangle =90,
+                   LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12)
+  TTT.DotPlot2
+
+
   pdf(file = paste0(Save.Path,"/PBMC_CCM_Dot.pdf"),
       width = 10, height = 10 )
   TTT.p
   TTT.DotPlot
+  TTT.DotPlot2
   dev.off() # graphics.off()
 
 # ##### Export R.Data ######
