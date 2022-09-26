@@ -1,23 +1,6 @@
-# ##### Presetting ######
-#   rm(list = ls()) # Clean variable
-#   memory.limit(150000)
-#
-# ##### Version information ######
-#   # platform       x86_64-w64-mingw32
-#   # arch           x86_64
-#   # os             mingw32
-#   # system         x86_64, mingw32
-#   # status
-#   # major          4
-#   # minor          1.1
-#   # year           2021
-#   # month          08
-#   # day            10
-#   # svn rev        80725
-#   # language       R
-#   # version.string R version 4.1.1 (2021-08-10)
-#   # nickname       Kick Things
-
+##### Presetting ######
+  rm(list = ls()) # Clean variable
+  memory.limit(150000)
 
 
 ##### Load libray #####
