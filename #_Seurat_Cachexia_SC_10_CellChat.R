@@ -90,8 +90,8 @@
               groupby = "celltype",species = "Mouse"
   ) -> CellChat_Secret_LO.lt
 
-  ##### save.image #####
-  save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction.RData"))
+  # ##### save.image #####
+  # save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction.RData"))
 
 ##***************************************************************************##
 
