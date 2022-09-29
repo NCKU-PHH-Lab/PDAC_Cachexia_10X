@@ -2,25 +2,6 @@
   rm(list = ls()) # Clean variable
   memory.limit(150000)
 
-##### Version information ######
-  # platform       x86_64-w64-mingw32
-  # arch           x86_64
-  # os             mingw32
-  # system         x86_64, mingw32
-  # status
-  # major          4
-  # minor          1.2
-  # year           2021
-  # month          11
-  # day            01
-  # svn rev        81115
-  # language       R
-  # version.string R version 4.1.2 (2021-11-01)
-  # nickname       Bird Hippie
-  #--------------------------------#
-  # R version 4.1.2
-  # Seurat 4.0.2
-
 ##### Load Packages  #####
   library(Seurat)
   library(SeuratData)
@@ -47,12 +28,12 @@
   source("FUN_GSEA_Run_LargeGeneSet.R")
   source("FUN_GSEA_ggplot.R")
 
-##### Current path and new folder setting  #####
+##### Current path and new folder setting*  #####
   Version = paste0(Sys.Date(),"_","PBMC_Main")
   Save.Path = paste0(getwd(),"/",Version)
   dir.create(Save.Path)
 
-##### Load datasets  #####
+##### Load datasets*  #####
   PBMC.data.TN138 <- Read10X(data.dir = paste0(getwd(),"/TN138/monocle/outs/filtered_gene_bc_matrices/mm10"))
   PBMC.TN138 <- CreateSeuratObject(counts = PBMC.data.TN138, project = "EO.M", min.cells = 3, min.features = 200)
   PBMC.TN138
