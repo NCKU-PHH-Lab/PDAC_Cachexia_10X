@@ -66,18 +66,6 @@
   PBMC.TN148@meta.data[["Cachexia"]] <- rep(c("EO"), times=length(PBMC.TN148@meta.data[["orig.ident"]]))
   PBMC.TN148@meta.data[["Sex"]] <- rep(c("Female"), times=length(PBMC.TN148@meta.data[["orig.ident"]]))
 
-##### Abbreviation Note #####
-  # CCM: Cancer Cachexia Marker
-  # SPA: Sex Pooled Analysis
-  # SSA: Sex Separated Analysis
-  # I:Intersection ; F: Female ; M: Male
-
-  # EO: Early Onset
-  # LO: Late Onset
-  # CT: Cell Type
-
-  # list:lt
-  # dataframe: df
 
 ##### 01 Combine different datasets before QC  #####
   PBMC.list  <- c(PBMC.TN138,PBMC.TN139,PBMC.TN146,PBMC.TN148)
