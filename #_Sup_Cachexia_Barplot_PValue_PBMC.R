@@ -21,9 +21,17 @@ library(ggpubr)
 # load("D:/Dropbox/##_GitHub/##_CAESAR/MagicDisc/2022-06-06_CC_PBMC/06_Cell_type_annotation.RData")
 load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
 
+## INTCHG: Interchangeable
+  # For PBMC
+  scRNA.SeuObj <- PBMC.combined
+  SampleType = "PBMC"
+
+  ## For SC
+  # scRNA.SeuObj <- SC.combined
+  # SampleType = "SC"
+
 # Clean up
-scRNA.SeuObj <- PBMC.combined
-rm(list=setdiff(ls(), "scRNA.SeuObj"))
+rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType")))
 
 # Order the cell type
 scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
