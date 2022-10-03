@@ -162,7 +162,7 @@
   # original unmodified data still resides in the 'RNA' assay
   DefaultAssay(PBMC.combined) <- "integrated"
 
-  ##?
+  ## ScaleData
   set.seed(1) # Fix the seed
   PBMC.combined <- ScaleData(PBMC.combined, verbose = FALSE)
 
