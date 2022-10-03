@@ -1,6 +1,8 @@
 ## INTCHG: Interchangeable
   scRNA.SeuObj <- PBMC.combined
+  SampleType = "PBMC"
   # scRNA.SeuObj <- SC.combined
+  # SampleType = "SC"
 
 ##### 07 Count Cell number  #####
   Pheno.df <- data.frame(sample = scRNA.SeuObj@meta.data[["sample"]],celltype = scRNA.SeuObj@meta.data[["celltype"]],
@@ -112,7 +114,7 @@
   Freq_All_Ca.df$Percent <- as.numeric(Freq_All_Ca.df$Percent)
 
   write.table( Freq_All_Ca.df ,
-               file = paste0(Save.Path,"/PBMC_CellCount_CT_Ca.tsv"),
+               file = paste0(Save.Path,"/",SampleType,"_CellCount_CT_Ca.tsv"),
                sep = "\t",
                quote = F,
                row.names = F
@@ -255,7 +257,7 @@
 
 
 ##### Export PDF file #####
-  pdf(file = paste0(Save.Path,"/PBMC_CellCount_LinePlot.pdf"),
+  pdf(file = paste0(Save.Path,"/",SampleType,"_CellCount_LinePlot.pdf"),
       width = 7, height = 7 )
     CellNum_P4
     CellNum_P3
@@ -267,7 +269,7 @@
     BarPlot2_2
     BarPlot3_1
     BarPlot3_2
-    dev.off() # graphics.off()
+  dev.off() # graphics.off()
 
   rm(CellNum_P1, CellNum_P2, CellNum_P3, CellNum_P4, BarPlot1_1, BarPlot1_2,
      BarPlot2_1, BarPlot2_2, BarPlot3_1, BarPlot3_2)

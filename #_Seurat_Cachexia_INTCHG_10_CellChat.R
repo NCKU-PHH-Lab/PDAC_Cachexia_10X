@@ -42,7 +42,7 @@
 ##### Load CellChat object of each dataset and then merge together #####
   source("FUN_CellChatOne.R")
 
-  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/09_4_GSEA_Analysis_(SSA).RData")
+  # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/09_4_GSEA_Analysis_(SSA).RData")
   PBMC_EO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "EO"]
   PBMC_LO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "LO"]
 
@@ -56,26 +56,26 @@
   ## ECM-Receptor
   CellChatOne(PBMC_EO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM_EO",
-              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_EO.lt
 
   CellChatOne(PBMC_LO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM_LO",
-              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_LO.lt
 
   ## Cell-Cell Contact
   CellChatOne(PBMC_EO.combined,
               signalingtype = "Cell-Cell Contact", projectName = "CC_EO",
-              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
   ) -> CellChat_CC_EO.lt
 
   CellChatOne(PBMC_LO.combined,
               signalingtype = "Cell-Cell Contact", projectName = "CC_LO",
-              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
   ) -> CellChat_CC_LO.lt
 
@@ -83,13 +83,13 @@
   ## Secreted Signaling
   CellChatOne(PBMC_EO.combined,
               signalingtype = "Secreted Signaling", projectName = "Secret_EO",
-              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) -> CellChat_Secret_EO.lt
 
   CellChatOne(PBMC_LO.combined,
               signalingtype = "Secreted Signaling", projectName = "Secret_LO",
-              save.path = paste0(Save.Path,"/PBMC_CellCell_Interaction"),
+              save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) -> CellChat_Secret_LO.lt
 

@@ -61,11 +61,11 @@ dir.create(paste0(Subfolder.Path))
 ## GSEA analysis
 GSEA_SPA.lt <- GSEA_Run_Multi(CCMarker_SPA.lt,
                               GeneSets = Pathway.all.MM, TopNum = GSEATopNum,
-                              Save.Path = Subfolder.Path, FileName = "/PBMC_GSEA_SPA_EnrichPlot.pdf")
+                              Save.Path = Subfolder.Path, FileName = paste0("/",SampleType,"_GSEA_SPA_EnrichPlot.pdf"))
 
 GSEA_Large.df.TOP <- GSEA_SPA.lt[["GSEA_Large.df.TOP"]]
 GSEA_Large.df.TOP <- GSEA_Large.df.TOP[,!colnames(GSEA_Large.df.TOP) %in% c("leadingEdge")]
-write.table(GSEA_Large.df.TOP, file=paste0(Subfolder.Path,"/PBMC_GSEA_Pathway_LargeTOP_SPA.txt"),sep="\t",
+write.table(GSEA_Large.df.TOP, file=paste0(Subfolder.Path,"/",SampleType,"_GSEA_Pathway_LargeTOP_SPA.txt"),sep="\t",
             row.names=F, quote = FALSE)
 
 ##### Bubble plot #####
@@ -85,7 +85,7 @@ GSEA_Large.df.TOP.S <- GSEA_ggplot_SPA.lt[["GSEA_TOP.df"]]
 # GSEA_Large.df.TOP.S <- GSEA_Large.df.TOP[abs(GSEA_Large.df.TOP$padj) < 0.25,]
 # GSEA_Large.df.TOP.S <- GSEA_Large.df.TOP.S[abs(GSEA_Large.df.TOP.S$pval) < 0.05,]
 
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SPA.pdf"),width = 17, height = 12 )
+pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_SPA.pdf"),width = 17, height = 12 )
   GSEA_ggplot_SPA.lt[["BBPlot_Ori"]]
   GSEA_ggplot_SPA.lt[["BBPlot"]]
   GSEA_ggplot_SPA.lt[["BBPlot2"]]
@@ -102,7 +102,7 @@ GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.df.TOP,
                                  OrderSet = GSEA_ggplot_SPA.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
-                                 FileName = "/PBMC_GSEA_Bubble_SPA_SubType_T.pdf")
+                                 FileName = paste0("/",SampleType,"_GSEA_Bubble_SPA_SubType_T.pdf"))
 
 ## Mac
 GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.df.TOP.S,
@@ -110,7 +110,7 @@ GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.df.TOP.S,
                                  OrderSet = GSEA_ggplot_SPA.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
-                                 FileName = "/PBMC_GSEA_Bubble_SPA_SubType_Mac.pdf")
+                                 FileName = paste0("/",SampleType,"_GSEA_Bubble_SPA_SubType_Mac.pdf"))
 
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
@@ -124,11 +124,11 @@ save.image(paste0(Subfolder.Path,"/09_1_GSEA_Analysis_(SPA).RData"))
 ## GSEA analysis
 GSEA_SSA_Male.lt <- GSEA_Run_Multi(CCMarker_Male.lt,
                               GeneSets = Pathway.all.MM, TopNum = GSEATopNum,
-                              Save.Path = Subfolder.Path, FileName = "/PBMC_GSEA_SSA_Male_EnrichPlot.pdf")
+                              Save.Path = Subfolder.Path, FileName = paste0("/",SampleType,"_GSEA_SSA_Male_EnrichPlot.pdf"))
 
 GSEA_Large_Male.df.TOP <- GSEA_SSA_Male.lt[["GSEA_Large.df.TOP"]]
 GSEA_Large_Male.df.TOP <- GSEA_Large_Male.df.TOP[,!colnames(GSEA_Large_Male.df.TOP) %in% c("leadingEdge")]
-write.table(GSEA_Large_Male.df.TOP, file=paste0(Subfolder.Path,"/PBMC_GSEA_Pathway_LargeTOP_SSA_Male.txt"),sep="\t",
+write.table(GSEA_Large_Male.df.TOP, file=paste0(Subfolder.Path,"/",SampleType,"_GSEA_Pathway_LargeTOP_SSA_Male.txt"),sep="\t",
             row.names=F, quote = FALSE)
 
 ##### Bubble plot #####
@@ -141,7 +141,7 @@ GSEA_Large_Male.df.TOP$PhenoType <- factor(GSEA_Large_Male.df.TOP$PhenoType,
 GSEA_ggplot_SSA_Male.lt <- GSEA_ggplot(GSEA_Large_Male.df.TOP,NES_Th = NES_Th_Set, padj_Th = padj_Th_Set)
 GSEA_Large_Male.df.TOP.S <- GSEA_ggplot_SSA_Male.lt[["GSEA_TOP.df"]]
 
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SSA_Male.pdf"),width = 17, height = 12 )
+pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_SSA_Male.pdf"),width = 17, height = 12 )
   GSEA_ggplot_SSA_Male.lt[["BBPlot_Ori"]]
   GSEA_ggplot_SSA_Male.lt[["BBPlot"]]
   GSEA_ggplot_SSA_Male.lt[["BBPlot2"]]
@@ -157,7 +157,7 @@ GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.df.TOP.S,
                                  OrderSet = GSEA_ggplot_SSA_Male.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
-                                 FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_T.pdf")
+                                 FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Male_SubType_T.pdf"))
 
 ## Mac
 GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.df.TOP.S,
@@ -165,7 +165,7 @@ GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.df.TOP.S,
                                    OrderSet = GSEA_ggplot_SSA_Male.lt[["Y_Order"]],
                                    GSEA_Color = GSEA_Color.lt,
                                    Save.Path = paste0(Subfolder.Path),
-                                   FileName = "/PBMC_GSEA_Bubble_SSA_Male_SubType_Mac.pdf")
+                                   FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Male_SubType_Mac.pdf"))
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
    df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
@@ -178,11 +178,11 @@ save.image(paste0(Subfolder.Path,"/09_2_GSEA_Analysis_(SSA_Male).RData"))
 ## GSEA analysis
 GSEA_SSA_Female.lt <- GSEA_Run_Multi(CCMarker_Female.lt,
                                    GeneSets = Pathway.all.MM, TopNum = GSEATopNum,
-                                   Save.Path = Subfolder.Path, FileName = "/PBMC_GSEA_SSA_Female_EnrichPlot.pdf")
+                                   Save.Path = Subfolder.Path, FileName = paste0("/",SampleType,"_GSEA_SSA_Female_EnrichPlot.pdf"))
 
 GSEA_Large_Female.df.TOP <- GSEA_SSA_Female.lt[["GSEA_Large.df.TOP"]]
 GSEA_Large_Female.df.TOP <- GSEA_Large_Female.df.TOP[,!colnames(GSEA_Large_Female.df.TOP) %in% c("leadingEdge")]
-write.table(GSEA_Large_Female.df.TOP, file=paste0(Subfolder.Path,"/PBMC_GSEA_Pathway_LargeTOP_SSA_Female.txt"),sep="\t",
+write.table(GSEA_Large_Female.df.TOP, file=paste0(Subfolder.Path,"/",SampleType,"_GSEA_Pathway_LargeTOP_SSA_Female.txt"),sep="\t",
             row.names=F, quote = FALSE)
 
 ##### Bubble plot #####
@@ -195,7 +195,7 @@ GSEA_Large_Female.df.TOP$PhenoType <- factor(GSEA_Large_Female.df.TOP$PhenoType,
 GSEA_ggplot_SSA_Female.lt <- GSEA_ggplot(GSEA_Large_Female.df.TOP,NES_Th = NES_Th_Set, padj_Th = padj_Th_Set)
 GSEA_Large_Female.df.TOP.S <- GSEA_ggplot_SSA_Female.lt[["GSEA_TOP.df"]]
 
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SSA_Female.pdf"),width = 17, height = 12 )
+pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_SSA_Female.pdf"),width = 17, height = 12 )
   GSEA_ggplot_SSA_Female.lt[["BBPlot_Ori"]]
   GSEA_ggplot_SSA_Female.lt[["BBPlot"]]
   GSEA_ggplot_SSA_Female.lt[["BBPlot2"]]
@@ -212,7 +212,7 @@ GSEA_T_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.df.TOP.S,
                                       OrderSet = GSEA_ggplot_SSA_Female.lt[["Y_Order"]],
                                       GSEA_Color = GSEA_Color.lt,
                                       Save.Path = paste0(Subfolder.Path),
-                                      FileName = "/PBMC_GSEA_Bubble_SSA_Female_SubType_T.pdf")
+                                      FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Female_SubType_T.pdf"))
 
 ## Mac
 GSEA_Mac_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.df.TOP.S,
@@ -220,7 +220,7 @@ GSEA_Mac_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.df.TOP.S,
                                         OrderSet = GSEA_ggplot_SSA_Female.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
-                                        FileName = "/PBMC_GSEA_Bubble_SSA_Female_SubType_Mac.pdf")
+                                        FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Female_SubType_Mac.pdf"))
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
    df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
@@ -245,7 +245,7 @@ GSEA_Large_SumTOP_Sex.df <- GSEA_Large_SumTOP_Sex.df[,!colnames(GSEA_Large_SumTO
 GSEA_ggplot_SSA.lt <- GSEA_ggplot(GSEA_Large_SumTOP_Sex.df,NES_Th = NES_Th_Set, padj_Th = padj_Th_Set)
 GSEA_Large_SumTOP_Sex.df.S <- GSEA_ggplot_SSA.lt[["GSEA_TOP.df"]]
 
-write.table(GSEA_Large_SumTOP_Sex.df, file=paste0(Subfolder.Path,"/PBMC_GSEA_Pathway_3Dataset_All.txt"),sep="\t",
+write.table(GSEA_Large_SumTOP_Sex.df, file=paste0(Subfolder.Path,"/",SampleType,"_GSEA_Pathway_3Dataset_All.txt"),sep="\t",
             row.names=F, quote = FALSE)
 
 
@@ -258,7 +258,7 @@ GSEA_SPA_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                         OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
-                                        FileName = "/PBMC_GSEA_Bubble_Sum_SubType_SPA.pdf",
+                                        FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_SPA.pdf"),
                                         PDFwidth = 35, PDFheight = 17)
 
 BBPlot_SPA_B <- GSEA_SPA_Sum.lt[["BBPlot_SubB"]]
@@ -270,7 +270,7 @@ GSEA_Male_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                         OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
-                                        FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Male.pdf",
+                                        FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_Male.pdf"),
                                         PDFwidth = 35, PDFheight = 17)
 
 BBPlot_M_B <- GSEA_Male_Sum.lt[["BBPlot_SubB"]]
@@ -282,7 +282,7 @@ GSEA_Female_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                         OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
-                                        FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Female.pdf",
+                                        FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_Female.pdf"),
                                         PDFwidth = 35, PDFheight = 17)
 
 BBPlot_F_B <- GSEA_Female_Sum.lt[["BBPlot_SubB"]]
@@ -297,7 +297,7 @@ GSEA_T_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                      OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                      GSEA_Color = GSEA_Color.lt,
                                      Save.Path = paste0(Subfolder.Path),
-                                     FileName = "/PBMC_GSEA_Bubble_Sum_SubType_T.pdf",
+                                     FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_T.pdf"),
                                      PDFwidth = 35, PDFheight = 17 )
 
 BBPlot_T_B <- GSEA_T_Sum.lt[["BBPlot_SubB"]]
@@ -309,7 +309,7 @@ GSEA_Mac_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                        OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                        GSEA_Color = GSEA_Color.lt,
                                        Save.Path = paste0(Subfolder.Path),
-                                       FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Mac.pdf",
+                                       FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_Mac.pdf"),
                                        PDFwidth = 35, PDFheight = 17 )
 BBPlot_Mac_B <- GSEA_Mac_Sum.lt[["BBPlot_SubB"]]
 BBPlot_Mac_B1 <- GSEA_Mac_Sum.lt[["BBPlot_SubB_Sort"]]
@@ -320,7 +320,7 @@ GSEA_Mast_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                         OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
-                                        FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Mast.pdf",
+                                        FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_Mast.pdf"),
                                         PDFwidth = 35, PDFheight = 17 )
 
 BBPlot_Mast_B <- GSEA_Mast_Sum.lt[["BBPlot_SubB"]]
@@ -332,7 +332,7 @@ GSEA_Neu_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
                                        OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                        GSEA_Color = GSEA_Color.lt,
                                        Save.Path = paste0(Subfolder.Path),
-                                       FileName = "/PBMC_GSEA_Bubble_Sum_SubType_Neu.pdf",
+                                       FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_Neu.pdf"),
                                        PDFwidth = 35, PDFheight = 17 )
 
 BBPlot_Neu_B <- GSEA_Neu_Sum.lt[["BBPlot_SubB"]]
@@ -348,7 +348,7 @@ BBPlotB2 <- BBPlotB2 + theme(axis.title.y=element_blank(),
 BBPlotB2 <- BBPlotB2 %>% insert_left(GSEA_ggplot_SSA.lt[["Y_Order"]], width = 0.2)
 BBPlotB2
 
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_Sum.pdf"),width = 35, height = 17 )
+pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_Sum.pdf"),width = 35, height = 17 )
   GSEA_ggplot_SSA.lt[["BBPlot"]]
   GSEA_ggplot_SSA.lt[["BBPlotB1"]]
   BBPlotB2
@@ -379,7 +379,7 @@ GSEA_Large_SumTOP_Sex.df.S <- GSEA_Large_SumTOP_Sex.df.S[abs(GSEA_Large_SumTOP_S
 library(ggplot2)
 library(scales)
 
-pdf(file = paste0(Subfolder.Path,"/PBMC_GSEA_Bubble_SSA.pdf"),width = 17, height = 20 )
+pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_SSA.pdf"),width = 17, height = 20 )
 
 
 ggplot(GSEA_Large_SumTOP_Sex.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
