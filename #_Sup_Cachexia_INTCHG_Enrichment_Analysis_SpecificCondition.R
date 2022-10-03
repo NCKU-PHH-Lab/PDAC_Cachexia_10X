@@ -1,7 +1,7 @@
 
-# ##### Presetting ######
-#   rm(list = ls()) # Clean variable
-#   memory.limit(150000)
+##### Presetting ######
+  rm(list = ls()) # Clean variable
+  memory.limit(150000)
 
 ##### Load Packages #####
   # if(!require("tidyverse")) install.packages("tidyverse")
@@ -45,21 +45,21 @@
 
 
 
-# ##### Load RData* #####
-#   # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-08-13_PBMC_Main/06_Cell_type_annotation.RData")
-#   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
-#
-#   # Clean up Object
-#   scRNA.SeuObj <- PBMC.combined
-#   rm(list=setdiff(ls(), "scRNA.SeuObj"))
-#
-#   ## Save Ori
-#   scRNA_Ori.SeuObj <- scRNA.SeuObj
-#
-#   ## Clean up data (Delete other type)
-#   scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"]] )]
-#
-#   ## Clean up data (Delete other type)
+##### Load RData* #####
+  # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-08-13_PBMC_Main/06_Cell_type_annotation.RData")
+  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
+
+  # Clean up Object
+  scRNA.SeuObj <- PBMC.combined
+  rm(list=setdiff(ls(), "scRNA.SeuObj"))
+
+  ## Save Ori
+  scRNA_Ori.SeuObj <- scRNA.SeuObj
+
+  ## Clean up data (Delete other type)
+  scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"]] )]
+
+  ## Clean up data (Delete other type)
 
 ##### Function setting #####
   ## Call function
