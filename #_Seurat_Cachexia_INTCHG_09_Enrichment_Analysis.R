@@ -46,6 +46,14 @@ GSEATopNum = 10
 NES_Th_Set = 1.5
 padj_Th_Set = 0.01
 
+## SubType Setting
+SubGrp1 = c("CD4+T","CD8+T","T")
+SubGrp1_DS <- c("F_CD4+T","F_CD8+T","F_T",  "M_CD4+T","M_CD8+T","M_T",  "SPA_CD4+T","SPA_CD8+T","SPA_T")
+SubGrp2 = c("Mac")
+SubGrp3 <- c("Mast")
+SubGrp4 <- c("Neu")
+
+
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
   #### Load Geneset ####
   ## Geneset from GSEA
@@ -105,21 +113,21 @@ dev.off()
 ##### Extract SubType #####
 source("FUN_GSEA_ExtractSubType.R")
 
-## T Cell
+## SubGrp1
 GSEA_T.lt <- GSEA_ExtractSubType(GSEA_Large.df.TOP,
-                                 KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
+                                 KeyWordSet.lt = list(Mode = "KWSet", KW = SubGrp1),
                                  OrderSet = GSEA_ggplot_SPA.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
-                                 FileName = paste0("/",SampleType,"_GSEA_Bubble_SPA_SubType_T.pdf"))
+                                 FileName = paste0("/",SampleType,"_GSEA_Bubble_SPA_SubType_SubGrp1.pdf"))
 
-## Mac
+## SubGrp2
 GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.df.TOP.S,
-                                 KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
+                                 KeyWordSet.lt = list(Mode = "Grep", KW = SubGrp2),
                                  OrderSet = GSEA_ggplot_SPA.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
-                                 FileName = paste0("/",SampleType,"_GSEA_Bubble_SPA_SubType_Mac.pdf"))
+                                 FileName = paste0("/",SampleType,"_GSEA_Bubble_SPA_SubType_SubGrp2.pdf"))
 
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
@@ -160,21 +168,21 @@ dev.off()
 ##### Extract SubType #####
 source("FUN_GSEA_ExtractSubType.R")
 
-## T Cell
+## SubGrp1
 GSEA_T_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.df.TOP.S,
-                                 KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
+                                 KeyWordSet.lt = list(Mode = "KWSet", KW = SubGrp1),
                                  OrderSet = GSEA_ggplot_SSA_Male.lt[["Y_Order"]],
                                  GSEA_Color = GSEA_Color.lt,
                                  Save.Path = paste0(Subfolder.Path),
-                                 FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Male_SubType_T.pdf"))
+                                 FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Male_SubType_SubGrp1.pdf"))
 
-## Mac
+## SubGrp2
 GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.df.TOP.S,
-                                   KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
+                                   KeyWordSet.lt = list(Mode = "Grep", KW = SubGrp2),
                                    OrderSet = GSEA_ggplot_SSA_Male.lt[["Y_Order"]],
                                    GSEA_Color = GSEA_Color.lt,
                                    Save.Path = paste0(Subfolder.Path),
-                                   FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Male_SubType_Mac.pdf"))
+                                   FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Male_SubType_SubGrp2.pdf"))
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
    df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
@@ -215,21 +223,21 @@ dev.off()
 ##### Extract SubType #####
 source("FUN_GSEA_ExtractSubType.R")
 
-## T Cell
+## SubGrp1
 GSEA_T_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.df.TOP.S,
-                                      KeyWordSet.lt = list(Mode = "KWSet", KW = c("CD4+T","CD8+T","T")),
+                                      KeyWordSet.lt = list(Mode = "KWSet", KW = SubGrp1),
                                       OrderSet = GSEA_ggplot_SSA_Female.lt[["Y_Order"]],
                                       GSEA_Color = GSEA_Color.lt,
                                       Save.Path = paste0(Subfolder.Path),
-                                      FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Female_SubType_T.pdf"))
+                                      FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Female_SubType_SubGrp1.pdf"))
 
-## Mac
+## SubGrp2
 GSEA_Mac_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.df.TOP.S,
-                                        KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
+                                        KeyWordSet.lt = list(Mode = "Grep", KW = SubGrp2),
                                         OrderSet = GSEA_ggplot_SSA_Female.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
-                                        FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Female_SubType_Mac.pdf"))
+                                        FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Female_SubType_SubGrp2.pdf"))
 
 rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
    df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
@@ -298,50 +306,48 @@ BBPlot_F_B <- GSEA_Female_Sum.lt[["BBPlot_SubB"]]
 BBPlot_F_B1 <- GSEA_Female_Sum.lt[["BBPlot_SubB_Sort"]]
 
 
-## T Cell
+## SubGrp1
 GSEA_T_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
-                                     KeyWordSet.lt = list(Mode = "KWSet", KW = c("F_CD4+T","F_CD8+T","F_T",
-                                                                                 "M_CD4+T","M_CD8+T","M_T",
-                                                                                 "SPA_CD4+T","SPA_CD8+T","SPA_T")),
+                                     KeyWordSet.lt = list(Mode = "KWSet", KW = SubGrp1_DS),
                                      OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                      GSEA_Color = GSEA_Color.lt,
                                      Save.Path = paste0(Subfolder.Path),
-                                     FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_T.pdf"),
+                                     FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_SubGrp1.pdf"),
                                      PDFwidth = 35, PDFheight = 17 )
 
 BBPlot_T_B <- GSEA_T_Sum.lt[["BBPlot_SubB"]]
 BBPlot_T_B1 <- GSEA_T_Sum.lt[["BBPlot_SubB_Sort"]]
 
-## Mac
+## SubGrp2
 GSEA_Mac_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
-                                       KeyWordSet.lt = list(Mode = "Grep", KW = c("Mac")),
+                                       KeyWordSet.lt = list(Mode = "Grep", KW = SubGrp2),
                                        OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                        GSEA_Color = GSEA_Color.lt,
                                        Save.Path = paste0(Subfolder.Path),
-                                       FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_Mac.pdf"),
+                                       FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_SubGrp2.pdf"),
                                        PDFwidth = 35, PDFheight = 17 )
 BBPlot_Mac_B <- GSEA_Mac_Sum.lt[["BBPlot_SubB"]]
 BBPlot_Mac_B1 <- GSEA_Mac_Sum.lt[["BBPlot_SubB_Sort"]]
 
-## Mast
+## SubGrp3
 GSEA_Mast_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
-                                        KeyWordSet.lt = list(Mode = "Grep", KW = c("Mast")),
+                                        KeyWordSet.lt = list(Mode = "Grep", KW = SubGrp3),
                                         OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
-                                        FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_Mast.pdf"),
+                                        FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_SubGrp3.pdf"),
                                         PDFwidth = 35, PDFheight = 17 )
 
 BBPlot_Mast_B <- GSEA_Mast_Sum.lt[["BBPlot_SubB"]]
 BBPlot_Mast_B1  <- GSEA_Mast_Sum.lt[["BBPlot_SubB_Sort"]]
 
-## Neu
+## SubGrp4
 GSEA_Neu_Sum.lt <- GSEA_ExtractSubType(GSEA_Large_SumTOP_Sex.df.S,
-                                       KeyWordSet.lt = list(Mode = "Grep", KW = c("Neu")),
+                                       KeyWordSet.lt = list(Mode = "Grep", KW = SubGrp4),
                                        OrderSet = GSEA_ggplot_SSA.lt[["Y_Order"]],
                                        GSEA_Color = GSEA_Color.lt,
                                        Save.Path = paste0(Subfolder.Path),
-                                       FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_Neu.pdf"),
+                                       FileName = paste0("/",SampleType,"_GSEA_Bubble_Sum_SubType_SubGrp4.pdf"),
                                        PDFwidth = 35, PDFheight = 17 )
 
 BBPlot_Neu_B <- GSEA_Neu_Sum.lt[["BBPlot_SubB"]]
