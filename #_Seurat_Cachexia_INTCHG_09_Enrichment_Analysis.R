@@ -1,3 +1,12 @@
+# ## INTCHG: Interchangeable
+#   # For PBMC
+#   scRNA.SeuObj <- PBMC.combined
+#   SampleType = "PBMC"
+#
+#   ## For SC
+#   # scRNA.SeuObj <- SC.combined
+#   # SampleType = "SC"
+
 # ##### Presetting ######
 #   rm(list = ls()) # Clean variable
 #   memory.limit(150000)

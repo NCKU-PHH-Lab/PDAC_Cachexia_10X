@@ -1,6 +1,9 @@
 ## INTCHG: Interchangeable
+  # For PBMC
   scRNA.SeuObj <- PBMC.combined
   SampleType = "PBMC"
+
+  ## For SC
   # scRNA.SeuObj <- SC.combined
   # SampleType = "SC"
 

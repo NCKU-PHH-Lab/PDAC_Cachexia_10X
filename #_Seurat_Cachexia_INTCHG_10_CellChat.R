@@ -2,9 +2,15 @@
 ## Ref: https://htmlpreview.github.io/?https://github.com/sqjin/CellChat/blob/master/tutorial/CellChat-vignette.html
 
 # ## INTCHG: Interchangeable
+#   # For PBMC
 #   scRNA.SeuObj <- PBMC.combined
-#   # scRNA.SeuObj <- SC.combined
+#   SampleType = "PBMC"
 #
+#   ## For SC
+#   # scRNA.SeuObj <- SC.combined
+#   # SampleType = "SC"
+
+
 # # ##### Presetting ######
 # #   rm(list = ls()) # Clean variable
 # #   memory.limit(150000)
