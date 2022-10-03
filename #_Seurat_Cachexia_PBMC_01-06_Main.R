@@ -92,7 +92,7 @@
     set.seed(1) # Fix the seed
     DefaultAssay(PBMC.combined) <- "integrated"
 
-    #### Save RData ####
+  #### Save RData ####
     save.image(paste0(Save.Path,"/01_Combine_different_datasets_before_QC.RData"))
 
 ##### 02 Quality Control  #####
@@ -183,20 +183,20 @@
     file = paste0(setwd(getwd()),"/",Version,"/PBMC_PCA.pdf"),
     width = 10,  height = 8
   )
-  VizDimLoadings(PBMC.combined, dims = 1:2, reduction = "pca")
-  DimPlot(PBMC.combined, reduction = "pca")
-  DimHeatmap(PBMC.combined, dims = 1, cells = 500, balanced = TRUE)
-  DimHeatmap(PBMC.combined, dims = 1:15, cells = 500, balanced = TRUE)
-  DimHeatmap(PBMC.combined, dims = 16:30, cells = 500, balanced = TRUE)
+    VizDimLoadings(PBMC.combined, dims = 1:2, reduction = "pca")
+    DimPlot(PBMC.combined, reduction = "pca")
+    DimHeatmap(PBMC.combined, dims = 1, cells = 500, balanced = TRUE)
+    DimHeatmap(PBMC.combined, dims = 1:15, cells = 500, balanced = TRUE)
+    DimHeatmap(PBMC.combined, dims = 16:30, cells = 500, balanced = TRUE)
 
-  # # Determine the 'dimensionality' of the dataset
-  # # NOTE: This process can take a long time for big datasets, comment out for expediency. More
-  # # approximate techniques such as those implemented in ElbowPlot() can be used to reduce
-  # # computation time
-  # PBMC.combined <- JackStraw(PBMC.combined, num.replicate = 100)
-  # PBMC.combined <- ScoreJackStraw(PBMC.combined, dims = 1:20)
-  # JackStrawPlot(PBMC.combined, dims = 1:20)
-  ElbowPlot(PBMC.combined, ndims = 50)
+    # # Determine the 'dimensionality' of the dataset
+    # # NOTE: This process can take a long time for big datasets, comment out for expediency. More
+    # # approximate techniques such as those implemented in ElbowPlot() can be used to reduce
+    # # computation time
+    # PBMC.combined <- JackStraw(PBMC.combined, num.replicate = 100)
+    # PBMC.combined <- ScoreJackStraw(PBMC.combined, dims = 1:20)
+    # JackStrawPlot(PBMC.combined, dims = 1:20)
+    ElbowPlot(PBMC.combined, ndims = 50)
   dev.off()
 
   ElbowPlot(PBMC.combined, ndims = 50)
@@ -227,10 +227,10 @@
   ## Visualization
   DimPlot(PBMC.combined, reduction = "umap", group.by = "sample") %>% BeautifyggPlot(.,LegPos = c(0.85, 0.15),AxisTitleSize=1.1)
 
-        pdf(
-          file = paste0(setwd(getwd()),"/",Version,"/PBMC_nlDR_Cluster.pdf"),
-          width = 10,  height = 8
-        )
+      pdf(
+        file = paste0(setwd(getwd()),"/",Version,"/PBMC_nlDR_Cluster.pdf"),
+        width = 10,  height = 8
+      )
 
         DimPlot(PBMC.combined, reduction = "umap", group.by = "sample") %>%
                 BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18)
@@ -251,15 +251,14 @@
         DimPlot(PBMC.combined, reduction = "tsne", group.by = "sample") %>%
           BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18)
 
-        dev.off()
-        # graphics.off()
+      dev.off()
+      # graphics.off()
 
   rm(PBMC.TN138_QC, PBMC.TN139_QC, PBMC.TN146_QC, PBMC.TN148_QC,PBMC.combined_QCTry)
 
 
   ##### Meta Table  #####
-
-    ## Before QC
+    #### Before QC ####
     Meta.df <- data.frame(matrix(nrow = 0,ncol = 3))
     colnames(Meta.df) <- c("NO.","Cell_Num","Gene_Num")
     Meta.df[1,1] <- c("EO.M")  # TN138
@@ -283,7 +282,7 @@
     Meta.df[5,2] <- ncol(PBMC.combined_Ori@assays[["RNA"]]@counts)
     Meta.df[5,3] <- nrow(PBMC.combined_Ori@assays[["RNA"]]@counts)
 
-    ## After QC
+    #### After QC ####
     colnames(Meta.df) <- c("NO.","Cell_Num","Gene_Num")
     Meta.df[6,1] <- c("EO.M.QC")  # TN138
     Meta.df[6,2] <- ncol(PBMC.list_QC[[1]]@assays[["RNA"]]@counts)
@@ -343,7 +342,7 @@
       file = paste0(Save.Path,"/PBMC_Heatmap_Cluster_top",top_NSet,".pdf"),
       width = 10,  height = 8
     )
-      DoHeatmap(PBMC.combined, features = top_N$gene,size = 2,angle = 60) +
+        DoHeatmap(PBMC.combined, features = top_N$gene,size = 2,angle = 60) +
         scale_fill_gradient2(low="#5283ff",mid ="white", high ="#ff5c5c") +
         theme(axis.text.y = element_text(size  = 5)) +
         theme(legend.position = "bottom" )
@@ -357,6 +356,15 @@
       file = paste0(setwd(getwd()),"/",Version,"/PBMC_nlDR_CTMarker.pdf"),
       width = 10,  height = 8
     )
+
+      ## Summary
+      markers.to.plot <- c("Cd3d","Cd3e", "Cd4","Cd8a", "Csf1r", "Lyz2","Chil3","Il1b", "S100a9","Nkg7",
+                           "Gzmb", "Cd79a", "Ms4a1","Clu","Hbb-bs","Ppbp")
+
+      FeaturePlot(PBMC.combined, features = markers.to.plot, min.cutoff = "q9", coord.fixed = 1)
+      # T Cell: Cd3d,Cd3e;  CD4+ T Cell: Cd4; CD8+ T Cell: Cd8a; Macrophages: Csf1r,Lyz,Chil3;  Neutrophils: S100a9;
+      # NK Cell: Nkg7,Gzmb; B Cell: Cd79a,Ms4a1; Mast Cell: Clu; Erythrocytes: Hbb-bs; Platelet: Ppbp
+
 
       # PMID: 31771616 #!!!!!!
       FeaturePlot(PBMC.combined, features = c("Cd3d", "Cd4", "Cd8a", "Csf1r", "Foxp3", "S100a9"), min.cutoff = "q9",
@@ -414,18 +422,10 @@
       # Platelet
       FeaturePlot(PBMC.combined, features = c("Ppbp"), min.cutoff = "q9", coord.fixed = 1)
 
-      ## Summary
-      markers.to.plot <- c("Cd3d","Cd3e", "Cd4","Cd8a", "Csf1r", "Lyz2","Chil3","Il1b", "S100a9","Nkg7",
-                           "Gzmb", "Cd79a", "Ms4a1","Clu","Hbb-bs","Ppbp")
-
-      FeaturePlot(PBMC.combined, features = markers.to.plot, min.cutoff = "q9", coord.fixed = 1)
-      # T Cell: Cd3d,Cd3e;  CD4+ T Cell: Cd4; CD8+ T Cell: Cd8a; Macrophages: Csf1r,Lyz,Chil3;  Neutrophils: S100a9;
-      # NK Cell: Nkg7,Gzmb; B Cell: Cd79a,Ms4a1; Mast Cell: Clu; Erythrocytes: Hbb-bs; Platelet: Ppbp
-
 
     dev.off()
 
-    #### Save RData ####
+  #### Save RData ####
     save.image(paste0(Save.Path,"/05_Identify_conserved_cell_type_markers.RData"))
 
 ##### 06 Cell type annotation  #####
@@ -612,7 +612,7 @@
 
 
 ###########################################################################################
-
+# -------------------------------------- #
 ##### Interested genes #####
 
   FeaturePlot(PBMC.combined, features = c("Top2a", "Ptk2"), min.cutoff = "q9")
@@ -627,8 +627,6 @@
 # -------------------------------------- #
 
 ###########################################################################################
-
-
 
 # ## Export Seurat Object in 10X format
 # # https://github.com/satijalab/seurat/issues/884
