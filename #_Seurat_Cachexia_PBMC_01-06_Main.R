@@ -455,9 +455,8 @@
   # Idents(PBMC.combined) <- "celltype"
 
     ## Heatmap
-
-    Heatmap_Color.lt <- list(low="#5283ff",mid ="#311669", high ="#ff5c5c")
-    Heatmap_Color.lt <- list(low="#419e47",mid ="#311669", high ="#edff66")
+    # Heatmap_Color.lt <- list(low="#5283ff",mid ="#311669", high ="#ff5c5c")
+    # Heatmap_Color.lt <- list(low="#419e47",mid ="#311669", high ="#edff66")
     Heatmap_Color.lt <- list(low="#5283ff",mid ="white", high ="#ff5c5c")
 
       pdf(
@@ -606,8 +605,6 @@
   #   p2 <- LabelPoints(plot = p2, points = genes.to.label, repel = TRUE)
   #   p1 + p2
   #   rm(p1 , p2 ,CD4T.cells, MacrophageM2, avg.CD4T.cells, avg.MacrophageM2)
-
-
 
 
 
