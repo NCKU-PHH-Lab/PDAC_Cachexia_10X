@@ -53,7 +53,6 @@ SubGrp2 = c("Mac")
 SubGrp3 <- c("Mast")
 SubGrp4 <- c("Neu")
 
-
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
   #### Load Geneset ####
   ## Geneset from GSEA
@@ -130,9 +129,6 @@ GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.df.TOP.S,
                                  FileName = paste0("/",SampleType,"_GSEA_Bubble_SPA_SubType_SubGrp2.pdf"))
 
 
-rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
-   df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
-
 ##### save.image #####
 save.image(paste0(Subfolder.Path,"/09_1_GSEA_Analysis_(SPA).RData"))
 
@@ -183,9 +179,6 @@ GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.df.TOP.S,
                                    GSEA_Color = GSEA_Color.lt,
                                    Save.Path = paste0(Subfolder.Path),
                                    FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Male_SubType_SubGrp2.pdf"))
-
-rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
-   df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
 
 ##### save.image #####
 save.image(paste0(Subfolder.Path,"/09_2_GSEA_Analysis_(SSA_Male).RData"))
@@ -238,9 +231,6 @@ GSEA_Mac_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.df.TOP.S,
                                         GSEA_Color = GSEA_Color.lt,
                                         Save.Path = paste0(Subfolder.Path),
                                         FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Female_SubType_SubGrp2.pdf"))
-
-rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
-   df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
 
 ##### save.image #####
 save.image(paste0(Subfolder.Path,"/09_3_GSEA_Analysis_(SSA_Female).RData"))
@@ -414,8 +404,13 @@ BBPlot %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horiz
 
 dev.off()
 
-rm(p2,p3,BBPlotB1,BBPlotB2,BBPlotB,BBPlot_Cluster,df1.1.clust.Pheno,df1.1.clust.Pathway,
-   df1.1,df1,BBPlot,BBPlot_Mac,BBPlot_MacB,BBPlot_T,BBPlot_TB)
+rm(SubGrp1,SubGrp1_DS,SubGrp2,SubGrp3,SubGrp4)
+rm(BBPlot ,BBPlot_F ,BBPlot_F_B ,BBPlot_F_B1 , BBPlot_M ,BBPlot_M_B ,BBPlot_M_B1,
+   BBPlot_Mac, BBPlot_Mac_B, BBPlot_Mac_B1, BBPlot_T, BBPlot_T_B, BBPlot_T_B1,
+   BBPlot_Mast, BBPlot_Mast_B, BBPlot_Mast_B1, BBPlotB,BBPlotB1,BBPlotB2)
+
+rm(GSEA_Large_Female.df.TOP, GSEA_Large_Male.df.TOP, GSEA_Large_Female.Sum.TOP, GSEA_Large_Male.Sum.TOP,
+   GSEA_Large_Female.Sum.TOP.S, GSEA_Large_Male.Sum.TOP.S, GSEA_Large.Sum.TOP.S)
 
 ##### save.image #####
 save.image(paste0(Subfolder.Path,"/09_4_GSEA_Analysis_(SSA).RData"))
