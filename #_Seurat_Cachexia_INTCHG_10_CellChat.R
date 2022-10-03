@@ -2,7 +2,7 @@
 ## Ref: https://htmlpreview.github.io/?https://github.com/sqjin/CellChat/blob/master/tutorial/CellChat-vignette.html
 
 # ## INTCHG: Interchangeable
-#   # For PBMC
+#   ## For PBMC
 #   scRNA.SeuObj <- PBMC.combined
 #   SampleType = "PBMC"
 #
@@ -11,9 +11,9 @@
 #   # SampleType = "SC"
 
 
-# # ##### Presetting ######
-# #   rm(list = ls()) # Clean variable
-# #   memory.limit(150000)
+# ##### Presetting ######
+#   rm(list = ls()) # Clean variable
+#   memory.limit(150000)
 
 #### Installation and load the required libraries ####
   #### Basic installation ####
@@ -49,37 +49,43 @@
   source("FUN_CellChatOne.R")
 
   # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/09_4_GSEA_Analysis_(SSA).RData")
-  PBMC_EO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "EO"]
-  PBMC_LO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "LO"]
+  scRNA_EO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "EO"]
+  scRNA_LO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "LO"]
 
+  ## For PBMC
   Cell_Type_Order.set <- c("Mac1", "Mac2", "Mac3","Neu", "T", "CD4+T", "CD8+T", "NK", "B" , "Mast",  "Ery")
-  PBMC_EO.combined$celltype <- factor(PBMC_EO.combined$celltype,
+
+  # ## For SC
+  # Cell_Type_Order.set <- c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
+  #                          "Fib1", "Fib2", "Fib3")
+
+  scRNA_EO.combined$celltype <- factor(scRNA_EO.combined$celltype,
                                   levels = Cell_Type_Order.set)
-  PBMC_LO.combined$celltype <- factor(PBMC_LO.combined$celltype,
+  scRNA_LO.combined$celltype <- factor(scRNA_LO.combined$celltype,
                                       levels = Cell_Type_Order.set)
 
 
   ## ECM-Receptor
-  CellChatOne(PBMC_EO.combined,
+  CellChatOne(scRNA_EO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM_EO",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_EO.lt
 
-  CellChatOne(PBMC_LO.combined,
+  CellChatOne(scRNA_LO.combined,
               signalingtype = "ECM-Receptor", projectName = "ECM_LO",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) ->   CellChat_ECM_LO.lt
 
   ## Cell-Cell Contact
-  CellChatOne(PBMC_EO.combined,
+  CellChatOne(scRNA_EO.combined,
               signalingtype = "Cell-Cell Contact", projectName = "CC_EO",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
   ) -> CellChat_CC_EO.lt
 
-  CellChatOne(PBMC_LO.combined,
+  CellChatOne(scRNA_LO.combined,
               signalingtype = "Cell-Cell Contact", projectName = "CC_LO",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
@@ -87,13 +93,13 @@
 
 
   ## Secreted Signaling
-  CellChatOne(PBMC_EO.combined,
+  CellChatOne(scRNA_EO.combined,
               signalingtype = "Secreted Signaling", projectName = "Secret_EO",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
   ) -> CellChat_Secret_EO.lt
 
-  CellChatOne(PBMC_LO.combined,
+  CellChatOne(scRNA_LO.combined,
               signalingtype = "Secreted Signaling", projectName = "Secret_LO",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
@@ -107,9 +113,9 @@
 ##### Merge cellchat #####
 
   ##### Load rds #####
-  cellchat.EO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/PBMC_CellCell_Interaction/ECM_EO_CellChat.rds")
-  cellchat.LO <- readRDS("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/PBMC_CellCell_Interaction/ECM_LO_CellChat.rds")
-
+  CCDBType = "ECM"
+  cellchat.EO <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EO_CellChat.rds"))
+  cellchat.LO <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_LO_CellChat.rds"))
 
   object.list <- list(LO = cellchat.LO, EO = cellchat.EO)
   cellchat <- mergeCellChat(object.list, add.names = names(object.list))
@@ -120,7 +126,7 @@
   #                                     levels = Cell_Type_Order.set)
 
   ##### Current path and new folder setting*  #####
-  ProjectName = "PBMC_CellChat_Multi_ECM" # Secret, ECM, CC
+  ProjectName = paste0(SampleType,"_CellChat_Multi_ECM") # Secret, ECM, CC
   Version = paste0(Sys.Date(),"_",ProjectName)
   Save.Path = paste0(getwd(),"/",Version)
   ## Create new folder
