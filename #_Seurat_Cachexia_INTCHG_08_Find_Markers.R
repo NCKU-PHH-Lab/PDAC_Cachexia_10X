@@ -1,6 +1,6 @@
-## INTCHG: Interchangeable
-  scRNA.SeuObj <- PBMC.combined
-  # scRNA.SeuObj <- SC.combined
+# ## INTCHG: Interchangeable
+#   scRNA.SeuObj <- PBMC.combined
+#   # scRNA.SeuObj <- SC.combined
 
 ##### 08_1 Find CCmarker in different Cell type and VolcanoPlot (SSA) ########
   ### Define group by different phenotype ###

@@ -1,9 +1,13 @@
 ## Ref: https://github.com/sqjin/CellChat
 ## Ref: https://htmlpreview.github.io/?https://github.com/sqjin/CellChat/blob/master/tutorial/CellChat-vignette.html
 
-##### Presetting ######
-  rm(list = ls()) # Clean variable
-  memory.limit(150000)
+# ## INTCHG: Interchangeable
+#   scRNA.SeuObj <- PBMC.combined
+#   # scRNA.SeuObj <- SC.combined
+#
+# # ##### Presetting ######
+# #   rm(list = ls()) # Clean variable
+# #   memory.limit(150000)
 
 #### Installation and load the required libraries ####
   #### Basic installation ####
@@ -39,8 +43,8 @@
   source("FUN_CellChatOne.R")
 
   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/09_4_GSEA_Analysis_(SSA).RData")
-  PBMC_EO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "EO"]
-  PBMC_LO.combined <- PBMC.combined[,PBMC.combined@meta.data[["Cachexia"]] %in% "LO"]
+  PBMC_EO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "EO"]
+  PBMC_LO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "LO"]
 
   Cell_Type_Order.set <- c("Mac1", "Mac2", "Mac3","Neu", "T", "CD4+T", "CD8+T", "NK", "B" , "Mast",  "Ery")
   PBMC_EO.combined$celltype <- factor(PBMC_EO.combined$celltype,

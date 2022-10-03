@@ -1,36 +1,36 @@
-##### Presetting ######
-rm(list = ls()) # Clean variable
-memory.limit(150000)
-
-##### ***Load data if necessary*** #####
-# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
-
-##### ***Current path and new folder setting if necessary*** #####
-Save.Path = paste0(Sys.Date(),"_","PBMC_GSEA")
-dir.create(Save.Path)
-SampleType = "PBMC"
-
+# ##### Presetting ######
+#   rm(list = ls()) # Clean variable
+#   memory.limit(150000)
+#
+# ##### ***Load data if necessary*** #####
+#   # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
+#   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
+#
+# ##### ***Current path and new folder setting if necessary*** #####
+#   Save.Path = paste0(Sys.Date(),"_","PBMC_GSEA")
+#   dir.create(Save.Path)
+#   SampleType = "PBMC"
+#
 ## Create folder
-Subfolder.Path = paste0(Save.Path,"/",SampleType,"_GSEA")
-if (!dir.exists(Subfolder.Path)){
-  dir.create(Subfolder.Path)
-}
+  Subfolder.Path = paste0(Save.Path,"/",SampleType,"_GSEA")
+  if (!dir.exists(Subfolder.Path)){
+    dir.create(Subfolder.Path)
+  }
 
 ##### Load packages ####
-# https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
-# install # https://bioconductor.org/packages/release/bioc/html/GSEABase.html
-library(tidyverse)
-library(fgsea)
-library(aplot)
+  # https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
+  # install # https://bioconductor.org/packages/release/bioc/html/GSEABase.html
+  library(tidyverse)
+  library(fgsea)
+  library(aplot)
 
 ##### Function setting  #####
-## Call function
-source("FUN_GSEA_Run_LargeGeneSet.R")
-source("FUN_HSsymbol2MMsymbol.R")
-source("FUN_GSEA_ggplot.R")
-source("FUN_GSEA_Run_Multi.R")
-source("FUN_GSEA_ExtractSubType.R")
+  ## Call function
+  source("FUN_GSEA_Run_LargeGeneSet.R")
+  source("FUN_HSsymbol2MMsymbol.R")
+  source("FUN_GSEA_ggplot.R")
+  source("FUN_GSEA_Run_Multi.R")
+  source("FUN_GSEA_ExtractSubType.R")
 
 ##### Parameter setting  #####
 GSEATopNum = 10
