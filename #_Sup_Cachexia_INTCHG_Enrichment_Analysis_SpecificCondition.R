@@ -101,7 +101,7 @@
 
 ##### Current path and new folder setting* #####
   ProjectName = "CC10X"
-  Sampletype = "PBMC"
+  SampleType = "PBMC"
 
   ExportAnno2 = "EOLO_Neu"
   if(Group_Mode == "GoupByGeneExp"){
@@ -115,10 +115,10 @@
   # ExportAnno = "Chil3Mean_PathM2"
   # ExportAnno = "Recur2Prim"
 
-  ExportName = paste0(ProjectName,"_",Sampletype,"_",ExportAnno)
+  ExportName = paste0(ProjectName,"_",SampleType,"_",ExportAnno)
 
 
-  Version = paste0(Sys.Date(),"_",ProjectName,"_",Sampletype,"_", ExportAnno)
+  Version = paste0(Sys.Date(),"_",ProjectName,"_",SampleType,"_", ExportAnno)
   Save.Path = paste0(getwd(),"/",Version)
   ## Create new folder
   if (!dir.exists(Save.Path)){
