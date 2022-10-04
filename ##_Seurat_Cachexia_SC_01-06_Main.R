@@ -368,6 +368,7 @@
                                             "Cd3d", "Ms4a1","Ms4a2"), min.cutoff = "q9",
                   ncol = 3, coord.fixed = 1)
       # Ductal cells
+      # https://pubmed.ncbi.nlm.nih.gov/24418153/
       FeaturePlot(SC.combined, features = c("Tff2", "Mmp7", "Tspan8", "Sox9", "Lcn2","Ceacam1","Ceacam5","Ceacam6","Krt19"),
                   min.cutoff = "q9", ncol = 3, coord.fixed = 1)
 
