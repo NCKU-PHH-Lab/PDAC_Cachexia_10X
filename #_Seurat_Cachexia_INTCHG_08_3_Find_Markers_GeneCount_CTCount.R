@@ -360,7 +360,7 @@
     df1 <- melt(CCM_Count_Sum_EO.df[1:500,], id = "Genes")
     df1$Genes <- factor(df1$Genes,levels = df1$Genes[1:500])
 
-    source("FUN_Beautify_LinePlot_Ori.R")
+    source("FUN_Beautify_LinePlot.R")
     EO1.P <- ggplot(df1, aes(x = Genes, y = value, color = variable,
                              group = variable ,linetype = variable)) + theme_bw()+
       theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
