@@ -50,7 +50,6 @@ ComHeatmap1 + ComHeatmap2
 
 #### Charlene Modify ####
 source("FUN_netVisual_heatmap_Ch.R")
-source("FUN_netVisual_heatmap_ChTryLog.R")
 
 ScaleSetMax <- 0.5
 ScaleSetMin <- -0.5
