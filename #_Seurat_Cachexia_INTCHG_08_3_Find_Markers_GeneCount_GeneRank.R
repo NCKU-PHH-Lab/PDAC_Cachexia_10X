@@ -1,153 +1,161 @@
-##### Presetting ######
-  rm(list = ls()) # Clean variable
-  memory.limit(150000)
+# ## INTCHG: Interchangeable
+#   # For PBMC
+#   scRNA.SeuObj <- PBMC.combined
+#   SampleType = "PBMC"
+#
+#   ## For SC
+#   # scRNA.SeuObj <- SC.combined
+#   # SampleType = "SC"
 
-##### Load libray #####
-  library(dplyr)
-  library(stringr)
-  library(ggplot2)
-  library(Seurat)
-
-##### Function setting  #####
-  ## Call function
-  source("FUN_CountGeneNum.R")
-  source("FUN_Beautify_ggplot.R")
-
-# ##### Load RData  #####
-# load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
-# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
-  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
+# ##### Presetting ######
+#   rm(list = ls()) # Clean variable
+#   memory.limit(150000)
+#
+# ##### Load libray #####
+#   library(dplyr)
+#   library(stringr)
+#   library(ggplot2)
+#   library(Seurat)
+#
+# ##### Function setting  #####
+#   ## Call function
+#   source("FUN_CountGeneNum.R")
+#   source("FUN_Beautify_ggplot.R")
+#
+# # ##### Load RData  #####
+# # load(paste0(Save_Sub.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
+#   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
 
 ##### Current path and new folder setting #####
-  Version = paste0(Sys.Date(),"_","PBMC_GeneRank")
-  Save.Path = paste0(getwd(),"/",Version)
-  dir.create(Save.Path)
-  SampleType="PBMC"
+  Version = paste0(SampleType,"_GeneRank")
+  Save_Sub.Path = paste0(Save.Path,"/",Version)
+  dir.create(Save_Sub.Path)
 
-##### SSA CCMarker genes( Exclude genes express opposite in Sex) #####
-  ##-------------- Pos --------------##
-  CCMarker_SSA_Pos.df = as.data.frame(matrix(nrow=length(names(Venn_CCMarker_Pos)),ncol= 4))
-  row.names(CCMarker_SSA_Pos.df) <- names(Venn_CCMarker_Pos)
-  colnames(CCMarker_SSA_Pos.df) <- c("Male","Female","Intersect","Union")
+####-------------------------------------------------------------------------------------------####
+#####  CCMarker genes in different cell type ####
+  #### SSA CCMarker genes( Exclude genes express opposite in Sex) ####
+    ##-------------- Pos --------------##
+    CCMarker_SSA_Pos.df = as.data.frame(matrix(nrow=length(names(Venn_CCMarker_Pos)),ncol= 4))
+    row.names(CCMarker_SSA_Pos.df) <- names(Venn_CCMarker_Pos)
+    colnames(CCMarker_SSA_Pos.df) <- c("Male","Female","Intersect","Union")
 
-  for (i in 1:length(Venn_CCMarker_Pos)) {
-    CCMarker_SSA_Pos.df[i,1] <- paste(c(Venn_CCMarker_Pos[[i]][["Summary"]][["Unique_A"]]), collapse = ", ")
-    CCMarker_SSA_Pos.df[i,2] <- paste(c(Venn_CCMarker_Pos[[i]][["Summary"]][["Unique_B"]]), collapse = ", ")
-    CCMarker_SSA_Pos.df[i,3] <- paste(c(Venn_CCMarker_Pos[[i]][["Summary"]][["Intersect_AB"]]), collapse = ", ")
-    CCMarker_SSA_Pos.df[i,4] <- paste(c(Venn_CCMarker_Pos[[i]][["Summary"]][["Union_AB"]]), collapse = ", ")
-
-  }
-  rm(i)
-
-  ##-------------- Neg --------------##
-  CCMarker_SSA_Neg.df = as.data.frame(matrix(nrow=length(names(Venn_CCMarker_Neg)),ncol= 4))
-  row.names(CCMarker_SSA_Neg.df) <- names(Venn_CCMarker_Neg)
-  colnames(CCMarker_SSA_Neg.df) <- c("Male","Female","Intersect","Union")
-
-  for (i in 1:length(Venn_CCMarker_Neg)) {
-    CCMarker_SSA_Neg.df[i,1] <- paste(c(Venn_CCMarker_Neg[[i]][["Summary"]][["Unique_A"]]), collapse = ", ")
-    CCMarker_SSA_Neg.df[i,2] <- paste(c(Venn_CCMarker_Neg[[i]][["Summary"]][["Unique_B"]]), collapse = ", ")
-    CCMarker_SSA_Neg.df[i,3] <- paste(c(Venn_CCMarker_Neg[[i]][["Summary"]][["Intersect_AB"]]), collapse = ", ")
-    CCMarker_SSA_Neg.df[i,4] <- paste(c(Venn_CCMarker_Neg[[i]][["Summary"]][["Union_AB"]]), collapse = ", ")
-
-  }
-  rm(i)
-
-  ##-------------- Combine --------------##
-  CCMList_SSA.df  <- rbind(CCMarker_SSA_Pos.df,CCMarker_SSA_Neg.df)
-  CCMList_SSA.df  <- data.frame(Type = row.names(CCMList_SSA.df ),CCMList_SSA.df )
-
-  rm(CCMarker_SSA_Pos.df,CCMarker_SSA_Neg.df)
-
-  ## Export tsv
-  write.table( CCMList_SSA.df  ,
-               file = paste0(Save.Path,"/",SampleType,"_CCMarker_SSA.tsv"),
-               sep = "\t",
-               quote = F,
-               row.names = F
-  )
-
-##### SPA CCMarker genes #####
-  ##-------------- Pos --------------##
-    CCMarker_SPA_Pos.lt <- list()
-    for(i in c(1:length(CellType.list))){
-      try({
-        CCMarker_SPA_Pos.lt[[i]] <- CCMarker_SPA.lt[[paste0(CellType.list[i])]][["CCMarker.S_Pos_List"]]
-        names(CCMarker_SPA_Pos.lt)[[i]] <- paste0("CCMarker_",CellType.list[i],"_EO")
-      })
-    }
-    rm(i)
-
-    CCMarker_SPA_Pos.df = as.data.frame(matrix(nrow=length(names(CCMarker_SPA_Pos.lt)),ncol= 1))
-    row.names(CCMarker_SPA_Pos.df) <- names(CCMarker_SPA_Pos.lt)
-    colnames(CCMarker_SPA_Pos.df) <- c("Marker")
-
-    for (i in 1:length(CCMarker_SPA_Pos.lt)) {
-      CCMarker_SPA_Pos.df[i,1] <- paste(c(CCMarker_SPA_Pos.lt[[i]]), collapse = ", ")
+    for (i in 1:length(Venn_CCMarker_Pos)) {
+      CCMarker_SSA_Pos.df[i,1] <- paste(c(Venn_CCMarker_Pos[[i]][["Summary"]][["Unique_A"]]), collapse = ", ")
+      CCMarker_SSA_Pos.df[i,2] <- paste(c(Venn_CCMarker_Pos[[i]][["Summary"]][["Unique_B"]]), collapse = ", ")
+      CCMarker_SSA_Pos.df[i,3] <- paste(c(Venn_CCMarker_Pos[[i]][["Summary"]][["Intersect_AB"]]), collapse = ", ")
+      CCMarker_SSA_Pos.df[i,4] <- paste(c(Venn_CCMarker_Pos[[i]][["Summary"]][["Union_AB"]]), collapse = ", ")
 
     }
     rm(i)
 
+    ##-------------- Neg --------------##
+    CCMarker_SSA_Neg.df = as.data.frame(matrix(nrow=length(names(Venn_CCMarker_Neg)),ncol= 4))
+    row.names(CCMarker_SSA_Neg.df) <- names(Venn_CCMarker_Neg)
+    colnames(CCMarker_SSA_Neg.df) <- c("Male","Female","Intersect","Union")
 
-  ##-------------- Neg --------------##
-    CCMarker_SPA_Neg.lt <- list()
-    for(i in c(1:length(CellType.list))){
-      try({
-        CCMarker_SPA_Neg.lt[[i]] <- CCMarker_SPA.lt[[paste0(CellType.list[i])]][["CCMarker.S_Neg_List"]]
-        names(CCMarker_SPA_Neg.lt)[[i]] <- paste0("CCMarker_",CellType.list[i],"_LO")
-      })
+    for (i in 1:length(Venn_CCMarker_Neg)) {
+      CCMarker_SSA_Neg.df[i,1] <- paste(c(Venn_CCMarker_Neg[[i]][["Summary"]][["Unique_A"]]), collapse = ", ")
+      CCMarker_SSA_Neg.df[i,2] <- paste(c(Venn_CCMarker_Neg[[i]][["Summary"]][["Unique_B"]]), collapse = ", ")
+      CCMarker_SSA_Neg.df[i,3] <- paste(c(Venn_CCMarker_Neg[[i]][["Summary"]][["Intersect_AB"]]), collapse = ", ")
+      CCMarker_SSA_Neg.df[i,4] <- paste(c(Venn_CCMarker_Neg[[i]][["Summary"]][["Union_AB"]]), collapse = ", ")
+
     }
     rm(i)
 
-    CCMarker_SPA_Neg.df = as.data.frame(matrix(nrow=length(names(CCMarker_SPA_Neg.lt)),ncol= 1))
-    row.names(CCMarker_SPA_Neg.df) <- names(CCMarker_SPA_Neg.lt)
-    colnames(CCMarker_SPA_Neg.df) <- c("Marker")
+    ##-------------- Combine --------------##
+    CCMList_SSA.df  <- rbind(CCMarker_SSA_Pos.df,CCMarker_SSA_Neg.df)
+    CCMList_SSA.df  <- data.frame(Type = row.names(CCMList_SSA.df ),CCMList_SSA.df )
 
-    for (i in 1:length(CCMarker_SPA_Neg.lt)) {
-      CCMarker_SPA_Neg.df[i,1] <- paste(c(CCMarker_SPA_Neg.lt[[i]]), collapse = ", ")
-    }
-    rm(i)
+    rm(CCMarker_SSA_Pos.df,CCMarker_SSA_Neg.df)
 
-    CCMList_SPA.df  <- rbind(CCMarker_SPA_Pos.df,CCMarker_SPA_Neg.df)
-    CCMList_SPA.df  <- data.frame(Type = row.names(CCMList_SPA.df ),CCMList_SPA.df )
+    ## Modify the words
+    library(stringr)
+    CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Venn_CCMarker.","")
+    CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Pos","EO")
+    CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Neg","LO")
 
-    rm(CCMarker_SPA_Pos.df,CCMarker_SPA_Neg.df,CCMarker_SPA_Pos.lt,CCMarker_SPA_Neg.lt)
-
-  ## Export tsv
-    write.table( CCMList_SPA.df  ,
-                 file = paste0(Save.Path,"/",SampleType,"_CCMarker_SPA.tsv"),
+    ## Export tsv
+    write.table( CCMList_SSA.df  ,
+                 file = paste0(Save_Sub.Path,"/",SampleType,"_CCMarker_SSA.tsv"),
                  sep = "\t",
                  quote = F,
                  row.names = F
     )
 
+  #### SPA CCMarker genes ####
+    ##-------------- Pos --------------##
+      CCMarker_SPA_Pos.lt <- list()
+      for(i in c(1:length(CellType.list))){
+        try({
+          CCMarker_SPA_Pos.lt[[i]] <- CCMarker_SPA.lt[[paste0(CellType.list[i])]][["CCMarker.S_Pos_List"]]
+          names(CCMarker_SPA_Pos.lt)[[i]] <- paste0("CCMarker_",CellType.list[i],"_EO")
+        })
+      }
+      rm(i)
 
-  # ##### Load data #####
-  #   CCMList_SPA.df <- read.delim2(paste0(Save.Path,"/PBMC_CCMarker_SPA.tsv"))
-  #   CCMList_SSA.df <- read.delim2(paste0(Save.Path,"/PBMC_CCMarker_SSA.tsv"))
+      CCMarker_SPA_Pos.df = as.data.frame(matrix(nrow=length(names(CCMarker_SPA_Pos.lt)),ncol= 1))
+      row.names(CCMarker_SPA_Pos.df) <- names(CCMarker_SPA_Pos.lt)
+      colnames(CCMarker_SPA_Pos.df) <- c("Marker")
 
-  ## Modify the words
-  library(stringr)
-  CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"CCMarker.","")
-  CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Pos","EO")
-  CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Neg","LO")
+      for (i in 1:length(CCMarker_SPA_Pos.lt)) {
+        CCMarker_SPA_Pos.df[i,1] <- paste(c(CCMarker_SPA_Pos.lt[[i]]), collapse = ", ")
 
-  CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Venn_CCMarker.","")
-  CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Pos","EO")
-  CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Neg","LO")
+      }
+      rm(i)
 
-# ##### (Test) Specific Cell Type #####
-#   CCM_SPA_Mac.df <- CCMList_SPA.df[grep("Mac", CCMList_SPA.df$Type), ]
-#
-#   CCM_SPA_Mac_EO.df <- CCM_SPA_Mac.df[grep("EO",CCM_SPA_Mac.df$Type), ]
-#   CCM_SPA_Mac_LO.df <- CCM_SPA_Mac.df[grep("LO",CCM_SPA_Mac.df$Type), ]
-#
-#   ## Seperate genes ##
-#   CCM_SPA_Mac_EO_Split.df <- strsplit(as.character(
-#                                    CCM_SPA_Mac_EO.df$Marker), ", ")
-#   rm( CCM_SPA_Mac.df,CCM_SPA_Mac_EO.df,CCM_SPA_Mac_LO.df, CCM_SPA_Mac_EO_Split.df)
 
-##### Count gene number #####
+    ##-------------- Neg --------------##
+      CCMarker_SPA_Neg.lt <- list()
+      for(i in c(1:length(CellType.list))){
+        try({
+          CCMarker_SPA_Neg.lt[[i]] <- CCMarker_SPA.lt[[paste0(CellType.list[i])]][["CCMarker.S_Neg_List"]]
+          names(CCMarker_SPA_Neg.lt)[[i]] <- paste0("CCMarker_",CellType.list[i],"_LO")
+        })
+      }
+      rm(i)
+
+      CCMarker_SPA_Neg.df = as.data.frame(matrix(nrow=length(names(CCMarker_SPA_Neg.lt)),ncol= 1))
+      row.names(CCMarker_SPA_Neg.df) <- names(CCMarker_SPA_Neg.lt)
+      colnames(CCMarker_SPA_Neg.df) <- c("Marker")
+
+      for (i in 1:length(CCMarker_SPA_Neg.lt)) {
+        CCMarker_SPA_Neg.df[i,1] <- paste(c(CCMarker_SPA_Neg.lt[[i]]), collapse = ", ")
+      }
+      rm(i)
+
+      CCMList_SPA.df  <- rbind(CCMarker_SPA_Pos.df,CCMarker_SPA_Neg.df)
+      CCMList_SPA.df  <- data.frame(Type = row.names(CCMList_SPA.df ),CCMList_SPA.df )
+
+      rm(CCMarker_SPA_Pos.df,CCMarker_SPA_Neg.df,CCMarker_SPA_Pos.lt,CCMarker_SPA_Neg.lt)
+
+    ## Modify the words
+      library(stringr)
+      CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"CCMarker.","")
+      CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Pos","EO")
+      CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Neg","LO")
+
+    ## Export tsv
+      write.table( CCMList_SPA.df  ,
+                   file = paste0(Save_Sub.Path,"/",SampleType,"_CCMarker_SPA.tsv"),
+                   sep = "\t",
+                   quote = F,
+                   row.names = F
+      )
+
+
+  # ##### (Test) Specific Cell Type #####
+  #   CCM_SPA_Mac.df <- CCMList_SPA.df[grep("Mac", CCMList_SPA.df$Type), ]
+  #
+  #   CCM_SPA_Mac_EO.df <- CCM_SPA_Mac.df[grep("EO",CCM_SPA_Mac.df$Type), ]
+  #   CCM_SPA_Mac_LO.df <- CCM_SPA_Mac.df[grep("LO",CCM_SPA_Mac.df$Type), ]
+  #
+  #   ## Seperate genes ##
+  #   CCM_SPA_Mac_EO_Split.df <- strsplit(as.character(
+  #                                    CCM_SPA_Mac_EO.df$Marker), ", ")
+  #   rm( CCM_SPA_Mac.df,CCM_SPA_Mac_EO.df,CCM_SPA_Mac_LO.df, CCM_SPA_Mac_EO_Split.df)
+
+####-------------------------------------------------------------------------------------------####
+##### Count gene number in different cell type #####
   source("FUN_CountGeneNum.R")
 
   ##--------------------- SPA ---------------------##
@@ -258,7 +266,7 @@
 
 ##### Export the result #####
   # write.csv( CCM_SPA_SumCT.df[,-2] ,
-  #            file = paste0(Save.Path,"/KLC_",SampleType, "_CCMCount_SPA_CT_Num.csv"),
+  #            file = paste0(Save_Sub.Path,"/KLC_",SampleType, "_CCMCount_SPA_CT_Num.csv"),
   #            #sep = ",",
   #            quote = F,
   #            row.names = F
@@ -266,7 +274,7 @@
 
   write.csv( CCM_SPA_SumCT.df[,!(colnames(CCM_SPA_SumCT.df) %in%
                                         c("Total"))] ,
-             file = paste0(Save.Path,"/KLC_",SampleType, "_CCMCount_SPA_CT_Num.csv"),
+             file = paste0(Save_Sub.Path,"/KLC_",SampleType, "_CCMCount_SPA_CT_Num.csv"),
              #sep = ",",
              quote = F,
              row.names = F
@@ -275,7 +283,7 @@
 
   write.csv( CCM_SSA_SumCT.df[,!(colnames(CCM_SSA_SumCT.df) %in%
                                             c("Total_F","Total_M","Total"))] ,
-             file = paste0(Save.Path,"/KLC_",SampleType, "_CCMCount_SSA_CT_Num.csv"),
+             file = paste0(Save_Sub.Path,"/KLC_",SampleType, "_CCMCount_SSA_CT_Num.csv"),
              #sep = ",",
              quote = F,
              row.names = F
@@ -307,7 +315,7 @@
                               colnames(CCM_All_SumCT_Fin.df)[4:ncol(CCM_All_SumCT_Fin.df)])
 
   write.csv( CCM_All_SumCT_Fin.df ,
-             file = paste0(Save.Path,"/KLC_",SampleType, "_CCMCount_SPA_SSA_CT_Num.csv"),
+             file = paste0(Save_Sub.Path,"/KLC_",SampleType, "_CCMCount_SPA_SSA_CT_Num.csv"),
              #sep = ",",
              quote = F,
              row.names = F
@@ -329,8 +337,7 @@
   rm( CCM_SPA_SumCT.df, CCM_SSA_SumCT.df,
        CCM_SSA_I_SumCT.df, CCM_SSA_F_SumCT.df, CCM_SSA_M_SumCT.df)
 
-##########################################################################
-
+####-------------------------------------------------------------------------------------------####
 
 ##### Visualization #####
   library(ggplot2)
@@ -557,7 +564,7 @@
 
   ##### Export PDF #####
 
-  pdf(file = paste0(Save.Path,"/",SampleType,"_GeneCount.pdf"),width = 7, height = 7 )
+  pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_GeneCount.pdf"),width = 7, height = 7 )
     Sum_GF_log.P2
     Sum_GF.P
     EO1.P
@@ -566,7 +573,7 @@
     LOSS.P
   dev.off()
 
-  pdf(file = paste0(Save.Path,"/",SampleType,"_GeneCount_Main.pdf"),width = 14, height = 7 )
+  pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_GeneCount_Main.pdf"),width = 14, height = 7 )
    Sum_GF_log.P
   dev.off()
 
@@ -607,15 +614,13 @@
 
 
 ##### SPA_SSA_Cell_Type_Match #####
-
-
   ##### Load data #####
-  ## Way 1
-  CCM_SPA.df <- read.delim2(paste0(Save.Path,"/KLC_",SampleType, "_CCMCount_SPA_CT_Num.csv"),
-                            sep = ",")
-
-  CCM_SSA.df <- read.delim2(paste0(Save.Path,"/KLC_",SampleType, "_CCMCount_SSA_CT_Num.csv"),
-                            sep = ",")
+  # ## Way 1
+  # CCM_SPA.df <- read.delim2(paste0(Save_Sub.Path,"/KLC_",SampleType, "_CCMCount_SPA_CT_Num.csv"),
+  #                           sep = ",")
+  #
+  # CCM_SSA.df <- read.delim2(paste0(Save_Sub.Path,"/KLC_",SampleType, "_CCMCount_SSA_CT_Num.csv"),
+  #                           sep = ",")
 
   ## Way 2
   CCM_SPA_SumCT.df <- CCM_SumCT.lt[["CCM_SPA_SumCT.df"]]
@@ -857,7 +862,7 @@
 
 
   ##### Export PDF #####
-    pdf(file = paste0(Save.Path,"/",SampleType,"_CCMark_CTCount.pdf"),width = 7, height = 7 )
+    pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_CCMark_CTCount.pdf"),width = 7, height = 7 )
       CCM_CT_Num.p
       CCM_CT_Num.p2
     dev.off()
@@ -865,14 +870,14 @@
   ##### Table #####
   ## Table For Heatmap
   write.csv( CCM_All_M_S.df ,
-             file = paste0(Save.Path,"/KLC_",SampleType, "_CCMHeatmap_SPA_SSA_Match_S.csv"),
+             file = paste0(Save_Sub.Path,"/KLC_",SampleType, "_CCMHeatmap_SPA_SSA_Match_S.csv"),
              #sep = ",",
              quote = F,
              row.names = F
   )
 
   write.csv( CCM_All_M2.df , # CCM_All_M2.df
-             file = paste0(Save.Path,"/KLC_",SampleType, "_CCMHeatmap_SPA_SSA_Match_All.csv"),
+             file = paste0(Save_Sub.Path,"/KLC_",SampleType, "_CCMHeatmap_SPA_SSA_Match_All.csv"),
              #sep = ",",
              quote = F,
              row.names = F
@@ -881,65 +886,65 @@
   ## Table For Marker
 
   write.csv( CCM.df ,
-             file = paste0(Save.Path,"/#_",SampleType, "_CCM_lt_SUM.csv"),
+             file = paste0(Save_Sub.Path,"/#_",SampleType, "_CCM_lt_SUM.csv"),
              #sep = ",",
              quote = F,
              row.names = F
   )
 
   write.table( CCM.df ,
-               file = paste0(Save.Path,"/#_",SampleType, "_CCM_lt_SUM.tsv"),
+               file = paste0(Save_Sub.Path,"/#_",SampleType, "_CCM_lt_SUM.tsv"),
                sep = "\t",
                quote = F,
                row.names = F
   )
 
 
-##### CCMarker bar plot #####
-  Idents(PBMC.combined) <- PBMC.combined$celltype
-  TTT <- CCM_All_M2.df %>% arrange(desc(Match_Sum))
-  TTT <- TTT[TTT$Match_Sum>=2,]
+##### Count cell type number for each CCMarker #####
+  Idents(scRNA.SeuObj) <- scRNA.SeuObj$celltype
+  CountCTNum2Marker.df <- CCM_All_M2.df %>% arrange(desc(Match_Sum))
+  CountCTNum2Marker.df <- CountCTNum2Marker.df[CountCTNum2Marker.df$Match_Sum>=2,]
 
-  TTT$CCState <- ""
-  TTT[TTT$Match_EO_Sum >0,]$CCState <- "EO"
-  TTT[TTT$Match_EO_Sum <=0,]$CCState <- "LO"
+  CountCTNum2Marker.df$CCState <- ""
+  CountCTNum2Marker.df[CountCTNum2Marker.df$Match_EO_Sum >0,]$CCState <- "EO"
+  CountCTNum2Marker.df[CountCTNum2Marker.df$Match_EO_Sum <=0,]$CCState <- "LO"
 
-  TTT$Genes <- factor(TTT$Genes,levels = TTT$Genes)
-  TTT.p <- ggplot(data=TTT, aes(x=Genes, y=Match_Sum ,fill=CCState))  +
+  CountCTNum2Marker.df$Genes <- factor(CountCTNum2Marker.df$Genes,levels = CountCTNum2Marker.df$Genes)
+  CountCTNum2Marker.df.p <- ggplot(data=CountCTNum2Marker.df, aes(x=Genes, y=Match_Sum ,fill=CCState))  +
     geom_bar(stat="identity")+
     #theme(axis.title.x = element_text(angle = 90,face="italic",colour = "darkred",size=14)) +
     theme(axis.text.x = element_text(face="bold",  size = 12,angle = 90,
                                      hjust = 1, vjust = .5)) + # Change the size along the x axis
     scale_fill_manual(values = c("#ef476f", "#0077b6"))
-  TTT.p
-  TTT.p <- TTT.p %>% BeautifyggPlot(., AspRat=1, LegPos = c(0.9, 0.9), AxisTitleSize=1.5,
+  CountCTNum2Marker.df.p
+  CountCTNum2Marker.df.p <- CountCTNum2Marker.df.p %>% BeautifyggPlot(., AspRat=1, LegPos = c(0.9, 0.9), AxisTitleSize=1.5,
                                     XtextSize= 15,  YtextSize= 20, xangle = 90,
                                     LegTitleSize= 20 ,LegTextSize = 17) + labs(x="") +
     theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank()) # Remove grid
-  TTT.p
+  CountCTNum2Marker.df.p
 
   # DotPlot
-  TTT.DotPlot <- DotPlot(PBMC.combined, features = TTT$Genes, cols = c("#ef476f", "#0077b6"), dot.scale = 8, split.by = "Cachexia") + RotatedAxis()
-  TTT.DotPlot <- TTT.DotPlot%>%
+  CountCTNum2Marker.df.DotPlot <- DotPlot(scRNA.SeuObj, features = CountCTNum2Marker.df$Genes, cols = c("#ef476f", "#0077b6"), dot.scale = 8, split.by = "Cachexia") + RotatedAxis()
+  CountCTNum2Marker.df.DotPlot <- CountCTNum2Marker.df.DotPlot%>%
     BeautifyggPlot(.,LegPos = "bottom",AxisTitleSize=1, TitleSize = 20, xangle =90,
                    LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12)
-  TTT.DotPlot
+  CountCTNum2Marker.df.DotPlot
 
   # DotPlot2
-  TTT.DotPlot2 <- DotPlot(PBMC.combined, features = TTT$Genes, cols = c("#ef476f", "#0077b6", "#0077b6","#ef476f"), dot.scale = 8, split.by = "sample") + RotatedAxis()
-  TTT.DotPlot2 <- TTT.DotPlot2%>%
+  CountCTNum2Marker.df.DotPlot2 <- DotPlot(scRNA.SeuObj, features = CountCTNum2Marker.df$Genes, cols = c("#ef476f", "#0077b6", "#0077b6","#ef476f"), dot.scale = 8, split.by = "sample") + RotatedAxis()
+  CountCTNum2Marker.df.DotPlot2 <- CountCTNum2Marker.df.DotPlot2%>%
     BeautifyggPlot(.,LegPos = "bottom",AxisTitleSize=1, TitleSize = 20, xangle =90,
                    LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12)
-  TTT.DotPlot2
+  CountCTNum2Marker.df.DotPlot2
 
 
-  pdf(file = paste0(Save.Path,"/PBMC_CCM_Dot.pdf"),
+  pdf(file = paste0(Save_Sub.Path,"/PBMC_CCM_Dot.pdf"),
       width = 10, height = 10 )
-  TTT.p
-  TTT.DotPlot
-  TTT.DotPlot2
+    CountCTNum2Marker.df.p
+    CountCTNum2Marker.df.DotPlot
+    CountCTNum2Marker.df.DotPlot2
   dev.off() # graphics.off()
 
-# ##### Export R.Data ######
-#   save.image(paste0(Save.Path,"/S01_GeneCount.RData"))
+#### Save RData ####
+  save.image(paste0(Save.Path,"/08_3_Find_Markers_GeneCount_CTCount.RData"))
 
