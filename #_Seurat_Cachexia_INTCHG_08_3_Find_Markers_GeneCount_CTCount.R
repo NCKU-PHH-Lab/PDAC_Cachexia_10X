@@ -938,7 +938,7 @@
   CountCTNum2Marker.df.DotPlot2
 
 
-  pdf(file = paste0(Save_Sub.Path,"/PBMC_CCM_Dot.pdf"),
+  pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_CCM_Dot.pdf"),
       width = 10, height = 10 )
     CountCTNum2Marker.df.p
     CountCTNum2Marker.df.DotPlot
