@@ -2,7 +2,6 @@
   rm(list = ls()) # Clean variable
   memory.limit(150000)
 
-
 ##### Load libray #####
   library(dplyr)
   library(stringr)
@@ -14,28 +13,16 @@
   source("FUN_CountGeneNum.R")
   source("FUN_Beautify_ggplot.R")
 
-##### Abbreviated Notes #####
-  # CCM: Cancer Cachexia Marker
-  # SPA: Sex Pooled Analysis
-  # SSA: Sex Separated Analysis
-  # EO: Early Onset
-  # LO: Late Onset
-  # CT: Cell Type
-
-  # list:lt
-  # dataframe: df
-
-  # ##### Load RData  #####
-  # load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
-  # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
+# ##### Load RData  #####
+# load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
+# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-07_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
 
-
 ##### Current path and new folder setting #####
-Version = paste0(Sys.Date(),"_","PBMC_GeneRank")
-Save.Path = paste0(getwd(),"/",Version)
-dir.create(Save.Path)
-SampleType="PBMC"
+  Version = paste0(Sys.Date(),"_","PBMC_GeneRank")
+  Save.Path = paste0(getwd(),"/",Version)
+  dir.create(Save.Path)
+  SampleType="PBMC"
 
 ##### SSA CCMarker genes( Exclude genes express opposite in Sex) #####
   ##-------------- Pos --------------##
