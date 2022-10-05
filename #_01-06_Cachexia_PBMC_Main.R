@@ -621,6 +621,7 @@
   FeaturePlot(PBMC.combined, features = c("Il13ra1"), min.cutoff = "q9",ncol = 3)
   FeaturePlot(PBMC.combined, features = c("Stat6"), min.cutoff = "q9",ncol = 3)
 
+  rm(Test,Test2)
 # -------------------------------------- #
 
 ###########################################################################################

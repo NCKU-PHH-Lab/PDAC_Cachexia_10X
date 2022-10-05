@@ -663,7 +663,7 @@
     CCM_All_M.df$Temp <- as.numeric(CCM_All_M.df$Temp)
     colnames(CCM_All_M.df)[ncol_Ori+i] <- paste0(PhenoType_SPA.Set[i],"_Ma")
   }
-  rm(i)
+  rm(i,TempD)
 
   # Check
   # t(CCM_All_M.df) %>% View()
