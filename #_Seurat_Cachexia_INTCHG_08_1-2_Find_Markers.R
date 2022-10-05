@@ -34,7 +34,7 @@
                                             paste0(CellType.list[i],"_LO_Male"),
                                             CellType.list[i],
                                             Path = Save.Path,
-                                            ResultFolder = "",SampleType,"_SSA_Male_FindMarkers")
+                                            ResultFolder = paste0(SampleType,"_SSA_Male_FindMarkers"))
       # names(CCMarker_Male.lt)[[i]] <- paste0("CCMarker_Male.lt.",CellType.list[i])
       names(CCMarker_Male.lt)[[i]] <- paste0(CellType.list[i])
     })
