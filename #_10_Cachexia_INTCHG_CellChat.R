@@ -525,7 +525,9 @@
     pathways.show.lt <- object.list[["EO"]]@netP[["pathways"]]
 
     for (j in 1:length(pathways.show.lt)) {
-      pathways.show <- object.list[["EO"]]@netP[["pathways"]][j]
+      pathways.show1 <- object.list[["EO"]]@netP[["pathways"]][j]
+      pathways.show2 <- object.list[["LO"]]@netP[["pathways"]][j]
+      pathways.show <- unique(pathways.show1,pathways.show2)
 
       cellchat@meta$datasets = factor(cellchat@meta$datasets, levels = c("EO", "LO")) # set factor level
       plotGeneExpression(cellchat, signaling = pathways.show, split.by = "datasets",
