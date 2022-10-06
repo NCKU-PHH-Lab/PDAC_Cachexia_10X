@@ -4,7 +4,6 @@
 ## https://www.middleprofessor.com/files/applied-biostatistics_bookdown/_book/plotting-models.html
 ## https://github.com/kassambara/ggpubr/issues/111
 
-
 ##### Presetting ######
 rm(list = ls()) # Clean variable
 memory.limit(150000)
@@ -18,8 +17,7 @@ if(!require("ggpubr")) install.packages("ggpubr")
 library(ggpubr)
 
 ##### Load RData* #####
-# load("D:/Dropbox/##_GitHub/##_CAESAR/MagicDisc/2022-06-06_CC_PBMC/06_Cell_type_annotation.RData")
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
+load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
 
 ## INTCHG: Interchangeable
   # For PBMC
