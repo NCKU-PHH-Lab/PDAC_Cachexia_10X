@@ -146,7 +146,7 @@ colnames(SummaryTable.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.a
 
 
 for (j in 1:length(pathways.show)) {
-
+try({
 
   LR_Tar.df <- LR.df[LR.df$pathway_name == pathways.show[j],]
 
@@ -206,35 +206,39 @@ for (j in 1:length(pathways.show)) {
   SummaryTable_Sub.df <-  as.data.frame(matrix(nrow=0,ncol=9))
   colnames(SummaryTable_Sub.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.adj", "p.format", "p.signif", "method"  )
   for (i in 1:length(TarGene)) {
-    # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
-    # convert string column name to name/symbol
-    f <- paste0(TarGene[i]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
-    SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data=Anno.df, group.by = "celltype"))
-    rm(f)
-    SummaryTable_Temp.df$celltype <- factor(SummaryTable_Temp.df$celltype  ,levels = CellType.Order)
-    SummaryTable_Temp.df <- SummaryTable_Temp.df[order(SummaryTable_Temp.df$celltype), ]
 
-    ## Filter
-    if(c("****") %in% SummaryTable_Temp.df$p.signif || c("***") %in% SummaryTable_Temp.df$p.signif){
-      SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
-    }else{
-      SummaryTable_Sub.df <- SummaryTable_Sub.df
-    }
+    try({
+      # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
+      # convert string column name to name/symbol
+      f <- paste0(TarGene[i]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+      SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data=Anno.df, group.by = "celltype"))
+      rm(f)
+      SummaryTable_Temp.df$celltype <- factor(SummaryTable_Temp.df$celltype  ,levels = CellType.Order)
+      SummaryTable_Temp.df <- SummaryTable_Temp.df[order(SummaryTable_Temp.df$celltype), ]
 
-    # ## Withot Filter
-    # SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
+      ## Filter
+      if(c("****") %in% SummaryTable_Temp.df$p.signif || c("***") %in% SummaryTable_Temp.df$p.signif){
+        SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
+      }else{
+        SummaryTable_Sub.df <- SummaryTable_Sub.df
+      }
 
-
-    rm(SummaryTable_Temp.df)
-
+      # ## Withot Filter
+      # SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
 
 
-    # if(i==1){
-    #   SummaryTable_Sub.df <- SummaryTable_Temp.df
-    # }else{
-    #   SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
-    #   rm(SummaryTable_Temp.df)
-    # }
+      rm(SummaryTable_Temp.df)
+
+
+
+      # if(i==1){
+      #   SummaryTable_Sub.df <- SummaryTable_Temp.df
+      # }else{
+      #   SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
+      #   rm(SummaryTable_Temp.df)
+      # }
+
+    })
   }
   SummaryTable_Sub.df$pathway_name <- pathways.show[j]
   SummaryTable.df <- rbind(SummaryTable.df, SummaryTable_Sub.df)
@@ -252,50 +256,9 @@ for (j in 1:length(pathways.show)) {
 
   #### Cell type & EO LO ####
   ## BarPlot
+
   for (i in 1:length(TarGene)) {
-    ## Main ggPlot
-    plt.ManyGroup2 <- ggboxplot(Anno.df, x = "celltype", y = TarGene[i],
-                                color = "Cachexia", # palette = "jco",
-                                add = "jitter", # short.panel.labs = T
-    ) + ylim(0, LabelY*1.2)
-
-    ## Beautify ggPlot
-    plt.ManyGroup2 <- plt.ManyGroup2 +
-      theme(axis.text.x = element_blank(),
-            axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
-
-            axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
-            axis.title.x = element_blank(),
-            axis.title.y = element_text(size = 17,face="bold"),
-            legend.position = "none",
-            aspect.ratio=0.1
-      )
-
-    ## Add PValue
-    plt.ManyGroup2 <- plt.ManyGroup2 +
-      stat_compare_means(aes(group = Cachexia),
-                         label =  "p.signif",label.x = 1.5,
-                         label.y = LabelY*1.2*0.9,
-                         method = "wilcox.test", size = 7)
-
-    if(i==1){
-      plt.ManyGroupSum <- plt.ManyGroup2
-      plt.ManyGroupSum <- plt.ManyGroupSum  + ggtitle(pathways.show[j]) + theme(
-        plot.title = element_text(color="black", size=20, face="bold.italic"))+
-        theme(legend.title = element_text(size= 17, color = "black", face="bold"),
-              legend.text = element_text(colour="black", size= 17,face="bold"),
-              legend.background = element_rect(fill = alpha("white", 0.5)),
-              legend.position = c(0.5, 1.2), # legend.position = c(0.11, 0.96),
-              legend.direction= "horizontal",
-              aspect.ratio=0.1
-        )
-
-    }else if(i>=1 && i<length(TarGene)){
-
-      plt.ManyGroupSum <- plt.ManyGroupSum/plt.ManyGroup2
-
-    }else{
-
+    try({
       ## Main ggPlot
       plt.ManyGroup2 <- ggboxplot(Anno.df, x = "celltype", y = TarGene[i],
                                   color = "Cachexia", # palette = "jco",
@@ -304,7 +267,7 @@ for (j in 1:length(pathways.show)) {
 
       ## Beautify ggPlot
       plt.ManyGroup2 <- plt.ManyGroup2 +
-        theme(axis.text.x = element_text(face="bold",  size = 17,angle = 90, hjust = 1, vjust = .5), # Change the size along the x axis
+        theme(axis.text.x = element_blank(),
               axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
 
               axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
@@ -312,20 +275,6 @@ for (j in 1:length(pathways.show)) {
               axis.title.y = element_text(size = 17,face="bold"),
               legend.position = "none",
               aspect.ratio=0.1
-              # axis.title = element_text(size = rel(AxisTitleSize),face="bold"),
-              # plot.title = element_text(color="black",
-              #                           size=TitleSize,
-              #                           face="bold.italic",
-              #                           hjust = TH,vjust =TV), # margin = margin(t = 0.5, b = -7),
-              # #     plot.background = element_rect(fill = 'chartreuse'),
-
-              # legend.title = element_text(size= 17, color = "black", face="bold"),
-              # legend.text = element_text(colour="black", size= 17,face="bold"),
-              # legend.background = element_rect(fill = alpha("white", 0.5)),
-              # legend.position = c(0.11, 0.8), # legend.position = c(0.11, 0.96),
-              # legend.direction= "horizontal",
-              #     plot.text = element_text(size = 20),
-              #     aspect.ratio=AspRat
         )
 
       ## Add PValue
@@ -335,12 +284,74 @@ for (j in 1:length(pathways.show)) {
                            label.y = LabelY*1.2*0.9,
                            method = "wilcox.test", size = 7)
 
-      plt.ManyGroupSum <- plt.ManyGroupSum/plt.ManyGroup2
-    }
+      if(i==1){
+        plt.ManyGroupSum <- plt.ManyGroup2
+        plt.ManyGroupSum <- plt.ManyGroupSum  + ggtitle(pathways.show[j]) + theme(
+          plot.title = element_text(color="black", size=20, face="bold.italic"))+
+          theme(legend.title = element_text(size= 17, color = "black", face="bold"),
+                legend.text = element_text(colour="black", size= 17,face="bold"),
+                legend.background = element_rect(fill = alpha("white", 0.5)),
+                legend.position = c(0.5, 1.2), # legend.position = c(0.11, 0.96),
+                legend.direction= "horizontal",
+                aspect.ratio=0.1
+          )
+
+      }else if(i>=1 && i<length(TarGene)){
+
+        plt.ManyGroupSum <- plt.ManyGroupSum/plt.ManyGroup2
+
+      }else{
+
+        ## Main ggPlot
+        plt.ManyGroup2 <- ggboxplot(Anno.df, x = "celltype", y = TarGene[i],
+                                    color = "Cachexia", # palette = "jco",
+                                    add = "jitter", # short.panel.labs = T
+        ) + ylim(0, LabelY*1.2)
+
+        ## Beautify ggPlot
+        plt.ManyGroup2 <- plt.ManyGroup2 +
+          theme(axis.text.x = element_text(face="bold",  size = 17,angle = 90, hjust = 1, vjust = .5), # Change the size along the x axis
+                axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
+
+                axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
+                axis.title.x = element_blank(),
+                axis.title.y = element_text(size = 17,face="bold"),
+                legend.position = "none",
+                aspect.ratio=0.1
+                # axis.title = element_text(size = rel(AxisTitleSize),face="bold"),
+                # plot.title = element_text(color="black",
+                #                           size=TitleSize,
+                #                           face="bold.italic",
+                #                           hjust = TH,vjust =TV), # margin = margin(t = 0.5, b = -7),
+                # #     plot.background = element_rect(fill = 'chartreuse'),
+
+                # legend.title = element_text(size= 17, color = "black", face="bold"),
+                # legend.text = element_text(colour="black", size= 17,face="bold"),
+                # legend.background = element_rect(fill = alpha("white", 0.5)),
+                # legend.position = c(0.11, 0.8), # legend.position = c(0.11, 0.96),
+                # legend.direction= "horizontal",
+                #     plot.text = element_text(size = 20),
+                #     aspect.ratio=AspRat
+          )
+
+        ## Add PValue
+        plt.ManyGroup2 <- plt.ManyGroup2 +
+          stat_compare_means(aes(group = Cachexia),
+                             label =  "p.signif",label.x = 1.5,
+                             label.y = LabelY*1.2*0.9,
+                             method = "wilcox.test", size = 7)
+
+        plt.ManyGroupSum <- plt.ManyGroupSum/plt.ManyGroup2
+      }
+    })
+
 
   }
 
-  plt.ManyGroupSum %>% print()
+  try({
+    plt.ManyGroupSum %>% print()
+  })
+
 
 
   # # Use only p.format as label. Remove method name.
@@ -356,6 +367,7 @@ for (j in 1:length(pathways.show)) {
   #                                   add = "jitter",)
   # plt.ManyGroup2_2_Sum + stat_compare_means(aes(group = Cachexia), label = "p.format")
   # plt.ManyGroup2_2_Sum + stat_compare_means(aes(group = Cachexia), label = "p.signif")
+})
 
 }
 dev.off()
