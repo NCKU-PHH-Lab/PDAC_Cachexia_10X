@@ -82,9 +82,10 @@ if(SampleTypeSet == "PBMC"){
   SampleType = "SC"
 
   # Order the cell type
+  CellType.Order = c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
+                     "Fib1", "Fib2", "Fib3")
   scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
-                                                 levels =c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
-                                                           "Fib1", "Fib2", "Fib3"))
+                                                 levels = CellType.Order)
 
 }
 
