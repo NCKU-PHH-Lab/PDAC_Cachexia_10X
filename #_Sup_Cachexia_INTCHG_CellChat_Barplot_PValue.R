@@ -43,21 +43,50 @@ rm(Package.set,i)
 ## Call function
 source("FUN_CellChatOne.R")
 
+##### Condition Setting ####
+## INTCHG: Interchangeable
+SampleTypeSet = "PBMC"
+
+## CellChat DB Set
+CCDBType = "ECM" # c("ECM","CC","Secret")
 
 ##### Load RData* #####
+
 ## Load Seurat.Obj
-Load.Path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main"
+
+
+if(SampleTypeSet == "PBMC"){
+  Load.Path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main"
+
+}else if(SampleTypeSet == "SC"){
+  Load.Path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_SC_Main"
+}
+
 load(paste0(Load.Path,"/06_Cell_type_annotation.RData"))
 # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
 
-  ## INTCHG: Interchangeable
-  # For PBMC
+if(SampleTypeSet == "PBMC"){
+  ## For PBMC
   scRNA.SeuObj <- PBMC.combined
   SampleType = "PBMC"
 
+  # Order the cell type
+  CellType.Order = c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery")
+  scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
+                                                 levels = CellType.Order)
+
+
+}else if(SampleTypeSet == "SC"){
   ## For SC
-  # scRNA.SeuObj <- SC.combined
-  # SampleType = "SC"
+  scRNA.SeuObj <- SC.combined
+  SampleType = "SC"
+
+  # Order the cell type
+  scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
+                                                 levels =c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
+                                                           "Fib1", "Fib2", "Fib3"))
+
+}
 
   # Clean up
   rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Load.Path")))
@@ -67,19 +96,8 @@ load(paste0(Load.Path,"/06_Cell_type_annotation.RData"))
   scRNA.SeuObj@meta.data$Cachexia <-  gsub("LO", "PreCX", scRNA.SeuObj@meta.data$Cachexia)
 
 
-  ## Order the cell type*
-  # For PBMC
-  CellType.Order = c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery")
-  scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
-                                                 levels = CellType.Order)
-  # # For SC
-  # scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
-  #                                                levels =c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
-  #                                                          "Fib1", "Fib2", "Fib3"))
-
 
 ## Load CellChat rds
-CCDBType = "ECM"
 cellchat.EO <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EO_CellChat.rds"))
 cellchat.LO <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_LO_CellChat.rds"))
 
