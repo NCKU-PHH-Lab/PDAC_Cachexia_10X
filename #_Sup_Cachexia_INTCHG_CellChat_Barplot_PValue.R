@@ -31,10 +31,16 @@ load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSu
 # Clean up
 rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType")))
 
-# Order the cell type
-scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
-                                               levels =c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
-                                                         "NK","B","Mast","Ery"))
+## Order the cell type
+  # For PBMC
+  scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
+                                                 levels =c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
+                                                           "NK","B","Mast","Ery"))
+  # # For SC
+  # scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
+  #                                                levels =c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
+  #                                                          "Fib1", "Fib2", "Fib3"))
+
 
 ##### Current path and new folder setting  #####
 TarGene <- c("Gp9")
