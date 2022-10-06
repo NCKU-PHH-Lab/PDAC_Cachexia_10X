@@ -48,14 +48,17 @@ scRNA.SeuObj@meta.data$Cachexia <-  gsub("LO", "PreCX", scRNA.SeuObj@meta.data$C
 
 
 ##### Current path and new folder setting  #####
-TarGene <- c("Gp9")
-Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
+TarGene <- c("Vwf","Itga2b","Itgb3","Gp9")
+TypeName <- "PBMC_ECM"
+Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TypeName)
 Save.Path = paste0(getwd(),"/",Version)
 dir.create(Save.Path)
 
 ##### Extract df #####
 ## Old version (Without normalizaiton) ## GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
 GeneExp.df <- GetAssayData(scRNA.SeuObj, assay = "RNA", slot = "data") %>% as.data.frame() # normalized data matrix
+## Set y position
+LabelY <- max(GeneExp.df) %>% ceiling()
 
 Anno.df <- scRNA.SeuObj@meta.data
 Anno.df <- data.frame(ID=row.names(Anno.df), Anno.df)
@@ -68,6 +71,8 @@ scRNA_Ori.SeuObj <- scRNA.SeuObj
 ##### Data preprocessing #####
 ## Extract Target gene and combine to the annotation table
 TarGene.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene,] %>% t() %>% as.data.frame()
+max(TarGene.df)
+
 TarGene.df <- data.frame(ID = row.names(TarGene.df), TarGene.df)
 Anno.df <- left_join(Anno.df,TarGene.df)
 
@@ -80,8 +85,8 @@ scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"
 ##### Visualize the expression profile ####
 source("FUN_Beautify_ggplot.R")
 
-## Set y position
-LabelY <- max(Anno.df[,TarGene])
+# ## Set y position
+# LabelY <- max(Anno.df[,TarGene])
 
 #
 # ##### Export PDF #####
@@ -91,47 +96,84 @@ LabelY <- max(Anno.df[,TarGene])
 # dev.off()
 
 #### Cell type & EO LO ####
-# Box plot facetted by "celltype"
-plt.ManyGroup2 <- ggboxplot(Anno.df, x = "celltype", y = TarGene,
-                            color = "Cachexia", # palette = "jco",
-                            add = "jitter", # short.panel.labs = T
-                            ) +
-  ylim(0, LabelY*1.2)
+
+for (i in 1:length(TarGene)) {
+
+  plt.ManyGroup2 <- ggboxplot(Anno.df, x = "celltype", y = TarGene[i],
+                              color = "Cachexia", # palette = "jco",
+                              add = "jitter", # short.panel.labs = T
+  ) + ylim(0, LabelY*1.2)
 
 
-## Beautify ggPlot
-plt.ManyGroup2 <- plt.ManyGroup2 +
-    theme(axis.text.x = element_text(face="bold",  size = 17,angle = 90, hjust = 1, vjust = .5), # Change the size along the x axis
+  ## Beautify ggPlot
+  plt.ManyGroup2 <- plt.ManyGroup2 +
+    theme(axis.text.x = element_blank(),
           axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
 
           axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
           axis.title.x = element_blank(),
           axis.title.y = element_text(size = 24,face="bold"),
+          legend.position = "none",
+    )
 
-          # axis.title = element_text(size = rel(AxisTitleSize),face="bold"),
-          # plot.title = element_text(color="black",
-          #                           size=TitleSize,
-          #                           face="bold.italic",
-          #                           hjust = TH,vjust =TV), # margin = margin(t = 0.5, b = -7),
-          # #     plot.background = element_rect(fill = 'chartreuse'),
+  ## Add PValue
+  plt.ManyGroup2 <- plt.ManyGroup2 +
+    stat_compare_means(aes(group = Cachexia),
+                       label =  "p.signif",label.x = 1.5,
+                       label.y = LabelY*1.2*0.9,
+                       method = "wilcox.test", size = 7)
 
-          legend.title = element_text(size= 20, color = "black", face="bold"),
-          legend.text = element_text(colour="black", size= 17,face="bold"),
-          legend.background = element_rect(fill = alpha("white", 0.5)),
-          legend.position = c(0.11, 0.96),legend.direction= "horizontal",
-          #     plot.text = element_text(size = 20),
-          #     aspect.ratio=AspRat
-          )
+  if(i==1){
+    plt.ManyGroupSum <- plt.ManyGroup2
+  }else if(i>=1 && i<length(TarGene)){
 
-plt.ManyGroup2
+    plt.ManyGroupSum <- plt.ManyGroupSum/plt.ManyGroup2
 
-## Add PValue
-plt.ManyGroup2 <- plt.ManyGroup2 +
-                  stat_compare_means(aes(group = Cachexia),
-                                     label =  "p.signif",label.x = 1.5,
-                                     label.y = LabelY*1.2*0.9,
-                                     method = "wilcox.test", size = 7)
-plt.ManyGroup2
+  }else{
+    plt.ManyGroup2 <- ggboxplot(Anno.df, x = "celltype", y = TarGene[i],
+                                color = "Cachexia", # palette = "jco",
+                                add = "jitter", # short.panel.labs = T
+    ) + ylim(0, LabelY*1.2)
+
+    plt.ManyGroup2 <- plt.ManyGroup2 +
+      theme(axis.text.x = element_text(face="bold",  size = 17,angle = 90, hjust = 1, vjust = .5), # Change the size along the x axis
+            axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
+
+            axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
+            axis.title.x = element_blank(),
+            axis.title.y = element_text(size = 22,face="bold"),
+
+            # axis.title = element_text(size = rel(AxisTitleSize),face="bold"),
+            # plot.title = element_text(color="black",
+            #                           size=TitleSize,
+            #                           face="bold.italic",
+            #                           hjust = TH,vjust =TV), # margin = margin(t = 0.5, b = -7),
+            # #     plot.background = element_rect(fill = 'chartreuse'),
+
+            legend.title = element_text(size= 20, color = "black", face="bold"),
+            legend.text = element_text(colour="black", size= 17,face="bold"),
+            legend.background = element_rect(fill = alpha("white", 0.5)),
+            legend.position = c(0.11, 0.8), # legend.position = c(0.11, 0.96),
+            legend.direction= "horizontal",
+            #     plot.text = element_text(size = 20),
+            #     aspect.ratio=AspRat
+      )
+
+    # plt.ManyGroup2
+
+    ## Add PValue
+    plt.ManyGroup2 <- plt.ManyGroup2 +
+      stat_compare_means(aes(group = Cachexia),
+                         label =  "p.signif",label.x = 1.5,
+                         label.y = LabelY*1.2*0.9,
+                         method = "wilcox.test", size = 7)
+    # plt.ManyGroup2
+    plt.ManyGroupSum <- plt.ManyGroupSum/plt.ManyGroup2
+  }
+
+}
+
+plt.ManyGroupSum
 
 # # Use only p.format as label. Remove method name.
 # p + stat_compare_means(label = "p.format", method = "wilcox.test", size = 7)
