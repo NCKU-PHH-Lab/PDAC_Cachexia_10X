@@ -328,6 +328,10 @@ for (j in 1:length(pathways.show)) {
 dev.off()
 
 ##### Export TSV #####
+colnames(SummaryTable.df)[2] <- "gene"
+SummaryTable.df <- relocate(SummaryTable.df,pathway_name,.before = gene)
+
+
 write.table( SummaryTable.df ,
              file = paste0(Save.Path,"/",Version,"_LR_Stats.tsv"),
              sep = "\t",
@@ -336,7 +340,7 @@ write.table( SummaryTable.df ,
 )
 
 # ##### Save RData #####
-# save.image(paste0(Save.Path,"/",Version,".RData"))
+# save.image(paste0(Save.Path,"/",Version,"_LR_Stats.RData"))
 #
 #
 #
