@@ -36,11 +36,11 @@ scRNA.SeuObj@meta.data$Cachexia <-  gsub("EO", "EOCX", scRNA.SeuObj@meta.data$Ca
 scRNA.SeuObj@meta.data$Cachexia <-  gsub("LO", "PreCX", scRNA.SeuObj@meta.data$Cachexia)
 
 
-## Order the cell type
+## Order the cell type*
   # For PBMC
+  CellType.Order = c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery")
   scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
-                                                 levels =c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
-                                                           "NK","B","Mast","Ery"))
+                                                 levels = CellType.Order)
   # # For SC
   # scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
   #                                                levels =c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
@@ -82,13 +82,41 @@ GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df$ID]
 scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"]] )]
 
 
-##### Visualize the expression profile ####
+# ## Summary Statistic Table
+# #(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno.df, group.by = "celltype"	)
+#
+# # ## Error (Solved)
+# # TTT <- compare_means( Anno.df[,TarGene[1]] ~ Cachexia, data = Anno.df, group.by = "celltype"	)
+#
+# # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
+# # convert string column name to name/symbol
+# f <- paste0(TarGene[1]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+# SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno.df, group.by = "celltype"))
+# rm(f)
+# SummaryTable.df$celltype <- factor(SummaryTable.df$celltype  ,levels = CellType.Order)
+# SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
+
+##### Summary Statistic Table #####
+for (i in 1:length(TarGene)) {
+  # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
+  # convert string column name to name/symbol
+  f <- paste0(TarGene[i]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+  SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data=Anno.df, group.by = "celltype"))
+  rm(f)
+  SummaryTable_Temp.df$celltype <- factor(SummaryTable_Temp.df$celltype  ,levels = CellType.Order)
+  SummaryTable_Temp.df <- SummaryTable_Temp.df[order(SummaryTable_Temp.df$celltype), ]
+  if(i==1){
+    SummaryTable.df <- SummaryTable_Temp.df
+  }else{
+    SummaryTable.df <- rbind(SummaryTable.df,SummaryTable_Temp.df)
+    rm(SummaryTable_Temp.df)
+  }
+}
+
+
+##### Visualize the expression profile #####
 source("FUN_Beautify_ggplot.R")
 
-# ## Set y position
-# LabelY <- max(Anno.df[,TarGene])
-
-#
 # ##### Export PDF #####
 # pdf(file = paste0(Save.Path,"/",Version,"_BarplotMulti.pdf"),width = 13, height = 13 )
 #   plt.ManyGroup2_Sum
@@ -96,28 +124,13 @@ source("FUN_Beautify_ggplot.R")
 # dev.off()
 
 #### Cell type & EO LO ####
-
-## Summary Statistic Table
-#(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno.df, group.by = "celltype"	)
-
-# ## Error (Solved)
-# TTT <- compare_means( Anno.df[,TarGene[1]] ~ Cachexia, data = Anno.df, group.by = "celltype"	)
-
-# https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
-# convert string column name to name/symbol
-f <- paste0(TarGene[1]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
-SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno.df, group.by = "celltype"))
-rm(f)
-SummaryTable.df$celltype <- factor(SummaryTable.df$celltype  ,levels =c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery"))
-SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
-
+## BarPlot
 for (i in 1:length(TarGene)) {
-
+  ## Main ggPlot
   plt.ManyGroup2 <- ggboxplot(Anno.df, x = "celltype", y = TarGene[i],
                               color = "Cachexia", # palette = "jco",
                               add = "jitter", # short.panel.labs = T
   ) + ylim(0, LabelY*1.2)
-
 
   ## Beautify ggPlot
   plt.ManyGroup2 <- plt.ManyGroup2 +
@@ -126,7 +139,7 @@ for (i in 1:length(TarGene)) {
 
           axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
           axis.title.x = element_blank(),
-          axis.title.y = element_text(size = 24,face="bold"),
+          axis.title.y = element_text(size = 17,face="bold"),
           legend.position = "none",
     )
 
@@ -139,23 +152,29 @@ for (i in 1:length(TarGene)) {
 
   if(i==1){
     plt.ManyGroupSum <- plt.ManyGroup2
+    plt.ManyGroupSum <- plt.ManyGroupSum  + ggtitle("Plot") + theme(
+      plot.title = element_text(color="black", size=20, face="bold.italic"))
+
   }else if(i>=1 && i<length(TarGene)){
 
     plt.ManyGroupSum <- plt.ManyGroupSum/plt.ManyGroup2
 
   }else{
+
+    ## Main ggPlot
     plt.ManyGroup2 <- ggboxplot(Anno.df, x = "celltype", y = TarGene[i],
                                 color = "Cachexia", # palette = "jco",
                                 add = "jitter", # short.panel.labs = T
     ) + ylim(0, LabelY*1.2)
 
+    ## Beautify ggPlot
     plt.ManyGroup2 <- plt.ManyGroup2 +
       theme(axis.text.x = element_text(face="bold",  size = 17,angle = 90, hjust = 1, vjust = .5), # Change the size along the x axis
             axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
 
             axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
             axis.title.x = element_blank(),
-            axis.title.y = element_text(size = 22,face="bold"),
+            axis.title.y = element_text(size = 17,face="bold"),
 
             # axis.title = element_text(size = rel(AxisTitleSize),face="bold"),
             # plot.title = element_text(color="black",
@@ -164,7 +183,7 @@ for (i in 1:length(TarGene)) {
             #                           hjust = TH,vjust =TV), # margin = margin(t = 0.5, b = -7),
             # #     plot.background = element_rect(fill = 'chartreuse'),
 
-            legend.title = element_text(size= 20, color = "black", face="bold"),
+            legend.title = element_text(size= 17, color = "black", face="bold"),
             legend.text = element_text(colour="black", size= 17,face="bold"),
             legend.background = element_rect(fill = alpha("white", 0.5)),
             legend.position = c(0.11, 0.8), # legend.position = c(0.11, 0.96),
@@ -173,15 +192,13 @@ for (i in 1:length(TarGene)) {
             #     aspect.ratio=AspRat
       )
 
-    # plt.ManyGroup2
-
     ## Add PValue
     plt.ManyGroup2 <- plt.ManyGroup2 +
       stat_compare_means(aes(group = Cachexia),
                          label =  "p.signif",label.x = 1.5,
                          label.y = LabelY*1.2*0.9,
                          method = "wilcox.test", size = 7)
-    # plt.ManyGroup2
+
     plt.ManyGroupSum <- plt.ManyGroupSum/plt.ManyGroup2
   }
 
@@ -189,22 +206,12 @@ for (i in 1:length(TarGene)) {
 
 plt.ManyGroupSum
 
+
 # # Use only p.format as label. Remove method name.
 # p + stat_compare_means(label = "p.format", method = "wilcox.test", size = 7)
 # # Or use significance symbol as label
 # p + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
 
-
-##### 20221005 Try #####
-plt.ManyGroup2_2_Sum <- ggboxplot(Anno.df, x = "celltype", y = TarGene,
-                                  color = "Cachexia", #palette = "jco",
-                                  add = "jitter",)
-plt.ManyGroup2_2_Sum + stat_compare_means(aes(group = Cachexia), label = "p.format") -> TTT1
-plt.ManyGroup2_2_Sum + stat_compare_means(aes(group = Cachexia), label = "p.signif") -> TTT2
-
-TTT1/TTT2 -> TTT3
-TTT3
-TTT3/TTT2
 
 # ## Violin
 # ## http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/
