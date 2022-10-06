@@ -89,7 +89,7 @@ if(SampleTypeSet == "PBMC"){
 }
 
   # Clean up
-  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Load.Path")))
+  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Load.Path","CCDBType","CellType.Order")))
 
   ## Modify the Cachexia state name
   scRNA.SeuObj@meta.data$Cachexia <-  gsub("EO", "EOCX", scRNA.SeuObj@meta.data$Cachexia)
