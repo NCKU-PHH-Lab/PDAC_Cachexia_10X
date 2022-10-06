@@ -165,13 +165,19 @@ for (j in 1:length(pathways.show)) {
              unique() %>% tolower() %>% capitalize()
   TarGene <-intersect(TarGene,row.names(GeneExp.df))
 
-  rm(LR_Tar.df)
+  source("FUN_HSsymbol2MMsymbol.R")
+  df <- TarGene %>% as.data.frame()
+  colnames(df) <- "Gene"
+
+  df1 <- HSsymbol2MMsymbol(df,"Gene")
+  TarGene <- df1$MM.symbol
+
+  rm(LR_Tar.df, df, df1)
 
 
   ##### Data preprocessing #####
   ## Extract Target gene and combine to the annotation table
   TarGene.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene,] %>% t() %>% as.data.frame()
-  max(TarGene.df)
 
   TarGene.df <- data.frame(ID = row.names(TarGene.df), TarGene.df)
   Anno.df <- left_join(Anno.df,TarGene.df)
@@ -208,11 +214,16 @@ for (j in 1:length(pathways.show)) {
     SummaryTable_Temp.df$celltype <- factor(SummaryTable_Temp.df$celltype  ,levels = CellType.Order)
     SummaryTable_Temp.df <- SummaryTable_Temp.df[order(SummaryTable_Temp.df$celltype), ]
 
+    ## Filter
     if(c("****") %in% SummaryTable_Temp.df$p.signif || c("***") %in% SummaryTable_Temp.df$p.signif){
       SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
     }else{
       SummaryTable_Sub.df <- SummaryTable_Sub.df
     }
+
+    # ## Withot Filter
+    # SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
+
 
     rm(SummaryTable_Temp.df)
 
