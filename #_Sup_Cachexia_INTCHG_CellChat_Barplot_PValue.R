@@ -238,6 +238,7 @@ for (j in 1:length(pathways.show)) {
             axis.title.x = element_blank(),
             axis.title.y = element_text(size = 17,face="bold"),
             legend.position = "none",
+            aspect.ratio=0.1
       )
 
     ## Add PValue
@@ -254,8 +255,9 @@ for (j in 1:length(pathways.show)) {
         theme(legend.title = element_text(size= 17, color = "black", face="bold"),
               legend.text = element_text(colour="black", size= 17,face="bold"),
               legend.background = element_rect(fill = alpha("white", 0.5)),
-              legend.position = c(0.15, 0.8), # legend.position = c(0.11, 0.96),
+              legend.position = c(0.5, 1.2), # legend.position = c(0.11, 0.96),
               legend.direction= "horizontal",
+              aspect.ratio=0.1
         )
 
     }else if(i>=1 && i<length(TarGene)){
@@ -279,6 +281,7 @@ for (j in 1:length(pathways.show)) {
               axis.title.x = element_blank(),
               axis.title.y = element_text(size = 17,face="bold"),
               legend.position = "none",
+              aspect.ratio=0.1
               # axis.title = element_text(size = rel(AxisTitleSize),face="bold"),
               # plot.title = element_text(color="black",
               #                           size=TitleSize,
