@@ -85,7 +85,7 @@ cellchat.LO <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",
 
 object.list <- list(LO = cellchat.LO, EO = cellchat.EO)
 cellchat <- mergeCellChat(object.list, add.names = names(object.list))
-rm(object.list)
+rm(object.list, cellchat.EO, cellchat.LO)
 
 
 ##### Current path and new folder setting  #####
@@ -96,7 +96,21 @@ dir.create(Save.Path)
 
 
 ##### Pathway and TarGene Setting  #####
-TarGene <- c("Vwf","Itga2b","Itgb3","Gp9")
+pathways.show1 <-cellchat@netP[["EO"]][["pathways"]]
+pathways.show2 <-cellchat@netP[["LO"]][["pathways"]]
+pathways.show <- unique(pathways.show1,pathways.show2)
+rm(pathways.show1,pathways.show2)
+
+TarGene_All <- cellchat@data.signaling %>% rownames
+LR.df <- rbind(cellchat@LR[["EO"]][["LRsig"]],cellchat@LR[["LO"]][["LRsig"]])
+LR_Tar.df <- LR.df[LR.df$pathway_name == pathways.show[1],]
+
+# TarGene <- c("Vwf","Itga2b","Itgb3","Gp9")
+TarGene <- c(LR_Tar.df$ligand, LR_Tar.df$receptor) %>% unique()
+# TarGene <- c(LR_Tar.df$ligand[1], LR_Tar.df$receptor) %>% unique()
+TarGene <-intersect(TarGene,row.names(GeneExp.df))
+
+rm(LR_Tar.df)
 
 ##### Extract df #####
 ## Old version (Without normalizaiton) ## GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
@@ -196,7 +210,7 @@ for (i in 1:length(TarGene)) {
 
   if(i==1){
     plt.ManyGroupSum <- plt.ManyGroup2
-    plt.ManyGroupSum <- plt.ManyGroupSum  + ggtitle("Plot") + theme(
+    plt.ManyGroupSum <- plt.ManyGroupSum  + ggtitle(pathways.show[1]) + theme(
       plot.title = element_text(color="black", size=20, face="bold.italic"))
 
   }else if(i>=1 && i<length(TarGene)){
