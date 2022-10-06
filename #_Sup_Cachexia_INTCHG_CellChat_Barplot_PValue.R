@@ -97,20 +97,19 @@ source("FUN_Beautify_ggplot.R")
 
 #### Cell type & EO LO ####
 
-## Test Table
-compare_means(len ~ supp, data = ToothGrowth)
-TTT <- compare_means( Vwf ~ Cachexia, data = Anno.df, group.by = "celltype"	)
+## Summary Statistic Table
+#(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno.df, group.by = "celltype"	)
 
-## Error (Solved)
-TTT <- compare_means( Anno.df[,TarGene[1]] ~ Cachexia, data = Anno.df, group.by = "celltype"	)
+# ## Error (Solved)
+# TTT <- compare_means( Anno.df[,TarGene[1]] ~ Cachexia, data = Anno.df, group.by = "celltype"	)
+
 # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
 # convert string column name to name/symbol
-f <- "Vwf ~ Cachexia"
-f <- paste0(TarGene[1]," ~ Cachexia")
-TTT1 <- do.call("compare_means", list(as.formula(f), data=Anno.df, group.by = "celltype"))
+f <- paste0(TarGene[1]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno.df, group.by = "celltype"))
 rm(f)
-TTT1$celltype <- factor(TTT1$celltype  ,levels =c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery"))
-TTT1 <- TTT1[order(TTT1$celltype), ]
+SummaryTable.df$celltype <- factor(SummaryTable.df$celltype  ,levels =c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery"))
+SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
 
 for (i in 1:length(TarGene)) {
 
