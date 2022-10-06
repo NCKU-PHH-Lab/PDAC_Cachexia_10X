@@ -105,6 +105,9 @@ plt.ManyGroup2 <- plt.ManyGroup2 +
           axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
 
           axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
+          axis.title.x = element_blank(),
+          axis.title.y = element_text(size = 24,face="bold"),
+
           # axis.title = element_text(size = rel(AxisTitleSize),face="bold"),
           # plot.title = element_text(color="black",
           #                           size=TitleSize,
