@@ -49,6 +49,8 @@
   source("FUN_CellChatOne.R")
 
   # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/09_4_GSEA_Analysis_(SSA).RData")
+  # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main//09_4_GSEA_Analysis_(SSA).RData")
+
   scRNA_EO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "EO"]
   scRNA_LO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "LO"]
 
@@ -408,8 +410,6 @@
     gg3_1 + gg3_2
 
 
-
-
     pairLR.use.up = net.up[, "interaction_name", drop = F]
     gg3_3 <- netVisual_bubble(cellchat, pairLR.use = pairLR.use.up, sources.use = 4, targets.use = c(5:11), comparison = c(1, 2),  angle.x = 90, remove.isolate = T,title.name = paste0("Up-regulated signaling in ", names(object.list)[2]))
     #> Comparing communications on a merged object
@@ -522,12 +522,13 @@
       width = 10,  height = 7
   )
     # pathways.show <- c("CXCL")
-    pathways.show.lt <- object.list[["EO"]]@netP[["pathways"]]
+  pathways.show1 <- object.list[["EO"]]@netP[["pathways"]]
+  pathways.show2 <- object.list[["LO"]]@netP[["pathways"]]
+  pathways.show.lt <- unique(pathways.show1,pathways.show2)
+
 
     for (j in 1:length(pathways.show.lt)) {
-      pathways.show1 <- object.list[["EO"]]@netP[["pathways"]][j]
-      pathways.show2 <- object.list[["LO"]]@netP[["pathways"]][j]
-      pathways.show <- unique(pathways.show1,pathways.show2)
+      pathways.show <- pathways.show.lt[j]
 
       cellchat@meta$datasets = factor(cellchat@meta$datasets, levels = c("EO", "LO")) # set factor level
       plotGeneExpression(cellchat, signaling = pathways.show, split.by = "datasets",
