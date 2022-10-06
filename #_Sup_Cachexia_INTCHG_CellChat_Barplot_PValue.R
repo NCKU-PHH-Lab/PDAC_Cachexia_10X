@@ -129,52 +129,56 @@ LabelY <- max(Anno.df[,TarGene])
 
 
 
-#### Cell type & EO LO ####
-# Box plot facetted by "celltype"
-plt.ManyGroup2 <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
-                            color = "Cachexia", palette = "jco",
-                            add = "jitter",
-                            facet.by = "celltype", short.panel.labs = T) +
-  ylim(0, LabelY*1.2)+
-  stat_compare_means(label.x = 1.1, label.y = LabelY*1.1, size = 4)
+# #### Cell type & EO LO ####
+# # Box plot facetted by "celltype"
+# plt.ManyGroup2 <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
+#                             color = "Cachexia", palette = "jco",
+#                             add = "jitter",
+#                             facet.by = "celltype", short.panel.labs = T) +
+#   ylim(0, LabelY*1.2)+
+#   stat_compare_means(label.x = 1.1, label.y = LabelY*1.1, size = 4)
+#
+# # # Use only p.format as label. Remove method name.
+# # p + stat_compare_means(label = "p.format", method = "wilcox.test", size = 7)
+# # # Or use significance symbol as label
+# # p + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
+#
+# plt.ManyGroup2 %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
+#                                   LegBox = "horizontal",LegDir="horizontal",
+#                                   XtextSize=17,  YtextSize=17, xangle =0,
+#                                   XaThick=0,  YaThick=0,OL_Thick = 1.5,
+#                                   AxisTitleSize=2) -> plt.ManyGroup2
+# plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
+# plt.ManyGroup2
 
-# # Use only p.format as label. Remove method name.
-# p + stat_compare_means(label = "p.format", method = "wilcox.test", size = 7)
-# # Or use significance symbol as label
-# p + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
-
-plt.ManyGroup2 %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
-                                  LegBox = "horizontal",LegDir="horizontal",
-                                  XtextSize=17,  YtextSize=17, xangle =0,
-                                  XaThick=0,  YaThick=0,OL_Thick = 1.5,
-                                  AxisTitleSize=2) -> plt.ManyGroup2
-plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
-
-    ## Add all cell type plot to multiple plots
+####------------------------------------------------------------------------####
     Anno_Sum.df <- Anno.df
-    Anno_Sum.df$celltype <- "Total"
-    Anno_Sum.df <- rbind(Anno.df,Anno_Sum.df)
+    # ## Add all cell type plot to multiple plots
+    # Anno_Sum.df <- Anno.df
+    # Anno_Sum.df$celltype <- "Total"
+    # Anno_Sum.df <- rbind(Anno.df,Anno_Sum.df)
+    #
+    # Anno_Sum.df$sample <- factor(Anno_Sum.df$sample ,levels =c("EO.M","EO.F", "LO.M","LO.F"))
+    # Anno_Sum.df$celltype <- factor(Anno_Sum.df$celltype ,
+    #                                levels =c("Total","Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
+    #                                          "NK","B","Mast","Ery"))
+####------------------------------------------------------------------------####
 
-    Anno_Sum.df$sample <- factor(Anno_Sum.df$sample ,levels =c("EO.M","EO.F", "LO.M","LO.F"))
-    Anno_Sum.df$celltype <- factor(Anno_Sum.df$celltype ,
-                                   levels =c("Total","Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
-                                             "NK","B","Mast","Ery"))
-
-    # Box plot facetted by "celltype"
-    plt.ManyGroup2_Sum <- ggboxplot(Anno_Sum.df, x = "Cachexia", y = TarGene,
-                                color = "Cachexia", palette = "jco",
-                                add = "jitter",
-                                facet.by = "celltype", short.panel.labs = T) +
-      ylim(0, LabelY*1.2)+
-      stat_compare_means(label.x = 1.1, label.y = LabelY*1.1, size = 5)
-
-    plt.ManyGroup2_Sum %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
-                                      LegBox = "horizontal",LegDir="horizontal",
-                                      XtextSize=17,  YtextSize=17, xangle =0,
-                                      XaThick=0,  YaThick=0,OL_Thick = 1.5,
-                                      AxisTitleSize=2) -> plt.ManyGroup2_Sum
-    plt.ManyGroup2_Sum <- plt.ManyGroup2_Sum + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
-    plt.ManyGroup2_Sum
+    # # Box plot facetted by "celltype"
+    # plt.ManyGroup2_Sum <- ggboxplot(Anno_Sum.df, x = "Cachexia", y = TarGene,
+    #                             color = "Cachexia", palette = "jco",
+    #                             add = "jitter",
+    #                             facet.by = "celltype", short.panel.labs = T) +
+    #   ylim(0, LabelY*1.2)+
+    #   stat_compare_means(label.x = 1.1, label.y = LabelY*1.1, size = 5)
+    #
+    # plt.ManyGroup2_Sum %>% BeautifyggPlot(LegPos = c(0.5, 1.1),LegTitleSize=17 ,LegTextSize = 15,
+    #                                   LegBox = "horizontal",LegDir="horizontal",
+    #                                   XtextSize=17,  YtextSize=17, xangle =0,
+    #                                   XaThick=0,  YaThick=0,OL_Thick = 1.5,
+    #                                   AxisTitleSize=2) -> plt.ManyGroup2_Sum
+    # plt.ManyGroup2_Sum <- plt.ManyGroup2_Sum + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
+    # plt.ManyGroup2_Sum
 
 #
 # #### Cell type & EO.M EO.F LO.M LO.F ####
@@ -235,6 +239,52 @@ plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.
 #   plt.ManyGroup2_Sum
 #   plt.ManyGroup3_Sum
 # dev.off()
+
+#### Cell type & EO LO ####
+# Box plot facetted by "celltype"
+plt.ManyGroup2 <- ggboxplot(Anno.df, x = "celltype", y = TarGene,
+                            color = "Cachexia", # palette = "jco",
+                            add = "jitter", # short.panel.labs = T
+                            ) +
+  ylim(0, LabelY*1.2)
+
+
+## Beautify ggPlot
+plt.ManyGroup2 <- plt.ManyGroup2 +
+    theme(axis.text.x = element_text(face="bold",  size = 17,angle = 90, hjust = 1, vjust = .5), # Change the size along the x axis
+          axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
+
+          axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
+          # axis.title = element_text(size = rel(AxisTitleSize),face="bold"),
+          # plot.title = element_text(color="black",
+          #                           size=TitleSize,
+          #                           face="bold.italic",
+          #                           hjust = TH,vjust =TV), # margin = margin(t = 0.5, b = -7),
+          # #     plot.background = element_rect(fill = 'chartreuse'),
+
+          legend.title = element_text(size= 20, color = "black", face="bold"),
+          legend.text = element_text(colour="black", size= 17,face="bold"),
+          legend.background = element_rect(fill = alpha("white", 0.5)),
+          #     legend.position = c(0.1, 0.18),
+          #     plot.text = element_text(size = 20),
+          #     aspect.ratio=AspRat
+          )
+
+plt.ManyGroup2
+
+## Add PValue
+plt.ManyGroup2 <- plt.ManyGroup2 +
+                  stat_compare_means(aes(group = Cachexia),
+                                     label =  "p.signif",label.x = 1.5,
+                                     label.y = LabelY*1.2*0.9,
+                                     method = "wilcox.test", size = 7)
+plt.ManyGroup2
+
+# # Use only p.format as label. Remove method name.
+# p + stat_compare_means(label = "p.format", method = "wilcox.test", size = 7)
+# # Or use significance symbol as label
+# p + stat_compare_means(label =  "p.signif",label.x = 1.5, label.y = LabelY*0.9, method = "wilcox.test", size = 7)
+
 
 ##### 20221005 Try #####
 plt.ManyGroup2_2_Sum <- ggboxplot(Anno.df, x = "celltype", y = TarGene,
