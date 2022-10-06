@@ -12,7 +12,7 @@ memory.limit(150000)
 #### Installation and load the required libraries ####
 #### Basic installation ####
 ## Package.set
-Package.set <- c("tidyverse","CellChat","patchwork","NMF","ggalluvial","Seurat","ggpubr")
+Package.set <- c("tidyverse","CellChat","patchwork","NMF","ggalluvial","Seurat","ggpubr", "stringr")
 ## Check whether the installation of those packages is required
 for (i in 1:length(Package.set)) {
   if (!requireNamespace(Package.set[i], quietly = TRUE)){
@@ -89,7 +89,7 @@ rm(object.list, cellchat.EO, cellchat.LO)
 
 
 ##### Current path and new folder setting  #####
-Version = paste0(Sys.Date(),"_", SampleType, "_CellChat_Barplot_PVal_",CCDBType)
+Version = paste0(Sys.Date(),"_", SampleType, "_", CCDBType, "_CellChat_PVal")
 Save.Path = paste0(getwd(),"/",Version)
 dir.create(Save.Path)
 
@@ -104,36 +104,50 @@ rm(pathways.show1,pathways.show2)
 TarGene_All <- cellchat@data.signaling %>% rownames
 LR.df <- rbind(cellchat@LR[["EO"]][["LRsig"]],cellchat@LR[["LO"]][["LRsig"]])
 
+##### Extract df #####
+## Old version (Without normalizaiton) ## GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
+GeneExp.df <- GetAssayData(scRNA.SeuObj, assay = "RNA", slot = "data") %>% as.data.frame() # normalized data matrix
+## Set y position
+LabelY <- max(GeneExp.df) %>% ceiling()
+
+Anno.df <- scRNA.SeuObj@meta.data
+Anno.df <- data.frame(ID=row.names(Anno.df), Anno.df)
+
+## Save Ori
+GeneExp_Ori.df <- GeneExp.df
+Anno_Ori.df <- Anno.df
+scRNA_Ori.SeuObj <- scRNA.SeuObj
+
+
+
 ##### Summarize all signal #####
 pdf(file = paste0(Save.Path,"/",Version,"_LR_BarplotMulti.pdf"),width = 15, height = 20 )
 SummaryTable.df <-  as.data.frame(matrix(nrow=0,ncol=10))
 colnames(SummaryTable.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.adj", "p.format", "p.signif", "method","pathway_name")
+
 
 for (j in 1:length(pathways.show)) {
 
 
   LR_Tar.df <- LR.df[LR.df$pathway_name == pathways.show[j],]
 
-  # TarGene <- c("Vwf","Itga2b","Itgb3","Gp9")
-  TarGene <- c(LR_Tar.df$ligand, LR_Tar.df$receptor) %>% unique()
-  # TarGene <- c(LR_Tar.df$ligand[1], LR_Tar.df$receptor) %>% unique()
+  # ## Method1
+  # # TarGene <- c("Vwf","Itga2b","Itgb3","Gp9")
+  # TarGene <- c(LR_Tar.df$ligand, LR_Tar.df$receptor) %>% unique()
+  # # TarGene <- c(LR_Tar.df$ligand[1], LR_Tar.df$receptor) %>% unique()
+  # TarGene <-intersect(TarGene,row.names(GeneExp.df))
+
+  ## Method2
+  library(stringr)
+  library(Hmisc)
+  TarGene <- LR_Tar.df$interaction_name %>%
+             str_split(pattern = "_", n = Inf, simplify = FALSE) %>%
+             unlist() %>%
+             unique() %>% tolower() %>% capitalize()
   TarGene <-intersect(TarGene,row.names(GeneExp.df))
 
   rm(LR_Tar.df)
 
-  ##### Extract df #####
-  ## Old version (Without normalizaiton) ## GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
-  GeneExp.df <- GetAssayData(scRNA.SeuObj, assay = "RNA", slot = "data") %>% as.data.frame() # normalized data matrix
-  ## Set y position
-  LabelY <- max(GeneExp.df) %>% ceiling()
-
-  Anno.df <- scRNA.SeuObj@meta.data
-  Anno.df <- data.frame(ID=row.names(Anno.df), Anno.df)
-
-  ## Save Ori
-  GeneExp_Ori.df <- GeneExp.df
-  Anno_Ori.df <- Anno.df
-  scRNA_Ori.SeuObj <- scRNA.SeuObj
 
   ##### Data preprocessing #####
   ## Extract Target gene and combine to the annotation table
@@ -240,7 +254,7 @@ for (j in 1:length(pathways.show)) {
         theme(legend.title = element_text(size= 17, color = "black", face="bold"),
               legend.text = element_text(colour="black", size= 17,face="bold"),
               legend.background = element_rect(fill = alpha("white", 0.5)),
-              legend.position = c(0.11, 0.8), # legend.position = c(0.11, 0.96),
+              legend.position = c(0.15, 0.8), # legend.position = c(0.11, 0.96),
               legend.direction= "horizontal",
         )
 
@@ -264,7 +278,7 @@ for (j in 1:length(pathways.show)) {
               axis.line = element_line(colour = "black", size = 1.5, linetype = "solid"),
               axis.title.x = element_blank(),
               axis.title.y = element_text(size = 17,face="bold"),
-
+              legend.position = "none",
               # axis.title = element_text(size = rel(AxisTitleSize),face="bold"),
               # plot.title = element_text(color="black",
               #                           size=TitleSize,
@@ -321,53 +335,53 @@ write.table( SummaryTable.df ,
              row.names = F
 )
 
-##### Save RData #####
-save.image(paste0(Save.Path,"/",Version,".RData"))
-
-
-
-##### Plot UMAP #####
-
-DimPlot(scRNA.SeuObj, reduction = "umap", group.by = "celltype",label = T,label.size = 9) %>%
-  BeautifyggPlot(.,LegPos = c(1.1, 0.5),AxisTitleSize=1.1) -> plt.UMAP1
-plt.UMAP1
-
-DimPlot(scRNA.SeuObj, reduction = "umap", group.by = "celltype",
-        split.by = "sample",label = T,label.size = 5, ncol = 2) %>%
-  BeautifyggPlot(.,LegPos = c(1.05, 0.5),AxisTitleSize=1.1 ,TV= 1,TH= 0.3) -> plt.UMAP2
-plt.UMAP2
-
-
-## https://github.com/satijalab/seurat/issues/2937
-FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
-            split.by = "sample",ncol = 2, coord.fixed = 1)  & theme(legend.position = c(0.9,0.3)) -> plt.UMAP3
-
-
-FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
-            split.by = "Cachexia",ncol = 2, coord.fixed = 1) & theme(legend.position = c(0.9,0.2)) -> plt.UMAP4
-
-##### Export PDF #####
-pdf(file = paste0(Save.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 )
-  plt.UMAP1
-  plt.UMAP2
-  plt.UMAP3
-  plt.UMAP4
-dev.off()
-
-# ## Example
-# # Load myeloma data from GitHub
-# myeloma <- read.delim("https://raw.githubusercontent.com/kassambara/data/master/myeloma.txt")
-# # Perform the test
-# compare_means(DEPDC1 ~ molecular_group,  data = myeloma,
-#               ref.group = ".all.", method = "t.test")
+# ##### Save RData #####
+# save.image(paste0(Save.Path,"/",Version,".RData"))
 #
-# # Visualize the expression profile
-# ggboxplot(myeloma, x = "molecular_group", y = "DEPDC1", color = "molecular_group",
-#           add = "jitter", legend = "none") +
-#   rotate_x_text(angle = 45)+
-#   geom_hline(yintercept = mean(myeloma$DEPDC1), linetype = 2)+ # Add horizontal line at base mean
-#   stat_compare_means(method = "anova", label.y = 1600)+        # Add global annova p-value
-#   stat_compare_means(label = "p.signif", method = "t.test",
-#                      ref.group = ".all.")                      # Pairwise comparison against all
 #
-
+#
+# ##### Plot UMAP #####
+#
+# DimPlot(scRNA.SeuObj, reduction = "umap", group.by = "celltype",label = T,label.size = 9) %>%
+#   BeautifyggPlot(.,LegPos = c(1.1, 0.5),AxisTitleSize=1.1) -> plt.UMAP1
+# plt.UMAP1
+#
+# DimPlot(scRNA.SeuObj, reduction = "umap", group.by = "celltype",
+#         split.by = "sample",label = T,label.size = 5, ncol = 2) %>%
+#   BeautifyggPlot(.,LegPos = c(1.05, 0.5),AxisTitleSize=1.1 ,TV= 1,TH= 0.3) -> plt.UMAP2
+# plt.UMAP2
+#
+#
+# ## https://github.com/satijalab/seurat/issues/2937
+# FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
+#             split.by = "sample",ncol = 2, coord.fixed = 1)  & theme(legend.position = c(0.9,0.3)) -> plt.UMAP3
+#
+#
+# FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
+#             split.by = "Cachexia",ncol = 2, coord.fixed = 1) & theme(legend.position = c(0.9,0.2)) -> plt.UMAP4
+#
+# ##### Export PDF #####
+# pdf(file = paste0(Save.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 )
+#   plt.UMAP1
+#   plt.UMAP2
+#   plt.UMAP3
+#   plt.UMAP4
+# dev.off()
+#
+# # ## Example
+# # # Load myeloma data from GitHub
+# # myeloma <- read.delim("https://raw.githubusercontent.com/kassambara/data/master/myeloma.txt")
+# # # Perform the test
+# # compare_means(DEPDC1 ~ molecular_group,  data = myeloma,
+# #               ref.group = ".all.", method = "t.test")
+# #
+# # # Visualize the expression profile
+# # ggboxplot(myeloma, x = "molecular_group", y = "DEPDC1", color = "molecular_group",
+# #           add = "jitter", legend = "none") +
+# #   rotate_x_text(angle = 45)+
+# #   geom_hline(yintercept = mean(myeloma$DEPDC1), linetype = 2)+ # Add horizontal line at base mean
+# #   stat_compare_means(method = "anova", label.y = 1600)+        # Add global annova p-value
+# #   stat_compare_means(label = "p.signif", method = "t.test",
+# #                      ref.group = ".all.")                      # Pairwise comparison against all
+# #
+#
