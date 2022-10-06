@@ -31,6 +31,7 @@ load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSu
 # Clean up
 rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType")))
 
+
 ## Order the cell type
   # For PBMC
   scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
@@ -265,7 +266,7 @@ plt.ManyGroup2 <- plt.ManyGroup2 +
           legend.title = element_text(size= 20, color = "black", face="bold"),
           legend.text = element_text(colour="black", size= 17,face="bold"),
           legend.background = element_rect(fill = alpha("white", 0.5)),
-          #     legend.position = c(0.1, 0.18),
+          legend.position = c(0.09, 0.96),legend.direction= "horizontal",
           #     plot.text = element_text(size = 20),
           #     aspect.ratio=AspRat
           )
