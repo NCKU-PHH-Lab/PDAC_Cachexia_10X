@@ -8,18 +8,49 @@
 rm(list = ls()) # Clean variable
 memory.limit(150000)
 
-##### Load Packages #####
-if(!require("tidyverse")) install.packages("tidyverse")
-library(tidyverse)
-if(!require("Seurat")) install.packages("Seurat")
-library(Seurat)
-if(!require("ggpubr")) install.packages("ggpubr")
-library(ggpubr)
+
+#### Installation and load the required libraries ####
+#### Basic installation ####
+## Package.set
+Package.set <- c("tidyverse","CellChat","patchwork","NMF","ggalluvial","Seurat","ggpubr")
+## Check whether the installation of those packages is required
+for (i in 1:length(Package.set)) {
+  if (!requireNamespace(Package.set[i], quietly = TRUE)){
+    install.packages(Package.set[i])
+  }
+}
+## Load Packages
+lapply(Package.set, library, character.only = TRUE)
+rm(Package.set,i)
+
+#### BiocManager installation ####
+## Package.set
+Package.set <- c("ComplexHeatmap")
+## Check whether the installation of those packages is required from BiocManager
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+for (i in 1:length(Package.set)) {
+  if (!requireNamespace(Package.set[i], quietly = TRUE)){
+    BiocManager::install(Package.set[i])
+  }
+}
+## Load Packages
+lapply(Package.set, library, character.only = TRUE)
+rm(Package.set,i)
+
+##### Function setting  #####
+## Call function
+source("FUN_CellChatOne.R")
+
 
 ##### Load RData* #####
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
+## Load Seurat.Obj
+Load.Path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main"
+load(paste0(Load.Path,"/06_Cell_type_annotation.RData"))
+# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
 
-## INTCHG: Interchangeable
+  ## INTCHG: Interchangeable
   # For PBMC
   scRNA.SeuObj <- PBMC.combined
   SampleType = "PBMC"
@@ -28,15 +59,15 @@ load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSu
   # scRNA.SeuObj <- SC.combined
   # SampleType = "SC"
 
-# Clean up
-rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType")))
+  # Clean up
+  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Load.Path")))
 
-## Modify the Cachexia state name
-scRNA.SeuObj@meta.data$Cachexia <-  gsub("EO", "EOCX", scRNA.SeuObj@meta.data$Cachexia)
-scRNA.SeuObj@meta.data$Cachexia <-  gsub("LO", "PreCX", scRNA.SeuObj@meta.data$Cachexia)
+  ## Modify the Cachexia state name
+  scRNA.SeuObj@meta.data$Cachexia <-  gsub("EO", "EOCX", scRNA.SeuObj@meta.data$Cachexia)
+  scRNA.SeuObj@meta.data$Cachexia <-  gsub("LO", "PreCX", scRNA.SeuObj@meta.data$Cachexia)
 
 
-## Order the cell type*
+  ## Order the cell type*
   # For PBMC
   CellType.Order = c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery")
   scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
@@ -47,12 +78,25 @@ scRNA.SeuObj@meta.data$Cachexia <-  gsub("LO", "PreCX", scRNA.SeuObj@meta.data$C
   #                                                          "Fib1", "Fib2", "Fib3"))
 
 
+## Load CellChat rds
+CCDBType = "ECM"
+cellchat.EO <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EO_CellChat.rds"))
+cellchat.LO <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_LO_CellChat.rds"))
+
+object.list <- list(LO = cellchat.LO, EO = cellchat.EO)
+cellchat <- mergeCellChat(object.list, add.names = names(object.list))
+rm(object.list)
+
+
 ##### Current path and new folder setting  #####
-TarGene <- c("Vwf","Itga2b","Itgb3","Gp9")
-TypeName <- "PBMC_ECM"
-Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TypeName)
+Version = paste0(Sys.Date(),"_", SampleType, "_CellChat_Barplot_PVal_",CCDBType)
 Save.Path = paste0(getwd(),"/",Version)
 dir.create(Save.Path)
+
+
+
+##### Pathway and TarGene Setting  #####
+TarGene <- c("Vwf","Itga2b","Itgb3","Gp9")
 
 ##### Extract df #####
 ## Old version (Without normalizaiton) ## GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
