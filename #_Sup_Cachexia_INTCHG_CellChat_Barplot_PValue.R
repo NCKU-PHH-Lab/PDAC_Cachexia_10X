@@ -163,6 +163,11 @@ try({
              str_split(pattern = "_", n = Inf, simplify = FALSE) %>%
              unlist() %>%
              unique() %>% tolower() %>% capitalize()
+  TarGeneH <- LR_Tar.df$interaction_name %>%
+    str_split(pattern = "_", n = Inf, simplify = FALSE) %>%
+    unlist() %>%
+    unique()
+  TarGeneH <- intersect(TarGeneH,row.names(GeneExp.df))
   TarGene <-intersect(TarGene,row.names(GeneExp.df))
 
   source("FUN_HSsymbol2MMsymbol.R")
@@ -170,8 +175,8 @@ try({
   colnames(df) <- "Gene"
 
   df1 <- HSsymbol2MMsymbol(df,"Gene")
-  TarGene <- df1$MM.symbol
-
+  TarGeneM <- df1$MM.symbol
+  TarGene <- c(TarGeneH,TarGeneM) %>% unique()
   rm(LR_Tar.df, df, df1)
 
 
