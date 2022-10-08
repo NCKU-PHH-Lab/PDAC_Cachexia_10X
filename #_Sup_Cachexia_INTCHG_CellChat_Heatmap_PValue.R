@@ -266,7 +266,7 @@ write.table( SummaryTable.df ,
              row.names = F
 )
 
-# ##### Save RData #####
-# save.image(paste0(Save.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
-#
-#
+##### Save RData #####
+save.image(paste0(Save.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
+
+
