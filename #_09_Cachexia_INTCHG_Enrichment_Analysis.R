@@ -47,20 +47,21 @@ NES_Th_Set = 1.5
 padj_Th_Set = 0.01
 
 ## SubType Setting
-
-## For PBMC
-SubGrp1 = c("CD4+T","CD8+T","T")
-SubGrp1_DS <- c("F_CD4+T","F_CD8+T","F_T",  "M_CD4+T","M_CD8+T","M_T",  "SPA_CD4+T","SPA_CD8+T","SPA_T")
-SubGrp2 = c("Mac")
-SubGrp3 <- c("Mast")
-SubGrp4 <- c("Neu")
-
-## For SC
-# SubGrp1 = c("CD4+T","CD8+T","T")
-# SubGrp1_DS <- c("F_CD4+T","F_CD8+T","F_T",  "M_CD4+T","M_CD8+T","M_T",  "SPA_CD4+T","SPA_CD8+T","SPA_T")
-SubGrp2 = c("Duct")
-SubGrp3 <- c("Fib")
-SubGrp4 <- c("Mac")
+if(SampleType == "PBMC"){
+  ## For PBMC
+  SubGrp1 = c("CD4+T","CD8+T","T")
+  SubGrp1_DS <- c("F_CD4+T","F_CD8+T","F_T",  "M_CD4+T","M_CD8+T","M_T",  "SPA_CD4+T","SPA_CD8+T","SPA_T")
+  SubGrp2 = c("Mac")
+  SubGrp3 <- c("Mast")
+  SubGrp4 <- c("Neu")
+}else{
+  ## For SC
+  # SubGrp1 = c("CD4+T","CD8+T","T")
+  # SubGrp1_DS <- c("F_CD4+T","F_CD8+T","F_T",  "M_CD4+T","M_CD8+T","M_T",  "SPA_CD4+T","SPA_CD8+T","SPA_T")
+  SubGrp2 = c("Duct")
+  SubGrp3 <- c("Fib")
+  SubGrp4 <- c("Mac")
+}
 
 
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
@@ -140,7 +141,7 @@ GSEA_Mac.lt <- GSEA_ExtractSubType(GSEA_Large.df.TOP.S,
 
 
 ##### save.image #####
-save.image(paste0(Subfolder.Path,"/09_1_GSEA_Analysis_(SPA).RData"))
+save.image(paste0(Save.Path,"/09_1_GSEA_Analysis_(SPA).RData"))
 
 ##*******************************************************************************************************************##
 ##### 09_2 GSEA Analysis (SSA_Male) #####
@@ -191,7 +192,7 @@ GSEA_Mac_Male.lt <- GSEA_ExtractSubType(GSEA_Large_Male.df.TOP.S,
                                    FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Male_SubType_SubGrp2.pdf"))
 
 ##### save.image #####
-save.image(paste0(Subfolder.Path,"/09_2_GSEA_Analysis_(SSA_Male).RData"))
+save.image(paste0(Save.Path,"/09_2_GSEA_Analysis_(SSA_Male).RData"))
 
 ##*******************************************************************************************************************##
 ##### 09_3 GSEA Analysis (SSA_Female) #####
@@ -243,7 +244,7 @@ GSEA_Mac_Female.lt <- GSEA_ExtractSubType(GSEA_Large_Female.df.TOP.S,
                                         FileName = paste0("/",SampleType,"_GSEA_Bubble_SSA_Female_SubType_SubGrp2.pdf"))
 
 ##### save.image #####
-save.image(paste0(Subfolder.Path,"/09_3_GSEA_Analysis_(SSA_Female).RData"))
+save.image(paste0(Save.Path,"/09_3_GSEA_Analysis_(SSA_Female).RData"))
 
 ##*******************************************************************************************************************##
 ##### 09_4 GSEA Analysis (SSA) #####
@@ -423,4 +424,4 @@ rm(GSEA_Large_Female.df.TOP, GSEA_Large_Male.df.TOP, GSEA_Large_Female.Sum.TOP, 
    GSEA_Large_Female.Sum.TOP.S, GSEA_Large_Male.Sum.TOP.S, GSEA_Large.Sum.TOP.S)
 
 ##### save.image #####
-save.image(paste0(Subfolder.Path,"/09_4_GSEA_Analysis_(SSA).RData"))
+save.image(paste0(Save.Path,"/09_4_GSEA_Analysis_(SSA).RData"))
