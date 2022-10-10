@@ -47,11 +47,21 @@ NES_Th_Set = 1.5
 padj_Th_Set = 0.01
 
 ## SubType Setting
+
+## For PBMC
 SubGrp1 = c("CD4+T","CD8+T","T")
 SubGrp1_DS <- c("F_CD4+T","F_CD8+T","F_T",  "M_CD4+T","M_CD8+T","M_T",  "SPA_CD4+T","SPA_CD8+T","SPA_T")
 SubGrp2 = c("Mac")
 SubGrp3 <- c("Mast")
 SubGrp4 <- c("Neu")
+
+## For SC
+# SubGrp1 = c("CD4+T","CD8+T","T")
+# SubGrp1_DS <- c("F_CD4+T","F_CD8+T","F_T",  "M_CD4+T","M_CD8+T","M_T",  "SPA_CD4+T","SPA_CD8+T","SPA_T")
+SubGrp2 = c("Duct")
+SubGrp3 <- c("Fib")
+SubGrp4 <- c("Mac")
+
 
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
   #### Load Geneset ####
