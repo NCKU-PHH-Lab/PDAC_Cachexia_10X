@@ -1,14 +1,21 @@
 ## Ref: https://github.com/sqjin/CellChat
 ## Ref: https://htmlpreview.github.io/?https://github.com/sqjin/CellChat/blob/master/tutorial/CellChat-vignette.html
 
-# ## INTCHG: Interchangeable
-#   ## For PBMC
-#   scRNA.SeuObj <- PBMC.combined
-#   SampleType = "PBMC"
+# SampleType = "PBMC"
 #
-#   ## For SC
-#   # scRNA.SeuObj <- SC.combined
-#   # SampleType = "SC"
+# ## INTCHG: Interchangeable
+# ## SubType Setting
+#   if(SampleType == "PBMC"){
+#     # For PBMC
+#     scRNA.SeuObj <- PBMC.combined
+#     SampleType = "PBMC"
+#
+#   }else{
+#     # For SC
+#     scRNA.SeuObj <- SC.combined
+#     SampleType = "SC"
+#
+#   }
 
 
 # ##### Presetting ######
