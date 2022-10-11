@@ -1,11 +1,18 @@
-# ## INTCHG: Interchangeable
-#   # For PBMC
-#   scRNA.SeuObj <- PBMC.combined
-#   SampleType = "PBMC"
+# SampleType = "PBMC"
 #
-#   ## For SC
-#   # scRNA.SeuObj <- SC.combined
-#   # SampleType = "SC"
+# ## INTCHG: Interchangeable
+# ## SubType Setting
+#   if(SampleType == "PBMC"){
+#     # For PBMC
+#     scRNA.SeuObj <- PBMC.combined
+#     SampleType = "PBMC"
+#
+#   }else{
+#     # For SC
+#     scRNA.SeuObj <- SC.combined
+#     SampleType = "SC"
+#
+#   }
 
 ##### 08_1 Find CCmarker in different Cell type and VolcanoPlot (SSA) ########
   ### Define group by different phenotype ###
