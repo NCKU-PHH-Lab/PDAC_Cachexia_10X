@@ -74,7 +74,7 @@ source("FUN_Beautify_ggplot.R")
 ## Set y position
 LabelY <- max(Anno.df[,TarGene])
 
-#### EO LO ####
+#### EOCX PreCX ####
 plt.2Group <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
                         color = "Cachexia", palette = "jco",
                         add = "jitter")
@@ -89,11 +89,11 @@ plt.2Group1 %>% BeautifyggPlot(LegPos = c(1.08, 0.5),LegTitleSize=17 ,LegTextSiz
                                AxisTitleSize=2) -> plt.2Group1
 plt.2Group1
 
-#### Cell type & EO LO ####
+#### Cell type & EOCX PreCX ####
 # Visualize: Specify the comparisons you want
 ## Ref(size): ## https://github.com/kassambara/ggpubr/issues/65
-Anno.df$sample <- factor(Anno.df$sample ,levels =c("EO.M","EO.F", "LO.M","LO.F"))
-my_comparisons <- list(  c("EO.M", "EO.F"), c("EO.F", "LO.M"), c("LO.M", "LO.F"), c("EO.M", "LO.M"), c("EO.F", "LO.F"), c("EO.M", "LO.F"))
+Anno.df$sample <- factor(Anno.df$sample ,levels =c("EOCX.M","EOCX.F", "PreCX.M","PreCX.F"))
+my_comparisons <- list(  c("EOCX.M", "EOCX.F"), c("EOCX.F", "PreCX.M"), c("PreCX.M", "PreCX.F"), c("EOCX.M", "PreCX.M"), c("EOCX.F", "PreCX.F"), c("EOCX.M", "PreCX.F"))
 plt.FewGroup1 <-  ggboxplot(Anno.df, x = "sample", y = TarGene,
                             color = "sample", palette = "jco",
                             add = "jitter", legend = "none")+
@@ -123,7 +123,7 @@ plt.ManyGroup1
 
 
 
-#### Cell type & EO LO ####
+#### Cell type & EOCX PreCX ####
 # Box plot facetted by "celltype"
 plt.ManyGroup2 <- ggboxplot(Anno.df, x = "Cachexia", y = TarGene,
                             color = "Cachexia", palette = "jco",
@@ -149,7 +149,7 @@ plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.
     Anno_Sum.df$celltype <- "Total"
     Anno_Sum.df <- rbind(Anno.df,Anno_Sum.df)
 
-    Anno_Sum.df$sample <- factor(Anno_Sum.df$sample ,levels =c("EO.M","EO.F", "LO.M","LO.F"))
+    Anno_Sum.df$sample <- factor(Anno_Sum.df$sample ,levels =c("EOCX.M","EOCX.F", "PreCX.M","PreCX.F"))
     Anno_Sum.df$celltype <- factor(Anno_Sum.df$celltype ,
                                    levels =c("Total","Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
                                              "NK","B","Mast","Ery"))
@@ -171,9 +171,9 @@ plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.
     plt.ManyGroup2_Sum
 
 
-#### Cell type & EO.M EO.F LO.M LO.F ####
+#### Cell type & EOCX.M EOCX.F PreCX.M PreCX.F ####
 # Box plot facetted by "celltype"
-my_comparisons <- list(  c("EO.M", "EO.F"), c("EO.F", "LO.M"), c("LO.M", "LO.F"), c("EO.F", "LO.F"), c("EO.M", "LO.M"), c("EO.M", "LO.F"))
+my_comparisons <- list(  c("EOCX.M", "EOCX.F"), c("EOCX.F", "PreCX.M"), c("PreCX.M", "PreCX.F"), c("EOCX.F", "PreCX.F"), c("EOCX.M", "PreCX.M"), c("EOCX.M", "PreCX.F"))
 
 plt.ManyGroup3 <- ggboxplot(Anno.df, x = "sample", y = TarGene,
                             color = "sample", palette = "jco",
