@@ -1,6 +1,17 @@
+SampleType = "PBMC"
+
 ## INTCHG: Interchangeable
+## SubType Setting
+if(SampleType == "PBMC"){
+  # For PBMC
   scRNA.SeuObj <- PBMC.combined
-  # scRNA.SeuObj <- SC.combined
+
+}else{
+  # For SC
+  scRNA.SeuObj <- SC.combined
+
+}
+
 
 ##### Beautify the Figures #####
 
