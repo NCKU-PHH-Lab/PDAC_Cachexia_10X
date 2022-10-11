@@ -35,35 +35,35 @@
 
 ##### Load datasets*  #####
   PBMC.data.TN138 <- Read10X(data.dir = paste0(getwd(),"/TN138/monocle/outs/filtered_gene_bc_matrices/mm10"))
-  PBMC.TN138 <- CreateSeuratObject(counts = PBMC.data.TN138, project = "EO.M", min.cells = 3, min.features = 200)
+  PBMC.TN138 <- CreateSeuratObject(counts = PBMC.data.TN138, project = "EOCX.M", min.cells = 3, min.features = 200)
   PBMC.TN138
-  PBMC.TN138@meta.data[["sample"]] <- rep(c("EO.M"), times=length(PBMC.TN138@meta.data[["orig.ident"]]))
+  PBMC.TN138@meta.data[["sample"]] <- rep(c("EOCX.M"), times=length(PBMC.TN138@meta.data[["orig.ident"]]))
   PBMC.TN138@meta.data[["ID"]] <- rep(c("TN138"), times=length(PBMC.TN138@meta.data[["orig.ident"]]))
-  PBMC.TN138@meta.data[["Cachexia"]] <- rep(c("EO"), times=length(PBMC.TN138@meta.data[["orig.ident"]]))  #EO: Early_Onset
+  PBMC.TN138@meta.data[["Cachexia"]] <- rep(c("EOCX"), times=length(PBMC.TN138@meta.data[["orig.ident"]]))  #EOCX: Early_Onset Cachexia
   PBMC.TN138@meta.data[["Sex"]] <- rep(c("Male"), times=length(PBMC.TN138@meta.data[["orig.ident"]]))
 
   PBMC.data.TN139 <- Read10X(data.dir = paste0(getwd(),"/TN139/monocle/outs/filtered_gene_bc_matrices/mm10"))
-  PBMC.TN139 <- CreateSeuratObject(counts = PBMC.data.TN139, project = "LO.M", min.cells = 3, min.features = 200)
+  PBMC.TN139 <- CreateSeuratObject(counts = PBMC.data.TN139, project = "PreCX.M", min.cells = 3, min.features = 200)
   PBMC.TN139
-  PBMC.TN139@meta.data[["sample"]] <- rep(c("LO.M"), times=length(PBMC.TN139@meta.data[["orig.ident"]]))
+  PBMC.TN139@meta.data[["sample"]] <- rep(c("PreCX.M"), times=length(PBMC.TN139@meta.data[["orig.ident"]]))
   PBMC.TN139@meta.data[["ID"]] <- rep(c("TN139"), times=length(PBMC.TN139@meta.data[["orig.ident"]]))
-  PBMC.TN139@meta.data[["Cachexia"]] <- rep(c("LO"), times=length(PBMC.TN139@meta.data[["orig.ident"]]))  #LO: Late_Onset
+  PBMC.TN139@meta.data[["Cachexia"]] <- rep(c("PreCX"), times=length(PBMC.TN139@meta.data[["orig.ident"]]))  #PreCX: Late_Onset Cachexia
   PBMC.TN139@meta.data[["Sex"]] <- rep(c("Male"), times=length(PBMC.TN139@meta.data[["orig.ident"]]))
 
   PBMC.data.TN146 <- Read10X(data.dir = paste0(getwd(),"/TN146/monocle/outs/filtered_gene_bc_matrices/mm10"))
-  PBMC.TN146 <- CreateSeuratObject(counts = PBMC.data.TN146, project = "LO.F", min.cells = 3, min.features = 200)
+  PBMC.TN146 <- CreateSeuratObject(counts = PBMC.data.TN146, project = "PreCX.F", min.cells = 3, min.features = 200)
   PBMC.TN146
-  PBMC.TN146@meta.data[["sample"]] <- rep(c("LO.F"), times=length(PBMC.TN146@meta.data[["orig.ident"]]))
+  PBMC.TN146@meta.data[["sample"]] <- rep(c("PreCX.F"), times=length(PBMC.TN146@meta.data[["orig.ident"]]))
   PBMC.TN146@meta.data[["ID"]] <- rep(c("TN146"), times=length(PBMC.TN146@meta.data[["orig.ident"]]))
-  PBMC.TN146@meta.data[["Cachexia"]] <- rep(c("LO"), times=length(PBMC.TN146@meta.data[["orig.ident"]]))
+  PBMC.TN146@meta.data[["Cachexia"]] <- rep(c("PreCX"), times=length(PBMC.TN146@meta.data[["orig.ident"]]))
   PBMC.TN146@meta.data[["Sex"]] <- rep(c("Female"), times=length(PBMC.TN146@meta.data[["orig.ident"]]))
 
   PBMC.data.TN148 <- Read10X(data.dir = paste0(getwd(),"/TN148/monocle/outs/filtered_gene_bc_matrices/mm10"))
-  PBMC.TN148 <- CreateSeuratObject(counts = PBMC.data.TN148, project = "EO.F", min.cells = 3, min.features = 200)
+  PBMC.TN148 <- CreateSeuratObject(counts = PBMC.data.TN148, project = "EOCX.F", min.cells = 3, min.features = 200)
   PBMC.TN148
-  PBMC.TN148@meta.data[["sample"]] <- rep(c("EO.F"), times=length(PBMC.TN148@meta.data[["orig.ident"]]))
+  PBMC.TN148@meta.data[["sample"]] <- rep(c("EOCX.F"), times=length(PBMC.TN148@meta.data[["orig.ident"]]))
   PBMC.TN148@meta.data[["ID"]] <- rep(c("TN148"), times=length(PBMC.TN148@meta.data[["orig.ident"]]))
-  PBMC.TN148@meta.data[["Cachexia"]] <- rep(c("EO"), times=length(PBMC.TN148@meta.data[["orig.ident"]]))
+  PBMC.TN148@meta.data[["Cachexia"]] <- rep(c("EOCX"), times=length(PBMC.TN148@meta.data[["orig.ident"]]))
   PBMC.TN148@meta.data[["Sex"]] <- rep(c("Female"), times=length(PBMC.TN148@meta.data[["orig.ident"]]))
 
 
@@ -261,19 +261,19 @@
     #### Before QC ####
     Meta.df <- data.frame(matrix(nrow = 0,ncol = 3))
     colnames(Meta.df) <- c("NO.","Cell_Num","Gene_Num")
-    Meta.df[1,1] <- c("EO.M")  # TN138
+    Meta.df[1,1] <- c("EOCX.M")  # TN138
     Meta.df[1,2] <- ncol(PBMC.list[[1]]@assays[["RNA"]]@counts)
     Meta.df[1,3] <- nrow(PBMC.list[[1]]@assays[["RNA"]]@counts)
 
-    Meta.df[2,1] <- c("LO.M")  # TN139
+    Meta.df[2,1] <- c("PreCX.M")  # TN139
     Meta.df[2,2] <- ncol(PBMC.list[[2]]@assays[["RNA"]]@counts)
     Meta.df[2,3] <- nrow(PBMC.list[[2]]@assays[["RNA"]]@counts)
 
-    Meta.df[3,1] <- c("LO.F")  # TN146
+    Meta.df[3,1] <- c("PreCX.F")  # TN146
     Meta.df[3,2] <- ncol(PBMC.list[[3]]@assays[["RNA"]]@counts)
     Meta.df[3,3] <- nrow(PBMC.list[[3]]@assays[["RNA"]]@counts)
 
-    Meta.df[4,1] <- c("EO.F")  # TN148
+    Meta.df[4,1] <- c("EOCX.F")  # TN148
     Meta.df[4,2] <- ncol(PBMC.list[[4]]@assays[["RNA"]]@counts)
     Meta.df[4,3] <- nrow(PBMC.list[[4]]@assays[["RNA"]]@counts)
 
@@ -284,19 +284,19 @@
 
     #### After QC ####
     colnames(Meta.df) <- c("NO.","Cell_Num","Gene_Num")
-    Meta.df[6,1] <- c("EO.M.QC")  # TN138
+    Meta.df[6,1] <- c("EOCX.M.QC")  # TN138
     Meta.df[6,2] <- ncol(PBMC.list_QC[[1]]@assays[["RNA"]]@counts)
     Meta.df[6,3] <- nrow(PBMC.list_QC[[1]]@assays[["RNA"]]@counts)
 
-    Meta.df[7,1] <- c("LO.M.QC")  # TN139
+    Meta.df[7,1] <- c("PreCX.M.QC")  # TN139
     Meta.df[7,2] <- ncol(PBMC.list_QC[[2]]@assays[["RNA"]]@counts)
     Meta.df[7,3] <- nrow(PBMC.list_QC[[2]]@assays[["RNA"]]@counts)
 
-    Meta.df[8,1] <- c("LO.F.QC")  # TN146
+    Meta.df[8,1] <- c("PreCX.F.QC")  # TN146
     Meta.df[8,2] <- ncol(PBMC.list_QC[[3]]@assays[["RNA"]]@counts)
     Meta.df[8,3] <- nrow(PBMC.list_QC[[3]]@assays[["RNA"]]@counts)
 
-    Meta.df[9,1] <- c("EO.F.QC")  # TN148
+    Meta.df[9,1] <- c("EOCX.F.QC")  # TN148
     Meta.df[9,2] <- ncol(PBMC.list_QC[[4]]@assays[["RNA"]]@counts)
     Meta.df[9,3] <- nrow(PBMC.list_QC[[4]]@assays[["RNA"]]@counts)
 
@@ -599,9 +599,9 @@
   #   avg.MacrophageM2$gene <- rownames(avg.MacrophageM2)
   #
   #   genes.to.label = c("Sox17", "Mrpl15", "Lypla1", "Tcea1", "Rgs20", "Atp6v1h", "Rb1cc1", "4732440D04Rik", "St18")
-  #   p1 <- ggplot(avg.CD4T.cells, aes(EO, LO)) + geom_point() + ggtitle("Cachexia T.cells")
+  #   p1 <- ggplot(avg.CD4T.cells, aes(EOCX, PreCX)) + geom_point() + ggtitle("Cachexia T.cells")
   #   p1 <- LabelPoints(plot = p1, points = genes.to.label, repel = TRUE)
-  #   p2 <- ggplot(avg.MacrophageM2, aes(EO, LO)) + geom_point() + ggtitle("Cachexia Macrophage")
+  #   p2 <- ggplot(avg.MacrophageM2, aes(EOCX, PreCX)) + geom_point() + ggtitle("Cachexia Macrophage")
   #   p2 <- LabelPoints(plot = p2, points = genes.to.label, repel = TRUE)
   #   p1 + p2
   #   rm(p1 , p2 ,CD4T.cells, MacrophageM2, avg.CD4T.cells, avg.MacrophageM2)
