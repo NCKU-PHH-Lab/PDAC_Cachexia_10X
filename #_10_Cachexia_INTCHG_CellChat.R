@@ -51,8 +51,8 @@
   # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/09_4_GSEA_Analysis_(SSA).RData")
   # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main//09_4_GSEA_Analysis_(SSA).RData")
 
-  scRNA_EO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "EO"]
-  scRNA_LO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "LO"]
+  scRNA_EOCX.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "EOCX"]
+  scRNA_PreCX.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "PreCX"]
 
   ## SubType Setting
   if(SampleType == "PBMC"){
@@ -67,51 +67,51 @@
   }
 
 
-  scRNA_EO.combined$celltype <- factor(scRNA_EO.combined$celltype,
+  scRNA_EOCX.combined$celltype <- factor(scRNA_EOCX.combined$celltype,
                                   levels = Cell_Type_Order.set)
-  scRNA_LO.combined$celltype <- factor(scRNA_LO.combined$celltype,
+  scRNA_PreCX.combined$celltype <- factor(scRNA_PreCX.combined$celltype,
                                       levels = Cell_Type_Order.set)
 
 
   ## ECM-Receptor
-  CellChatOne(scRNA_EO.combined,
-              signalingtype = "ECM-Receptor", projectName = "ECM_EO",
+  CellChatOne(scRNA_EOCX.combined,
+              signalingtype = "ECM-Receptor", projectName = "ECM_EOCX",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
-  ) ->   CellChat_ECM_EO.lt
+  ) ->   CellChat_ECM_EOCX.lt
 
-  CellChatOne(scRNA_LO.combined,
-              signalingtype = "ECM-Receptor", projectName = "ECM_LO",
+  CellChatOne(scRNA_PreCX.combined,
+              signalingtype = "ECM-Receptor", projectName = "ECM_PreCX",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
-  ) ->   CellChat_ECM_LO.lt
+  ) ->   CellChat_ECM_PreCX.lt
 
   ## Cell-Cell Contact
-  CellChatOne(scRNA_EO.combined,
-              signalingtype = "Cell-Cell Contact", projectName = "CC_EO",
+  CellChatOne(scRNA_EOCX.combined,
+              signalingtype = "Cell-Cell Contact", projectName = "CC_EOCX",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
-  ) -> CellChat_CC_EO.lt
+  ) -> CellChat_CC_EOCX.lt
 
-  CellChatOne(scRNA_LO.combined,
-              signalingtype = "Cell-Cell Contact", projectName = "CC_LO",
+  CellChatOne(scRNA_PreCX.combined,
+              signalingtype = "Cell-Cell Contact", projectName = "CC_PreCX",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species =  "Mouse"
-  ) -> CellChat_CC_LO.lt
+  ) -> CellChat_CC_PreCX.lt
 
 
   ## Secreted Signaling
-  CellChatOne(scRNA_EO.combined,
-              signalingtype = "Secreted Signaling", projectName = "Secret_EO",
+  CellChatOne(scRNA_EOCX.combined,
+              signalingtype = "Secreted Signaling", projectName = "Secret_EOCX",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
-  ) -> CellChat_Secret_EO.lt
+  ) -> CellChat_Secret_EOCX.lt
 
-  CellChatOne(scRNA_LO.combined,
-              signalingtype = "Secreted Signaling", projectName = "Secret_LO",
+  CellChatOne(scRNA_PreCX.combined,
+              signalingtype = "Secreted Signaling", projectName = "Secret_PreCX",
               save.path = paste0(Save.Path,"/",SampleType,"_CellCell_Interaction"),
               groupby = "celltype",species = "Mouse"
-  ) -> CellChat_Secret_LO.lt
+  ) -> CellChat_Secret_PreCX.lt
 
   ##### save.image #####
   save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction.RData"))
@@ -122,10 +122,10 @@
 
   ##### Load rds #####
   CCDBType = "ECM"
-  cellchat.EO <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EO_CellChat.rds"))
-  cellchat.LO <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_LO_CellChat.rds"))
+  cellchat.EOCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
+  cellchat.PreCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_PreCX_CellChat.rds"))
 
-  object.list <- list(LO = cellchat.LO, EO = cellchat.EO)
+  object.list <- list(PreCX = cellchat.PreCX, EOCX = cellchat.EOCX)
   cellchat <- mergeCellChat(object.list, add.names = names(object.list))
 
   cellchat
@@ -145,7 +145,7 @@
 
 #### Part I: Predict general principles of cell-cell communication #####
   CellType.set <- cellchat@meta[["celltype"]] %>% unique()
-  Pathway.set <- c(cellchat@netP[["EO"]][["pathways"]],cellchat@netP[["LO"]][["pathways"]]) %>% unique()
+  Pathway.set <- c(cellchat@netP[["EOCX"]][["pathways"]],cellchat@netP[["PreCX"]][["pathways"]]) %>% unique()
 
   pdf(file = paste0(Save.Path,"/",ProjectName,"_01_Predict_general_principles.pdf"),
       width = 12,  height = 7
@@ -333,7 +333,7 @@
 
   ## Identify dysfunctional signaling by using differential expression analysis ##
   # define a positive dataset, i.e., the dataset with positive fold change against the other dataset
-  pos.dataset = "EO"
+  pos.dataset = "EOCX"
   # define a char name used for storing the results of differential expression analysis
   features.name = pos.dataset
   # perform differential expression analysis
@@ -341,10 +341,10 @@
   #> Use the joint cell labels from the merged CellChat object
   # map the results of differential expression analysis onto the inferred cell-cell communications to easily manage/subset the ligand-receptor pairs of interest
   net <- netMappingDEG(cellchat, features.name = features.name)
-  # extract the ligand-receptor pairs with upregulated ligands in EO
-  net.up <- subsetCommunication(cellchat, net = net, datasets = "EO",ligand.logFC = 0.2, receptor.logFC = NULL)
-  # extract the ligand-receptor pairs with upregulated ligands and upregulated recetptors in LO, i.e.,downregulated in LS
-  net.down <- subsetCommunication(cellchat, net = net, datasets = "LO",ligand.logFC = -0.1, receptor.logFC = -0.1)
+  # extract the ligand-receptor pairs with upregulated ligands in EOCX
+  net.up <- subsetCommunication(cellchat, net = net, datasets = "EOCX",ligand.logFC = 0.2, receptor.logFC = NULL)
+  # extract the ligand-receptor pairs with upregulated ligands and upregulated recetptors in PreCX, i.e.,downregulated in LS
+  net.down <- subsetCommunication(cellchat, net = net, datasets = "PreCX",ligand.logFC = -0.1, receptor.logFC = -0.1)
 
   gene.up <- extractGeneSubsetFromPair(net.up, cellchat)
   gene.down <- extractGeneSubsetFromPair(net.down, cellchat)
@@ -357,8 +357,8 @@
     gg3_0 <- netVisual_bubble(cellchat,  comparison = c(1, 2), angle.x = 45)
     print(gg3_0)
 
-    gg3_1 <- netVisual_bubble(cellchat,  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in EO", angle.x = 45, remove.isolate = T)
-    gg3_2 <- netVisual_bubble(cellchat,  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in EO", angle.x = 45, remove.isolate = T)
+    gg3_1 <- netVisual_bubble(cellchat,  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in EOCX", angle.x = 45, remove.isolate = T)
+    gg3_2 <- netVisual_bubble(cellchat,  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in EOCX", angle.x = 45, remove.isolate = T)
 
     print(gg3_1 + gg3_2)
     gg3_1 %>% print()
@@ -385,9 +385,9 @@
     p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), angle.x = 45)
     print(p)
 
-    p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in EO", angle.x = 45, remove.isolate = T)
+    p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in EOCX", angle.x = 45, remove.isolate = T)
     print(p)
-    p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in EO", angle.x = 45, remove.isolate = T)
+    p <- netVisual_bubble(cellchat, sources.use = i,  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in EOCX", angle.x = 45, remove.isolate = T)
     print(p)
     p <- netVisual_bubble(cellchat, sources.use = i, pairLR.use = pairLR.use.up, comparison = c(1, 2),  angle.x = 90, remove.isolate = T,title.name = paste0("Up-regulated signaling in ", names(object.list)[2]))
     print(p)
@@ -409,9 +409,9 @@
     netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), angle.x = 45)
     #> Comparing communications on a merged object
 
-    gg3_1 <- netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in LO", angle.x = 45, remove.isolate = T)
+    gg3_1 <- netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), max.dataset = 2, title.name = "Increased signaling in PreCX", angle.x = 45, remove.isolate = T)
     #> Comparing communications on a merged object
-    gg3_2 <- netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in LO", angle.x = 45, remove.isolate = T)
+    gg3_2 <- netVisual_bubble(cellchat, sources.use = 4, targets.use = c(5:11),  comparison = c(1, 2), max.dataset = 1, title.name = "Decreased signaling in PreCX", angle.x = 45, remove.isolate = T)
     #> Comparing communications on a merged object
     gg3_1 + gg3_2
 
@@ -454,10 +454,10 @@
       width = 12,  height = 7
   )
     # pathways.show <- c("CXCL")
-    pathways.show.lt <- object.list[["EO"]]@netP[["pathways"]]
+    pathways.show.lt <- object.list[["EOCX"]]@netP[["pathways"]]
 
     for (j in 1:length(pathways.show.lt)) {
-      pathways.show <- object.list[["EO"]]@netP[["pathways"]][j]
+      pathways.show <- object.list[["EOCX"]]@netP[["pathways"]][j]
 
 
 
@@ -528,15 +528,15 @@
       width = 10,  height = 7
   )
     # pathways.show <- c("CXCL")
-  pathways.show1 <- object.list[["EO"]]@netP[["pathways"]]
-  pathways.show2 <- object.list[["LO"]]@netP[["pathways"]]
+  pathways.show1 <- object.list[["EOCX"]]@netP[["pathways"]]
+  pathways.show2 <- object.list[["PreCX"]]@netP[["pathways"]]
   pathways.show.lt <- unique(pathways.show1,pathways.show2)
 
 
     for (j in 1:length(pathways.show.lt)) {
       pathways.show <- pathways.show.lt[j]
 
-      cellchat@meta$datasets = factor(cellchat@meta$datasets, levels = c("EO", "LO")) # set factor level
+      cellchat@meta$datasets = factor(cellchat@meta$datasets, levels = c("EOCX", "PreCX")) # set factor level
       plotGeneExpression(cellchat, signaling = pathways.show, split.by = "datasets",
                          colors.ggplot = T) + ggtitle(pathways.show) -> P
       P %>% print()
