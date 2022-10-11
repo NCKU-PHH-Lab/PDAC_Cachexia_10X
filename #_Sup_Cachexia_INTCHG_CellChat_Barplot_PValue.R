@@ -92,19 +92,19 @@ if(SampleTypeSet == "PBMC"){
   # Clean up
   rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Load.Path","CCDBType","CellType.Order")))
 
-  ## Modify the Cachexia state name
-  scRNA.SeuObj@meta.data$Cachexia <-  gsub("EO", "EOCX", scRNA.SeuObj@meta.data$Cachexia)
-  scRNA.SeuObj@meta.data$Cachexia <-  gsub("LO", "PreCX", scRNA.SeuObj@meta.data$Cachexia)
+  # ## Modify the Cachexia state name
+  # scRNA.SeuObj@meta.data$Cachexia <-  gsub("EO", "EOCX", scRNA.SeuObj@meta.data$Cachexia)
+  # scRNA.SeuObj@meta.data$Cachexia <-  gsub("LO", "PreCX", scRNA.SeuObj@meta.data$Cachexia)
 
 
 
 ## Load CellChat rds
-cellchat.EO <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EO_CellChat.rds"))
-cellchat.LO <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_LO_CellChat.rds"))
+cellchat.EOCX <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
+cellchat.PreCX <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_PreCX_CellChat.rds"))
 
-object.list <- list(LO = cellchat.LO, EO = cellchat.EO)
+object.list <- list(PreCX = cellchat.PreCX, EOCX = cellchat.EOCX)
 cellchat <- mergeCellChat(object.list, add.names = names(object.list))
-rm(object.list, cellchat.EO, cellchat.LO)
+rm(object.list, cellchat.EOCX, cellchat.PreCX)
 
 
 ##### Current path and new folder setting  #####
@@ -115,13 +115,13 @@ dir.create(Save.Path)
 
 
 ##### Pathway and TarGene Setting  #####
-pathways.show1 <-cellchat@netP[["EO"]][["pathways"]]
-pathways.show2 <-cellchat@netP[["LO"]][["pathways"]]
+pathways.show1 <-cellchat@netP[["EOCX"]][["pathways"]]
+pathways.show2 <-cellchat@netP[["PreCX"]][["pathways"]]
 pathways.show <- unique(pathways.show1,pathways.show2)
 rm(pathways.show1,pathways.show2)
 
 TarGene_All <- cellchat@data.signaling %>% rownames
-LR.df <- rbind(cellchat@LR[["EO"]][["LRsig"]],cellchat@LR[["LO"]][["LRsig"]])
+LR.df <- rbind(cellchat@LR[["EOCX"]][["LRsig"]],cellchat@LR[["PreCX"]][["LRsig"]])
 
 ##### Extract df #####
 ## Old version (Without normalizaiton) ## GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
@@ -259,7 +259,7 @@ try({
   #   plt.ManyGroup3_Sum
   # dev.off()
 
-  #### Cell type & EO LO ####
+  #### Cell type & EOCX PreCX ####
   ## BarPlot
 
   for (i in 1:length(TarGene)) {
