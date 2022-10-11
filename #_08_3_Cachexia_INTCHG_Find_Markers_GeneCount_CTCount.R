@@ -1,11 +1,18 @@
-# ## INTCHG: Interchangeable
-#   # For PBMC
-#   scRNA.SeuObj <- PBMC.combined
-#   SampleType = "PBMC"
+# SampleType = "PBMC"
 #
-#   ## For SC
-#   # scRNA.SeuObj <- SC.combined
-#   # SampleType = "SC"
+# ## INTCHG: Interchangeable
+# ## SubType Setting
+#   if(SampleType == "PBMC"){
+#     # For PBMC
+#     scRNA.SeuObj <- PBMC.combined
+#     SampleType = "PBMC"
+#
+#   }else{
+#     # For SC
+#     scRNA.SeuObj <- SC.combined
+#     SampleType = "SC"
+#
+#   }
 
 # ##### Presetting ######
 #   rm(list = ls()) # Clean variable
