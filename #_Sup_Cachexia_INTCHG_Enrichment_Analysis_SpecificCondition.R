@@ -94,7 +94,7 @@
     AnnoSet.lt <- list(GroupType = TarGene_name, GroupCompare = c("High","Low") )   ## DEG by GeneExp group
   }else{
     ## Group by Pheno
-    AnnoSet.lt <- list(GroupType = "Cachexia", GroupCompare = c("EO","LO") )
+    AnnoSet.lt <- list(GroupType = "Cachexia", GroupCompare = c("EOCX","LO") )
   }
 
   Thr.lt <- list(LogFC = c("logFC",1), pVal = c("PValue",0.05) )
@@ -155,7 +155,7 @@
   # head(Anno.df)
 
   # ## Select Pheno row
-  # PhenoRowKeep.set <- list(col="Cachexia" ,row=c("EO"))
+  # PhenoRowKeep.set <- list(col="Cachexia" ,row=c("EOCX"))
   # Anno.df <- Anno.df[Anno.df[,PhenoRowKeep.set[["col"]]] %in% PhenoRowKeep.set[["row"]], ]
   #
   # GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df[,1] ]
