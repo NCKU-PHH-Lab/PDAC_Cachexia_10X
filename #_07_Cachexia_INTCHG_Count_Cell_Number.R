@@ -1,11 +1,16 @@
 ## INTCHG: Interchangeable
-  # For PBMC
-  scRNA.SeuObj <- PBMC.combined
-  SampleType = "PBMC"
+## SubType Setting
+  if(SampleType == "PBMC"){
+    # For PBMC
+    scRNA.SeuObj <- PBMC.combined
+    SampleType = "PBMC"
 
-  ## For SC
-  # scRNA.SeuObj <- SC.combined
-  # SampleType = "SC"
+  }else{
+    # For SC
+    scRNA.SeuObj <- SC.combined
+    SampleType = "SC"
+
+  }
 
 ##### 07 Count Cell number  #####
   Pheno.df <- data.frame(sample = scRNA.SeuObj@meta.data[["sample"]],celltype = scRNA.SeuObj@meta.data[["celltype"]],
