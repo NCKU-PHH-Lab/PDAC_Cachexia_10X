@@ -54,12 +54,18 @@
   scRNA_EO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "EO"]
   scRNA_LO.combined <- scRNA.SeuObj[,scRNA.SeuObj@meta.data[["Cachexia"]] %in% "LO"]
 
-  ## For PBMC
-  Cell_Type_Order.set <- c("Mac1", "Mac2", "Mac3","Neu", "T", "CD4+T", "CD8+T", "NK", "B" , "Mast",  "Ery")
+  ## SubType Setting
+  if(SampleType == "PBMC"){
+    ## For PBMC
+    Cell_Type_Order.set <- c("Mac1", "Mac2", "Mac3","Neu", "T", "CD4+T", "CD8+T",
+                             "NK", "B" , "Mast",  "Ery")
+  }else{
+    ## For SC
+    Cell_Type_Order.set <- c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" ,
+                             "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
+                             "Fib1", "Fib2", "Fib3")
+  }
 
-  # ## For SC
-  # Cell_Type_Order.set <- c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
-  #                          "Fib1", "Fib2", "Fib3")
 
   scRNA_EO.combined$celltype <- factor(scRNA_EO.combined$celltype,
                                   levels = Cell_Type_Order.set)
