@@ -94,7 +94,7 @@
     AnnoSet.lt <- list(GroupType = TarGene_name, GroupCompare = c("High","Low") )   ## DEG by GeneExp group
   }else{
     ## Group by Pheno
-    AnnoSet.lt <- list(GroupType = "Cachexia", GroupCompare = c("EOCX","LO") )
+    AnnoSet.lt <- list(GroupType = "Cachexia", GroupCompare = c("EOCX","PreCX") )
   }
 
   Thr.lt <- list(LogFC = c("logFC",1), pVal = c("PValue",0.05) )
@@ -103,7 +103,7 @@
   ProjectName = "CC10X"
   SampleType = "PBMC"
 
-  ExportAnno2 = "EOLO_Neu"
+  ExportAnno2 = "EOPre_Neu"
   if(Group_Mode == "GoupByGeneExp"){
     ExportAnno = paste0(TarGene_name,"_",GeneExpSet.lt$GeneExpMode,"_",ExportAnno2)
 
