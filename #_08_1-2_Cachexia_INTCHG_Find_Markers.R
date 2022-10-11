@@ -31,7 +31,7 @@
     try({
       CCMarker_Male.lt[[i]] <- Find_Markers(scRNA.SeuObj,
                                             paste0(CellType.list[i],"_EOCX_Male"),
-                                            paste0(CellType.list[i],"_LO_Male"),
+                                            paste0(CellType.list[i],"_PreCX_Male"),
                                             CellType.list[i],
                                             Path = Save.Path,
                                             ResultFolder = paste0(SampleType,"_SSA_Male_FindMarkers"))
@@ -88,7 +88,7 @@
     try({
       CCMarker_Female.lt[[i]] <- Find_Markers(scRNA.SeuObj,
                                               paste0(CellType.list[i],"_EOCX_Female"),
-                                              paste0(CellType.list[i],"_LO_Female"),
+                                              paste0(CellType.list[i],"_PreCX_Female"),
                                               CellType.list[i],
                                               Path = Save.Path,
                                               ResultFolder = paste0(SampleType,"_SSA_Female_FindMarkers"))
@@ -197,7 +197,7 @@
     try({
       CCMarker_SPA.lt[[i]] <- Find_Markers(scRNA.SeuObj,
                                            paste0(CellType.list[i],"_EOCX"),
-                                           paste0(CellType.list[i],"_LO"),
+                                           paste0(CellType.list[i],"_PreCX"),
                                            CellType.list[i],
                                            Path = Save.Path,
                                            ResultFolder = paste0(SampleType,"_SPA_FindMarkers"))
