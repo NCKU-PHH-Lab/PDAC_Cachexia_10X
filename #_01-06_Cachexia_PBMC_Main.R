@@ -116,7 +116,6 @@
   #### Save RData ####
   save.image(paste0(Save.Path,"/02_Quality_Control.RData"))
 
-
 ##### 03 Combine different data sets after QC  #####
   PBMC.list_QC  <- c(PBMC.TN138_QC ,PBMC.TN139_QC,PBMC.TN146_QC,PBMC.TN148_QC)
   rm(PBMC.TN138_QC ,PBMC.TN139_QC,PBMC.TN146_QC,PBMC.TN148_QC)
@@ -138,7 +137,6 @@
     # this command creates an 'integrated' data assay
     set.seed(1) # Fix the seed
     PBMC.combined <- IntegrateData(anchorset = PBMC.anchors)
-
 
   ## Check QC
     scRNAQC(PBMC.combined,AddMitInf = "No",CheckOnly="Yes",FileName = paste0(Version,"/PBMC_QC/PBMC_QC_Check"))
@@ -169,7 +167,6 @@
   # ## Run if use filter
   # set.seed(1) # Fix the seed
   # PBMC.combined <- FindVariableFeatures(PBMC.combined)
-
 
   ### RunPCA
   # set.seed(1) # Fix the seed
