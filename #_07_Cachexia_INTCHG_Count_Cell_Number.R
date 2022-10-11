@@ -5,12 +5,10 @@ SampleType = "PBMC"
   if(SampleType == "PBMC"){
     # For PBMC
     scRNA.SeuObj <- PBMC.combined
-    SampleType = "PBMC"
 
   }else{
     # For SC
     scRNA.SeuObj <- SC.combined
-    SampleType = "SC"
 
   }
 
