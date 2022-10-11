@@ -71,8 +71,8 @@
     ## Modify the words
     library(stringr)
     CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Venn_CCMarker.","")
-    CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Pos","EO")
-    CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Neg","LO")
+    CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Pos","EOCX")
+    CCMList_SSA.df$Type <- str_replace(CCMList_SSA.df$Type,"Neg","PreCX")
 
     ## Export tsv
     write.table( CCMList_SSA.df  ,
@@ -88,7 +88,7 @@
       for(i in c(1:length(CellType.list))){
         try({
           CCMarker_SPA_Pos.lt[[i]] <- CCMarker_SPA.lt[[paste0(CellType.list[i])]][["CCMarker.S_Pos_List"]]
-          names(CCMarker_SPA_Pos.lt)[[i]] <- paste0("CCMarker_",CellType.list[i],"_EO")
+          names(CCMarker_SPA_Pos.lt)[[i]] <- paste0("CCMarker_",CellType.list[i],"_EOCX")
         })
       }
       rm(i)
@@ -109,7 +109,7 @@
       for(i in c(1:length(CellType.list))){
         try({
           CCMarker_SPA_Neg.lt[[i]] <- CCMarker_SPA.lt[[paste0(CellType.list[i])]][["CCMarker.S_Neg_List"]]
-          names(CCMarker_SPA_Neg.lt)[[i]] <- paste0("CCMarker_",CellType.list[i],"_LO")
+          names(CCMarker_SPA_Neg.lt)[[i]] <- paste0("CCMarker_",CellType.list[i],"_PreCX")
         })
       }
       rm(i)
@@ -131,8 +131,8 @@
     ## Modify the words
       library(stringr)
       CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"CCMarker.","")
-      CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Pos","EO")
-      CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Neg","LO")
+      CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Pos","EOCX")
+      CCMList_SPA.df$Type <- str_replace(CCMList_SPA.df$Type,"Neg","PreCX")
 
     ## Export tsv
       write.table( CCMList_SPA.df  ,
@@ -146,13 +146,13 @@
   # ##### (Test) Specific Cell Type #####
   #   CCM_SPA_Mac.df <- CCMList_SPA.df[grep("Mac", CCMList_SPA.df$Type), ]
   #
-  #   CCM_SPA_Mac_EO.df <- CCM_SPA_Mac.df[grep("EO",CCM_SPA_Mac.df$Type), ]
-  #   CCM_SPA_Mac_LO.df <- CCM_SPA_Mac.df[grep("LO",CCM_SPA_Mac.df$Type), ]
+  #   CCM_SPA_Mac_EOCX.df <- CCM_SPA_Mac.df[grep("EOCX",CCM_SPA_Mac.df$Type), ]
+  #   CCM_SPA_Mac_PreCX.df <- CCM_SPA_Mac.df[grep("PreCX",CCM_SPA_Mac.df$Type), ]
   #
   #   ## Seperate genes ##
-  #   CCM_SPA_Mac_EO_Split.df <- strsplit(as.character(
-  #                                    CCM_SPA_Mac_EO.df$Marker), ", ")
-  #   rm( CCM_SPA_Mac.df,CCM_SPA_Mac_EO.df,CCM_SPA_Mac_LO.df, CCM_SPA_Mac_EO_Split.df)
+  #   CCM_SPA_Mac_EOCX_Split.df <- strsplit(as.character(
+  #                                    CCM_SPA_Mac_EOCX.df$Marker), ", ")
+  #   rm( CCM_SPA_Mac.df,CCM_SPA_Mac_EOCX.df,CCM_SPA_Mac_PreCX.df, CCM_SPA_Mac_EOCX_Split.df)
 
 ####-------------------------------------------------------------------------------------------####
 ##### Count gene number in different cell type #####
@@ -164,37 +164,37 @@
     CCM_SPA_Split.lt <- strsplit(as.character(CCM_SPA.set), ", ")
     names(CCM_SPA_Split.lt) <- CCM_SPA_CT.set
 
-    ## EO + LO
+    ## EOCX + PreCX
     CCM_SPA_Count.df <- CountGeneNum(CCM_SPA_Split.lt,mode=2)
-    ## EO
-    CCM_SPA_Split_EO.lt <- CCM_SPA_Split.lt[grep("EO", names(CCM_SPA_Split.lt))]
-    CCM_SPA_Count_EO.df <- CountGeneNum(CCM_SPA_Split_EO.lt,mode=2)
-    ## LO
-    CCM_SPA_Split_LO.lt <- CCM_SPA_Split.lt[grep("LO", names(CCM_SPA_Split.lt))]
-    CCM_SPA_Count_LO.df <- CountGeneNum(CCM_SPA_Split_LO.lt,mode=2)
-    CCM_SPA_Count_LO.df$Freq <- -CCM_SPA_Count_LO.df$Freq
+    ## EOCX
+    CCM_SPA_Split_EOCX.lt <- CCM_SPA_Split.lt[grep("EOCX", names(CCM_SPA_Split.lt))]
+    CCM_SPA_Count_EOCX.df <- CountGeneNum(CCM_SPA_Split_EOCX.lt,mode=2)
+    ## PreCX
+    CCM_SPA_Split_PreCX.lt <- CCM_SPA_Split.lt[grep("PreCX", names(CCM_SPA_Split.lt))]
+    CCM_SPA_Count_PreCX.df <- CountGeneNum(CCM_SPA_Split_PreCX.lt,mode=2)
+    CCM_SPA_Count_PreCX.df$Freq <- -CCM_SPA_Count_PreCX.df$Freq
 
     # Combine
-    CCM_SPA_Count_Summary.df <- full_join(CCM_SPA_Count.df, CCM_SPA_Count_EO.df, by="Var1")
-    CCM_SPA_Count_Summary.df <- full_join(CCM_SPA_Count_Summary.df, CCM_SPA_Count_LO.df, by="Var1")
-    colnames(CCM_SPA_Count_Summary.df) <- c("Genes","Total","EO","LO")
+    CCM_SPA_Count_Summary.df <- full_join(CCM_SPA_Count.df, CCM_SPA_Count_EOCX.df, by="Var1")
+    CCM_SPA_Count_Summary.df <- full_join(CCM_SPA_Count_Summary.df, CCM_SPA_Count_PreCX.df, by="Var1")
+    colnames(CCM_SPA_Count_Summary.df) <- c("Genes","Total","EOCX","PreCX")
     CCM_SPA_Count_Summary.df[is.na(CCM_SPA_Count_Summary.df)] <- 0
 
     ## For each cell type
-    CCM_SPA_Split_EO_CT.df <- CountGeneNum(CCM_SPA_Split_EO.lt,mode=1)
-    CCM_SPA_Split_LO_CT.df <- CountGeneNum(CCM_SPA_Split_LO.lt,mode=1)
-    CCM_SPA_Split_LO_CT.df[,2:ncol(CCM_SPA_Split_LO_CT.df)] <- -CCM_SPA_Split_LO_CT.df[,2:ncol(CCM_SPA_Split_LO_CT.df)]
+    CCM_SPA_Split_EOCX_CT.df <- CountGeneNum(CCM_SPA_Split_EOCX.lt,mode=1)
+    CCM_SPA_Split_PreCX_CT.df <- CountGeneNum(CCM_SPA_Split_PreCX.lt,mode=1)
+    CCM_SPA_Split_PreCX_CT.df[,2:ncol(CCM_SPA_Split_PreCX_CT.df)] <- -CCM_SPA_Split_PreCX_CT.df[,2:ncol(CCM_SPA_Split_PreCX_CT.df)]
 
     # Combine
     CCM_SPA_SumCT.df <- full_join(CCM_SPA_Count_Summary.df,
-                                                  CCM_SPA_Split_EO_CT.df,by="Genes")
+                                                  CCM_SPA_Split_EOCX_CT.df,by="Genes")
     CCM_SPA_SumCT.df <- full_join(CCM_SPA_SumCT.df,
-                                                  CCM_SPA_Split_LO_CT.df,by="Genes")
+                                                  CCM_SPA_Split_PreCX_CT.df,by="Genes")
     CCM_SPA_SumCT.df[is.na(CCM_SPA_SumCT.df)] <- 0
 
     ##
-    rm(CCM_SPA_Count.df, CCM_SPA_Split_EO.lt, CCM_SPA_Split_LO.lt,
-       CCM_SPA_Count_EO.df,CCM_SPA_Count_LO.df,CCM_SPA_Split_EO_CT.df,CCM_SPA_Split_LO_CT.df)
+    rm(CCM_SPA_Count.df, CCM_SPA_Split_EOCX.lt, CCM_SPA_Split_PreCX.lt,
+       CCM_SPA_Count_EOCX.df,CCM_SPA_Count_PreCX.df,CCM_SPA_Split_EOCX_CT.df,CCM_SPA_Split_PreCX_CT.df)
     return(CCM_SPA_SumCT.df)
     }
 
@@ -205,13 +205,13 @@
 
   ## Modify the colnames
   colnames(CCM_SPA_SumCT.df) <- str_replace(colnames(CCM_SPA_SumCT.df),
-                                                      "EO","EO_SPA")
+                                                      "EOCX","EOCX_SPA")
   colnames(CCM_SPA_SumCT.df) <- str_replace(colnames(CCM_SPA_SumCT.df),
-                                                      "LO","LO_SPA")
+                                                      "PreCX","PreCX_SPA")
   colnames(CCM_SPA_SumCT.df) <- str_replace(colnames(CCM_SPA_SumCT.df),
-                                                       "^EO","All_EO")
+                                                       "^EOCX","All_EOCX")
   colnames(CCM_SPA_SumCT.df) <- str_replace(colnames(CCM_SPA_SumCT.df),
-                                                       "^LO","All_LO")
+                                                       "^PreCX","All_PreCX")
 
   ## Check
   # CCM_SPA_SumCT.df2 <- CCMTable( CCM_SPA_CT.set,CCM_SPA.set)
@@ -248,14 +248,14 @@
     colnames(CCM_SSA_SumCT.df) <- str_replace(colnames(CCM_SSA_SumCT.df),
                                                         "\\.y","_M")
     colnames(CCM_SSA_SumCT.df) <- str_replace(colnames(CCM_SSA_SumCT.df),
-                                                         "^EO","All_EO")
+                                                         "^EOCX","All_EOCX")
     colnames(CCM_SSA_SumCT.df) <- str_replace(colnames(CCM_SSA_SumCT.df),
-                                                         "^LO","All_LO")
+                                                         "^PreCX","All_PreCX")
 
     colnames(CCM_SSA_SumCT.df) <- str_replace(colnames(CCM_SSA_SumCT.df),
-                                                   "EO$","EO_I")
+                                                   "EOCX$","EOCX_I")
     colnames(CCM_SSA_SumCT.df) <- str_replace(colnames(CCM_SSA_SumCT.df),
-                                                   "LO$","LO_I")
+                                                   "PreCX$","PreCX_I")
 
     # colnames(CCM_SSA_SumCT.df)[56:82] <- paste0(colnames(CCM_SSA_SumCT.df)[56:82],"_I")
     # head(CCM_SSA_SumCT.df)
@@ -345,155 +345,155 @@
 
   plot(x= seq(1:ncol(CCM_All_SumCT.df)), y= as.integer(CCM_All_SumCT.df[1,1:ncol(CCM_All_SumCT.df)]))
 
-  ## EO
+  ## EOCX
   # https://stackoverflow.com/questions/17423609/multiple-y-over-x-in-ggplot2
-    #CCM_Count_Sum_EO.df <- CCM_All_SumCT.df[,c(1,3,6)] %>% arrange(desc(All_EO_SPA),desc(All_EO_SSA_I))
-    # CCM_Count_Sum_EO.df <- CCM_All_SumCT.df[grep("All_EO", names(CCM_All_SumCT.df))] %>%
-    #                      arrange(desc(All_EO_SPA),desc(All_EO_I))
+    #CCM_Count_Sum_EOCX.df <- CCM_All_SumCT.df[,c(1,3,6)] %>% arrange(desc(All_EOCX_SPA),desc(All_EOCX_SSA_I))
+    # CCM_Count_Sum_EOCX.df <- CCM_All_SumCT.df[grep("All_EOCX", names(CCM_All_SumCT.df))] %>%
+    #                      arrange(desc(All_EOCX_SPA),desc(All_EOCX_I))
 
-    CCM_Count_Sum_EO.df <- CCM_All_SumCT.df[names(CCM_All_SumCT.df) %in% c("All_EO_SPA","All_EO_I")] %>%
-                           arrange(desc(All_EO_SPA),desc(All_EO_I))
-    CCM_Count_Sum_EO.df <- data.frame(Genes=row.names(CCM_Count_Sum_EO.df),CCM_Count_Sum_EO.df)
-    colnames(CCM_Count_Sum_EO.df)[3] <-"All_EO_SSA_I"
+    CCM_Count_Sum_EOCX.df <- CCM_All_SumCT.df[names(CCM_All_SumCT.df) %in% c("All_EOCX_SPA","All_EOCX_I")] %>%
+                           arrange(desc(All_EOCX_SPA),desc(All_EOCX_I))
+    CCM_Count_Sum_EOCX.df <- data.frame(Genes=row.names(CCM_Count_Sum_EOCX.df),CCM_Count_Sum_EOCX.df)
+    colnames(CCM_Count_Sum_EOCX.df)[3] <-"All_EOCX_SSA_I"
 
     library(reshape2)
-    df1 <- melt(CCM_Count_Sum_EO.df[1:500,], id = "Genes")
+    df1 <- melt(CCM_Count_Sum_EOCX.df[1:500,], id = "Genes")
     df1$Genes <- factor(df1$Genes,levels = df1$Genes[1:500])
 
     source("FUN_Beautify_LinePlot.R")
-    EO1.P <- ggplot(df1, aes(x = Genes, y = value, color = variable,
+    EOCX1.P <- ggplot(df1, aes(x = Genes, y = value, color = variable,
                              group = variable ,linetype = variable)) + theme_bw()+
       theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
 
-    EO1.P <- EO1.P %>% LinePlot_Ori(.,AspRat=1,LegPos = c(0.85, 0.9),AxisTitleSize=2,
+    EOCX1.P <- EOCX1.P %>% LinePlot_Ori(.,AspRat=1,LegPos = c(0.85, 0.9),AxisTitleSize=2,
                                     XtextSize=0,  YtextSize=25) +
       scale_color_manual(values = c('#f7598b','#9755ab'))
-    EO1.P
+    EOCX1.P
     ##
-    CCMarker_EO1 <- CCM_Count_Sum_EO.df[CCM_Count_Sum_EO.df$All_EO_SPA==1 &CCM_Count_Sum_EO.df$All_EO_SSA_I ==1,]
-    CCMarker_EO2 <- CCM_Count_Sum_EO.df[CCM_Count_Sum_EO.df$All_EO_SPA==2 &CCM_Count_Sum_EO.df$All_EO_SSA_I ==2,]
-    CCMarker_EO3 <- CCM_Count_Sum_EO.df[CCM_Count_Sum_EO.df$All_EO_SPA==3 &CCM_Count_Sum_EO.df$All_EO_SSA_I ==3,]
+    CCMarker_EOCX1 <- CCM_Count_Sum_EOCX.df[CCM_Count_Sum_EOCX.df$All_EOCX_SPA==1 &CCM_Count_Sum_EOCX.df$All_EOCX_SSA_I ==1,]
+    CCMarker_EOCX2 <- CCM_Count_Sum_EOCX.df[CCM_Count_Sum_EOCX.df$All_EOCX_SPA==2 &CCM_Count_Sum_EOCX.df$All_EOCX_SSA_I ==2,]
+    CCMarker_EOCX3 <- CCM_Count_Sum_EOCX.df[CCM_Count_Sum_EOCX.df$All_EOCX_SPA==3 &CCM_Count_Sum_EOCX.df$All_EOCX_SSA_I ==3,]
 
-  ## LO
+  ## PreCX
   # https://stackoverflow.com/questions/17423609/multiple-y-over-x-in-ggplot2
-    #CCM_Count_Sum_LO.df <- CCM_All_SumCT.df[,c(1,4,7)] %>% arrange(desc(LO.SPA),desc(LO.SSA.I))
-    CCM_Count_Sum_LO.df <- CCM_All_SumCT.df[names(CCM_All_SumCT.df) %in% c("All_LO_SPA","All_LO_I")] %>%
+    #CCM_Count_Sum_PreCX.df <- CCM_All_SumCT.df[,c(1,4,7)] %>% arrange(desc(PreCX.SPA),desc(PreCX.SSA.I))
+    CCM_Count_Sum_PreCX.df <- CCM_All_SumCT.df[names(CCM_All_SumCT.df) %in% c("All_PreCX_SPA","All_PreCX_I")] %>%
                            abs() %>%
-                           arrange(desc(All_LO_SPA),desc(All_LO_I))
-    CCM_Count_Sum_LO.df <- data.frame(Genes=row.names(CCM_Count_Sum_LO.df),CCM_Count_Sum_LO.df)
-    colnames(CCM_Count_Sum_LO.df)[3] <-"All_LO_SSA_I"
+                           arrange(desc(All_PreCX_SPA),desc(All_PreCX_I))
+    CCM_Count_Sum_PreCX.df <- data.frame(Genes=row.names(CCM_Count_Sum_PreCX.df),CCM_Count_Sum_PreCX.df)
+    colnames(CCM_Count_Sum_PreCX.df)[3] <-"All_PreCX_SSA_I"
     library(reshape2)
-    df2 <- melt(CCM_Count_Sum_LO.df[1:500,], id = "Genes")
+    df2 <- melt(CCM_Count_Sum_PreCX.df[1:500,], id = "Genes")
     df2$Genes <- factor(df2$Genes,levels = df2$Genes[1:500])
-    LO1.P <- ggplot(df2, aes(x = Genes, y = value, color = variable,
+    PreCX1.P <- ggplot(df2, aes(x = Genes, y = value, color = variable,
                              group = variable ,linetype = variable))
 
-    LO1.P <-LO1.P %>% LinePlot_Ori(.,AspRat=1,LegPos = c(0.85, 0.9),AxisTitleSize=2,
+    PreCX1.P <- PreCX1.P %>% LinePlot_Ori(.,AspRat=1,LegPos = c(0.85, 0.9),AxisTitleSize=2,
                                    XtextSize=0,  YtextSize=25) +
       scale_color_manual(values = c('#20ba87','#205eba'))
-    LO1.P
+    PreCX1.P
     ##
-    CCMarker_LO1 <- CCM_Count_Sum_LO.df[CCM_Count_Sum_LO.df$LO.SPA==1 &CCM_Count_Sum_LO.df$LO.SSA.I ==1,]
-    CCMarker_LO2 <- CCM_Count_Sum_LO.df[CCM_Count_Sum_LO.df$LO.SPA==2 &CCM_Count_Sum_LO.df$LO.SSA.I ==2,]
-    CCMarker_LO3 <- CCM_Count_Sum_LO.df[CCM_Count_Sum_LO.df$LO.SPA==3 &CCM_Count_Sum_LO.df$LO.SSA.I ==3,]
+    CCMarker_PreCX1 <- CCM_Count_Sum_PreCX.df[CCM_Count_Sum_PreCX.df$PreCX.SPA==1 &CCM_Count_Sum_PreCX.df$PreCX.SSA.I ==1,]
+    CCMarker_PreCX2 <- CCM_Count_Sum_PreCX.df[CCM_Count_Sum_PreCX.df$PreCX.SPA==2 &CCM_Count_Sum_PreCX.df$PreCX.SSA.I ==2,]
+    CCMarker_PreCX3 <- CCM_Count_Sum_PreCX.df[CCM_Count_Sum_PreCX.df$PreCX.SPA==3 &CCM_Count_Sum_PreCX.df$PreCX.SSA.I ==3,]
 
 
   #### Sex specific
-  ## EO
-  # CCM_Count_Sum_EO_SSA.df <- CCM_All_SumCT.df[,c(1,6,9,12)] %>% arrange(desc(All_EO_SSA_I),desc(EO.SSA.F),desc(EO.SSA.M))
-    CCM_Count_Sum_EO_SSA.df <- CCM_All_SumCT.df[names(CCM_All_SumCT.df) %in% c("All_EO_I","All_EO_F","All_EO_M")] %>%
-                            arrange(desc(All_EO_I),desc(All_EO_F),desc(All_EO_M))
-    CCM_Count_Sum_EO_SSA.df <- data.frame(Genes=row.names(CCM_Count_Sum_EO_SSA.df),CCM_Count_Sum_EO_SSA.df)
-    # colnames(CCM_Count_Sum_EO_SSA.df)[3] <-"All_EO_SSA_I"
+  ## EOCX
+  # CCM_Count_Sum_EOCX_SSA.df <- CCM_All_SumCT.df[,c(1,6,9,12)] %>% arrange(desc(All_EOCX_SSA_I),desc(EOCX.SSA.F),desc(EOCX.SSA.M))
+    CCM_Count_Sum_EOCX_SSA.df <- CCM_All_SumCT.df[names(CCM_All_SumCT.df) %in% c("All_EOCX_I","All_EOCX_F","All_EOCX_M")] %>%
+                            arrange(desc(All_EOCX_I),desc(All_EOCX_F),desc(All_EOCX_M))
+    CCM_Count_Sum_EOCX_SSA.df <- data.frame(Genes=row.names(CCM_Count_Sum_EOCX_SSA.df),CCM_Count_Sum_EOCX_SSA.df)
+    # colnames(CCM_Count_Sum_EOCX_SSA.df)[3] <-"All_EOCX_SSA_I"
 
     library(reshape2)
-    df3 <- melt(CCM_Count_Sum_EO_SSA.df[1:500,], id = "Genes")
+    df3 <- melt(CCM_Count_Sum_EOCX_SSA.df[1:500,], id = "Genes")
     df3$Genes <- factor(df3$Genes,levels = df3$Genes[1:500])
-    EOSS.P <- ggplot(df3, aes(x = Genes, y = value, color = variable,
+    EOCXSS.P <- ggplot(df3, aes(x = Genes, y = value, color = variable,
                               group = variable ,linetype = variable))
 
-    EOSS.P <- EOSS.P %>% LinePlot_Ori(.,AspRat=1,LegPos = c(0.85, 0.89),AxisTitleSize=2,
+    EOCXSS.P <- EOCXSS.P %>% LinePlot_Ori(.,AspRat=1,LegPos = c(0.85, 0.89),AxisTitleSize=2,
                                       XtextSize=0,  YtextSize=25) +
       geom_point(shape = 12, size = 4, fill = "white") +
       scale_linetype_manual(#name="Pheno_Type",
         values=c("solid", "dotted", "dotdash"), #  values=c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
-        ) +  # labels=c("All_EO_I","All_EO_F","All_EO_M")
+        ) +  # labels=c("All_EOCX_I","All_EOCX_F","All_EOCX_M")
       scale_color_manual(values = c('#9755ab','#ff75da','#6db5fc'))
 
-    CCM_Count_Sum_EO_SSA.df %>% arrange(desc(All_EO_F))
-    EOSS.P
+    CCM_Count_Sum_EOCX_SSA.df %>% arrange(desc(All_EOCX_F))
+    EOCXSS.P
 
 
-  ## LO
-    #CCM_Count_Sum_LO_SSA.df <- CCM_All_SumCT.df[,c(1,7,10,13)] %>% arrange(desc(LO.SSA.I),desc(LO.SSA.F),desc(LO.SSA.M))
-    CCM_Count_Sum_LO_SSA.df <- CCM_All_SumCT.df[names(CCM_All_SumCT.df) %in% c("All_LO_I","All_LO_F","All_LO_M")] %>% abs()%>%
-      arrange(desc(All_LO_I),desc(All_LO_F),desc(All_LO_M))
-    CCM_Count_Sum_LO_SSA.df <- data.frame(Genes=row.names(CCM_Count_Sum_LO_SSA.df),CCM_Count_Sum_LO_SSA.df)
+  ## PreCX
+    #CCM_Count_Sum_PreCX_SSA.df <- CCM_All_SumCT.df[,c(1,7,10,13)] %>% arrange(desc(PreCX.SSA.I),desc(PreCX.SSA.F),desc(PreCX.SSA.M))
+    CCM_Count_Sum_PreCX_SSA.df <- CCM_All_SumCT.df[names(CCM_All_SumCT.df) %in% c("All_PreCX_I","All_PreCX_F","All_PreCX_M")] %>% abs()%>%
+      arrange(desc(All_PreCX_I),desc(All_PreCX_F),desc(All_PreCX_M))
+    CCM_Count_Sum_PreCX_SSA.df <- data.frame(Genes=row.names(CCM_Count_Sum_PreCX_SSA.df),CCM_Count_Sum_PreCX_SSA.df)
 
     library(reshape2)
-    df4 <- melt(CCM_Count_Sum_LO_SSA.df[1:500,], id = "Genes")
+    df4 <- melt(CCM_Count_Sum_PreCX_SSA.df[1:500,], id = "Genes")
     df4$Genes <- factor(df4$Genes,levels = df4$Genes[1:500])
-    LOSS.P <- ggplot(df4, aes(x = Genes, y = value, color = variable,
+    PreCXSS.P <- ggplot(df4, aes(x = Genes, y = value, color = variable,
                               group = variable ,linetype = variable))
 
-    LOSS.P <- LOSS.P %>% LinePlot_Ori(.,AspRat=1,LegPos = c(0.85, 0.85),AxisTitleSize=2,
+    PreCXSS.P <- PreCXSS.P %>% LinePlot_Ori(.,AspRat=1,LegPos = c(0.85, 0.85),AxisTitleSize=2,
                                       XtextSize=0,  YtextSize=25)+
       geom_point(shape = 12, size = 4, fill = "white") +
       scale_linetype_manual(#name="Pheno_Type",
         values=c("solid", "dotted", "dotdash"), #  values=c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
-        ) + # labels=c("All_LO_I","All_LO_F","All_LO_M")
+        ) + # labels=c("All_PreCX_I","All_PreCX_F","All_PreCX_M")
       scale_color_manual(values = c('#9755ab','#ff75da','#6db5fc'))
 
-    CCM_Count_Sum_LO_SSA.df %>% arrange(desc(All_LO_F))
-    LOSS.P
+    CCM_Count_Sum_PreCX_SSA.df %>% arrange(desc(All_PreCX_F))
+    PreCXSS.P
 
 ##### Gene count vs Cluster #####
   # GF: Gene Frequency
     CCM_All_SumCT.df2 <- CCM_All_SumCT.df %>% abs()
     Base_GF <- data.frame(Var1=seq(from = 0, to = 9))
     Base_GF$Var1 <- as.factor(Base_GF$Var1)
-    EO_SPA_GF <- data.frame(table(CCM_All_SumCT.df2$All_EO_SPA))
-    colnames(EO_SPA_GF)[2] <-  'EO_SPA'
-    EO_SPA_GF <- full_join(Base_GF, EO_SPA_GF)
+    EOCX_SPA_GF <- data.frame(table(CCM_All_SumCT.df2$All_EOCX_SPA))
+    colnames(EOCX_SPA_GF)[2] <-  'EOCX_SPA'
+    EOCX_SPA_GF <- full_join(Base_GF, EOCX_SPA_GF)
 
-    LO_SPA_GF <- data.frame(table(CCM_All_SumCT.df2$All_LO_SPA))
-    colnames(LO_SPA_GF)[2] <-  'LO.SPA'
+    PreCX_SPA_GF <- data.frame(table(CCM_All_SumCT.df2$All_PreCX_SPA))
+    colnames(PreCX_SPA_GF)[2] <-  'PreCX.SPA'
 
-    Sum_GF <- full_join(EO_SPA_GF, LO_SPA_GF)
+    Sum_GF <- full_join(EOCX_SPA_GF, PreCX_SPA_GF)
 
-    EO_SSAI_GF <- data.frame(table(CCM_All_SumCT.df2$All_EO_I))
-    colnames(EO_SSAI_GF)[2] <-  'EO.SSAI'
+    EOCX_SSAI_GF <- data.frame(table(CCM_All_SumCT.df2$All_EOCX_I))
+    colnames(EOCX_SSAI_GF)[2] <-  'EOCX.SSAI'
 
-    Sum_GF <- full_join(Sum_GF, EO_SSAI_GF)
+    Sum_GF <- full_join(Sum_GF, EOCX_SSAI_GF)
 
-    LO_SSAI_GF <- data.frame(table(CCM_All_SumCT.df2$All_LO_I))
-    colnames(LO_SSAI_GF)[2] <-  'LO.SSAI'
+    PreCX_SSAI_GF <- data.frame(table(CCM_All_SumCT.df2$All_PreCX_I))
+    colnames(PreCX_SSAI_GF)[2] <-  'PreCX.SSAI'
 
-    Sum_GF <- full_join(Sum_GF, LO_SSAI_GF)
+    Sum_GF <- full_join(Sum_GF, PreCX_SSAI_GF)
 
-    EO_SSAF_GF <- data.frame(table(CCM_All_SumCT.df2$All_EO_F))
-    colnames(EO_SSAF_GF)[2] <-  'EO.SSAF'
+    EOCX_SSAF_GF <- data.frame(table(CCM_All_SumCT.df2$All_EOCX_F))
+    colnames(EOCX_SSAF_GF)[2] <-  'EOCX.SSAF'
 
-    Sum_GF <- full_join(Sum_GF, EO_SSAF_GF)
+    Sum_GF <- full_join(Sum_GF, EOCX_SSAF_GF)
 
-    LO_SSAF_GF <- data.frame(table(CCM_All_SumCT.df2$All_LO_F))
-    colnames(LO_SSAF_GF)[2] <-  'LO.SSAF'
+    PreCX_SSAF_GF <- data.frame(table(CCM_All_SumCT.df2$All_PreCX_F))
+    colnames(PreCX_SSAF_GF)[2] <-  'PreCX.SSAF'
 
-    Sum_GF <- full_join(Sum_GF, LO_SSAF_GF)
+    Sum_GF <- full_join(Sum_GF, PreCX_SSAF_GF)
 
-    EO_SSAM_GF <- data.frame(table(CCM_All_SumCT.df2$All_EO_M))
-    colnames(EO_SSAM_GF)[2] <-  'EO.SSAM'
+    EOCX_SSAM_GF <- data.frame(table(CCM_All_SumCT.df2$All_EOCX_M))
+    colnames(EOCX_SSAM_GF)[2] <-  'EOCX.SSAM'
 
-    Sum_GF <- full_join(Sum_GF, EO_SSAM_GF)
+    Sum_GF <- full_join(Sum_GF, EOCX_SSAM_GF)
 
-    LO_SSAM_GF <- data.frame(table(CCM_All_SumCT.df2$All_LO_M))
-    colnames(LO_SSAM_GF)[2] <-  'LO.SSAM'
+    PreCX_SSAM_GF <- data.frame(table(CCM_All_SumCT.df2$All_PreCX_M))
+    colnames(PreCX_SSAM_GF)[2] <-  'PreCX.SSAM'
 
-    Sum_GF <- full_join(Sum_GF, LO_SSAM_GF)
+    Sum_GF <- full_join(Sum_GF, PreCX_SSAM_GF)
     colnames(Sum_GF)[1] <- "GeneCount"
     Sum_GF[is.na(Sum_GF)] <- 0
-    rm(Base_GF,EO_SPA_GF, LO_SPA_GF, EO_SSAI_GF, LO_SSAI_GF, EO_SSAF_GF,
-       LO_SSAF_GF, EO_SSAM_GF, LO_SSAM_GF)
+    rm(Base_GF,EOCX_SPA_GF, PreCX_SPA_GF, EOCX_SSAI_GF, PreCX_SSAI_GF, EOCX_SSAF_GF,
+       PreCX_SSAF_GF, EOCX_SSAM_GF, PreCX_SSAM_GF)
 
   ## Plot
     library(ggplot2)
@@ -515,8 +515,8 @@
       scale_linetype_manual(#name="Pheno_Type",
         values=c("solid", "solid", "solid", "solid",
                  "dotted", "dotdash","dotted", "dotdash"), #  values=c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
-        labels=c("EO_SPA","LO.SPA","EO.SSAI","LO.SSAI",
-                 "EO.SSAF","LO.SSAF","EO.SSAM","LO.SSAM")) +
+        labels=c("EOCX_SPA","PreCX.SPA","EOCX.SSAI","PreCX.SSAI",
+                 "EOCX.SSAF","PreCX.SSAF","EOCX.SSAM","PreCX.SSAM")) +
       scale_color_manual(values = c('#ef476f','#0077b6','#e79bfa','#bc87c9',
                                     '#ff8fea','#c995c0','#3d84ff','#7099e0'))
     Sum_GF.P
@@ -525,7 +525,7 @@
   # Line Color Setting
     LTypeSet.lt <- list(
       values = c("solid", "solid", "solid", "solid", "dotted", "dotdash","dotted", "dotdash"), # values=c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
-      labels = c("EO_SPA","LO.SPA","EO.SSAI","LO.SSAI","EO.SSAF","LO.SSAF","EO.SSAM","LO.SSAM")
+      labels = c("EOCX_SPA","PreCX.SPA","EOCX.SSAI","PreCX.SSAI","EOCX.SSAF","PreCX.SSAF","EOCX.SSAM","PreCX.SSAM")
     )
     LColorSet.lt <- list(
       values = c('#ef476f','#0077b6','#b372c2','#874299','#ff8fea','#bd559c','#7099e0','#151e75')
@@ -567,10 +567,10 @@
   pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_GeneCount.pdf"),width = 7, height = 7 )
     Sum_GF_log.P2
     Sum_GF.P
-    EO1.P
-    LO1.P
-    EOSS.P
-    LOSS.P
+    EOCX1.P
+    PreCX1.P
+    EOCXSS.P
+    PreCXSS.P
   dev.off()
 
   pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_GeneCount_Main.pdf"),width = 14, height = 7 )
@@ -590,12 +590,12 @@
   H_CCM_SPA_CT.df <- as.data.frame(t(H_CCM_SPA_CT.df))
   Heatmap(H_CCM_SPA_CT.df)
 
-  CCM_TOP_EO.set <- c(as.character(CCMarker_EO1$Genes),as.character(CCMarker_EO2$Genes),
-                      as.character(CCMarker_EO3$Genes),"Chil3","S100a8")
-  CCM_TOP_LO.set <- c(as.character(CCMarker_LO1$Genes),as.character(CCMarker_LO2$Genes),
-                      as.character(CCMarker_LO3$Genes))
+  CCM_TOP_EOCX.set <- c(as.character(CCMarker_EOCX1$Genes),as.character(CCMarker_EOCX2$Genes),
+                      as.character(CCMarker_EOCX3$Genes),"Chil3","S100a8")
+  CCM_TOP_PreCX.set <- c(as.character(CCMarker_PreCX1$Genes),as.character(CCMarker_PreCX2$Genes),
+                      as.character(CCMarker_PreCX3$Genes))
 
-  CCM_TOP.set <- c(CCM_TOP_EO.set,CCM_TOP_LO.set)
+  CCM_TOP.set <- c(CCM_TOP_EOCX.set,CCM_TOP_PreCX.set)
 
   CCM_Count_Sum_T_S.df <- H_CCM_SPA_CT.df[,colnames(H_CCM_SPA_CT.df) %in% CCM_TOP.set]
 
@@ -606,10 +606,10 @@
   Heatmap(CCM_Count_Sum_T_S.df, name = "Num", col = col_fun)
 
 ##### Clean up the obj #####
-  rm(CCMarker_EO1, CCMarker_EO2, CCMarker_EO3,
-     CCMarker_LO1, CCMarker_LO2, CCMarker_LO3,
-     df1, df2, df3, df4, EO1.P, EOSS.P,
-     LO1.P, LOSS.P, CCM_All_SumCT.df2)
+  rm(CCMarker_EOCX1, CCMarker_EOCX2, CCMarker_EOCX3,
+     CCMarker_PreCX1, CCMarker_PreCX2, CCMarker_PreCX3,
+     df1, df2, df3, df4, EOCX1.P, EOCXSS.P,
+     PreCX1.P, PreCXSS.P, CCM_All_SumCT.df2)
 
 
 
@@ -672,57 +672,57 @@
   CT_Ma.Set <- grep("_Ma",colnames(CCM_All_M.df),value=T)
   CCM_All_M.df$Match_Sum <- rowSums(CCM_All_M.df[,CT_Ma.Set])
 
-  CT_Ma_EO.Set <- grep("EO",CT_Ma.Set,value=T)
-  CCM_All_M.df$Match_EO_Sum <- rowSums(CCM_All_M.df[,CT_Ma_EO.Set])
+  CT_Ma_EOCX.Set <- grep("EOCX",CT_Ma.Set,value=T)
+  CCM_All_M.df$Match_EOCX_Sum <- rowSums(CCM_All_M.df[,CT_Ma_EOCX.Set])
 
-  CT_Ma_LO.Set <- grep("LO",CT_Ma.Set,value=T)
-  CCM_All_M.df$Match_LO_Sum <- rowSums(CCM_All_M.df[,CT_Ma_LO.Set])
+  CT_Ma_PreCX.Set <- grep("PreCX",CT_Ma.Set,value=T)
+  CCM_All_M.df$Match_PreCX_Sum <- rowSums(CCM_All_M.df[,CT_Ma_PreCX.Set])
 
   CCM_All_M_S.df <- CCM_All_M.df[,c("Genes",CT_Ma.Set,
-                   "Match_Sum","Match_EO_Sum", "Match_LO_Sum")] %>%
+                   "Match_Sum","Match_EOCX_Sum", "Match_PreCX_Sum")] %>%
                     arrange(desc(Match_Sum))
   CCM_All_M_S.df <- CCM_All_M_S.df[!CCM_All_M_S.df$Match_Sum == 0,]
 
   # CCM_All_M.df$Match_Sum <- rowSums(CCM_All_M.df[,107:130])
-  # CCM_All_M.df$Match_EO_Sum <- rowSums(CCM_All_M.df[,107:118])
-  # CCM_All_M.df$Match_LO_Sum <- rowSums(CCM_All_M.df[,119:130])
+  # CCM_All_M.df$Match_EOCX_Sum <- rowSums(CCM_All_M.df[,107:118])
+  # CCM_All_M.df$Match_PreCX_Sum <- rowSums(CCM_All_M.df[,119:130])
   # CCM_All_M_S.df <- CCM_All_M.df[,c(1,107:133)] %>% arrange(desc(Match_Sum))
   # CCM_All_M_S.df <- CCM_All_M_S.df[!CCM_All_M_S.df$Match_Sum == 0,]
 
-  CCM_All_M_S_LO.df <- CCM_All_M_S.df[,grep("_LO",colnames(CCM_All_M_S.df))]
-  CCM_All_M_S_LO.df <- -CCM_All_M_S_LO.df
-  # CCM_All_M_S.df[,c(14:25,28)] <- CCM_All_M_S_LO.df
-  # CCM_All_M_S.df[,grep("_LO",colnames(CCM_All_M_S.df))] <- CCM_All_M_S_LO.df
-  rm(CCM_All_M_S_LO.df)
+  CCM_All_M_S_PreCX.df <- CCM_All_M_S.df[,grep("_PreCX",colnames(CCM_All_M_S.df))]
+  CCM_All_M_S_PreCX.df <- -CCM_All_M_S_PreCX.df
+  # CCM_All_M_S.df[,c(14:25,28)] <- CCM_All_M_S_PreCX.df
+  # CCM_All_M_S.df[,grep("_PreCX",colnames(CCM_All_M_S.df))] <- CCM_All_M_S_PreCX.df
+  rm(CCM_All_M_S_PreCX.df)
 
-  CCM_All_M_S.df[str_detect(colnames(CCM_All_M_S.df),"LO")]  <- -CCM_All_M_S.df[str_detect(colnames(CCM_All_M_S.df),"LO")]
+  CCM_All_M_S.df[str_detect(colnames(CCM_All_M_S.df),"PreCX")]  <- -CCM_All_M_S.df[str_detect(colnames(CCM_All_M_S.df),"PreCX")]
 
   ## Plot Heatmap
-  minC <- min(CCM_All_M_S.df$Match_LO_Sum)
-  maxC <- max(CCM_All_M_S.df$Match_EO_Sum)
+  minC <- min(CCM_All_M_S.df$Match_PreCX_Sum)
+  maxC <- max(CCM_All_M_S.df$Match_EOCX_Sum)
   col_fun_Match = colorRamp2(c(minC,minC/2, 0,maxC/2,maxC),
                              c("#003bbd","#5183f0","white", "#f051c2", "#bd0087"))
   Heatmap(CCM_All_M_S.df[,-1], name = "Num", col = col_fun_Match)
 
   ##### Grab candidate gene by Level #####
-  CCM_EO_1.set <- CCM_All_M_S.df[CCM_All_M_S.df$Match_EO_Sum > 1, 1]
-  CCM_EO_2.set <- CCM_All_M_S.df[CCM_All_M_S.df$Match_EO_Sum <= 1 &
-                                   CCM_All_M_S.df$Match_EO_Sum > 0  ,1]
-  CCM_LO_1.set <- CCM_All_M_S.df[abs(CCM_All_M_S.df$Match_LO_Sum) > 1, 1]
-  CCM_LO_2.set <- CCM_All_M_S.df[abs(CCM_All_M_S.df$Match_LO_Sum) <= 1 &
-                                   abs(CCM_All_M_S.df$Match_LO_Sum) > 0,1]
+  CCM_EOCX_1.set <- CCM_All_M_S.df[CCM_All_M_S.df$Match_EOCX_Sum > 1, 1]
+  CCM_EOCX_2.set <- CCM_All_M_S.df[CCM_All_M_S.df$Match_EOCX_Sum <= 1 &
+                                   CCM_All_M_S.df$Match_EOCX_Sum > 0  ,1]
+  CCM_PreCX_1.set <- CCM_All_M_S.df[abs(CCM_All_M_S.df$Match_PreCX_Sum) > 1, 1]
+  CCM_PreCX_2.set <- CCM_All_M_S.df[abs(CCM_All_M_S.df$Match_PreCX_Sum) <= 1 &
+                                   abs(CCM_All_M_S.df$Match_PreCX_Sum) > 0,1]
 
-  CCM_EO_1.str <- str_c(CCM_EO_1.set, collapse = ",")
-  CCM_EO_2.str <- str_c(CCM_EO_2.set, collapse = ",")
-  CCM_LO_1.str <- str_c(CCM_LO_1.set, collapse = ",")
-  CCM_LO_2.str <- str_c(CCM_LO_2.set, collapse = ",")
+  CCM_EOCX_1.str <- str_c(CCM_EOCX_1.set, collapse = ",")
+  CCM_EOCX_2.str <- str_c(CCM_EOCX_2.set, collapse = ",")
+  CCM_PreCX_1.str <- str_c(CCM_PreCX_1.set, collapse = ",")
+  CCM_PreCX_2.str <- str_c(CCM_PreCX_2.set, collapse = ",")
 
-  CCM_Level.df <- data.frame(EO1=CCM_EO_1.str,EO2=CCM_EO_2.str,
-                             LO1=CCM_LO_1.str,LO2=CCM_LO_2.str) %>% t()
+  CCM_Level.df <- data.frame(EOCX1=CCM_EOCX_1.str,EOCX2=CCM_EOCX_2.str,
+                             PreCX1=CCM_PreCX_1.str,PreCX2=CCM_PreCX_2.str) %>% t()
   colnames(CCM_Level.df) <- "CCMarker"
 
-  CCM_Level_Num.df <- data.frame(EO1=length(CCM_EO_1.set),EO2=length(CCM_EO_2.set),
-                                 LO1=length(CCM_LO_1.set),LO2=length(CCM_LO_2.set)) %>% t() %>% as.data.frame()
+  CCM_Level_Num.df <- data.frame(EOCX1=length(CCM_EOCX_1.set),EOCX2=length(CCM_EOCX_2.set),
+                                 PreCX1=length(CCM_PreCX_1.set),PreCX2=length(CCM_PreCX_2.set)) %>% t() %>% as.data.frame()
   colnames(CCM_Level_Num.df) <- "GeneNum"
   CCM_Level_Num.df$Type <- row.names(CCM_Level_Num.df)
 
@@ -732,8 +732,8 @@
                             geom_bar(stat="identity")
   CCM_Level_Num.p
 
-  rm(CCM_EO_1.set,CCM_EO_2.set,CCM_LO_1.set,CCM_LO_2.set,
-     CCM_EO_1.str,CCM_EO_2.str,CCM_LO_1.str,CCM_LO_2.str)
+  rm(CCM_EOCX_1.set,CCM_EOCX_2.set,CCM_PreCX_1.set,CCM_PreCX_2.set,
+     CCM_EOCX_1.str,CCM_EOCX_2.str,CCM_PreCX_1.str,CCM_PreCX_2.str)
 
   ##### Grab candidate gene by PhenoType #####
   ##
@@ -742,29 +742,29 @@
 
   for (i in 1:length(PhenoType_Ma.Set)) {
 
-    # CCM_MacM0_EO.df <- data.frame(CCM_All_M_S.df[CCM_All_M_S.df[PhenoType_Ma.Set[i]] == 1, 1])
-    # colnames(CCM_MacM0_EO.df) <- PhenoType_Ma.Set[i]
-    CCM_MacM0_EO.set <- CCM_All_M_S.df[abs(CCM_All_M_S.df[PhenoType_Ma.Set[i]]) == 1, 1]
-    CCM_MacM0_EO.str <- str_c(CCM_MacM0_EO.set, collapse = ",")
+    # CCM_MacM0_EOCX.df <- data.frame(CCM_All_M_S.df[CCM_All_M_S.df[PhenoType_Ma.Set[i]] == 1, 1])
+    # colnames(CCM_MacM0_EOCX.df) <- PhenoType_Ma.Set[i]
+    CCM_MacM0_EOCX.set <- CCM_All_M_S.df[abs(CCM_All_M_S.df[PhenoType_Ma.Set[i]]) == 1, 1]
+    CCM_MacM0_EOCX.str <- str_c(CCM_MacM0_EOCX.set, collapse = ",")
 
     ## CCMarker set
     if(i==1){
-      CCM_CT.df <- data.frame(Temp = CCM_MacM0_EO.str) %>% t()
+      CCM_CT.df <- data.frame(Temp = CCM_MacM0_EOCX.str) %>% t()
       row.names(CCM_CT.df)[1] <- PhenoType_Ma.Set[i]
     }else{
-      CCM_CT.df <- data.frame(Temp = CCM_MacM0_EO.str,CCM_CT.df%>% t()) %>% t()
+      CCM_CT.df <- data.frame(Temp = CCM_MacM0_EOCX.str,CCM_CT.df%>% t()) %>% t()
       row.names(CCM_CT.df)[1] <- PhenoType_Ma.Set[i]
     }
 
     # CCM_CT_Num.df
     if(i==1){
-      CCM_CT_Num.df <- data.frame(Temp=length(CCM_MacM0_EO.set)) %>%
+      CCM_CT_Num.df <- data.frame(Temp=length(CCM_MacM0_EOCX.set)) %>%
         t() %>% as.data.frame()
       colnames(CCM_CT_Num.df)[1] <- "GeneNum"
       CCM_CT_Num.df$Type <- PhenoType_Ma.Set[i]
       row.names(CCM_CT_Num.df)[1] <-PhenoType_Ma.Set[i]
     }else{
-      CCM_CT_Num_Temp.df <- data.frame(Temp=length(CCM_MacM0_EO.set)) %>%
+      CCM_CT_Num_Temp.df <- data.frame(Temp=length(CCM_MacM0_EOCX.set)) %>%
         t() %>% as.data.frame()
       colnames(CCM_CT_Num_Temp.df)[1] <- "GeneNum"
       CCM_CT_Num_Temp.df$Type <- PhenoType_Ma.Set[i]
@@ -837,20 +837,20 @@
                         GeneNum=CCM.df2[,1],Type=CCM.df2[,2],Type2="", CCMarker=CCM.df2[,3] )
   CCM.df <- rbind(CCM.df2,CCM.df)
   # ## Try
-  # CCM_MacM0_EO.df <- data.frame(CCM_All_M_S.df[CCM_All_M_S.df$MacM0_EO_Ma == 1, 1])
-  # colnames(CCM_MacM0_EO.df) <- "MacM0_EO_Ma"
-  # CCM_MacM0_EO.set <- CCM_All_M_S.df[CCM_All_M_S.df$MacM0_EO_Ma == 1, 1]
-  # CCM_MacM0_EO.str <- str_c(CCM_MacM0_EO.set, collapse = ",")
+  # CCM_MacM0_EOCX.df <- data.frame(CCM_All_M_S.df[CCM_All_M_S.df$MacM0_EOCX_Ma == 1, 1])
+  # colnames(CCM_MacM0_EOCX.df) <- "MacM0_EOCX_Ma"
+  # CCM_MacM0_EOCX.set <- CCM_All_M_S.df[CCM_All_M_S.df$MacM0_EOCX_Ma == 1, 1]
+  # CCM_MacM0_EOCX.str <- str_c(CCM_MacM0_EOCX.set, collapse = ",")
   #
-  # CCM_CT_Num.df <- data.frame(EO1=CCM_MacM0_EO.str,CCM_CT_Num.df) %>% t()
-  # row.names(CCM_Level.df)[1] <- "MacM0_EO_Ma"
+  # CCM_CT_Num.df <- data.frame(EOCX1=CCM_MacM0_EOCX.str,CCM_CT_Num.df) %>% t()
+  # row.names(CCM_Level.df)[1] <- "MacM0_EOCX_Ma"
 
 
 
 
   # ## Try
-  # sum(CCM_All_M.df$MacM1_EO_Ma)
-  # Genelist <- CCM_All_M.df[CCM_All_M.df$MacM1_EO_Ma == 1,1]
+  # sum(CCM_All_M.df$MacM1_EOCX_Ma)
+  # Genelist <- CCM_All_M.df[CCM_All_M.df$MacM1_EOCX_Ma == 1,1]
   # library(stringr)
   # Genelist2 <- str_c(Genelist, collapse = ", ")
 
@@ -906,8 +906,8 @@
   CountCTNum2Marker.df <- CountCTNum2Marker.df[CountCTNum2Marker.df$Match_Sum>=2,]
 
   CountCTNum2Marker.df$CCState <- ""
-  CountCTNum2Marker.df[CountCTNum2Marker.df$Match_EO_Sum >0,]$CCState <- "EO"
-  CountCTNum2Marker.df[CountCTNum2Marker.df$Match_EO_Sum <=0,]$CCState <- "LO"
+  CountCTNum2Marker.df[CountCTNum2Marker.df$Match_EOCX_Sum >0,]$CCState <- "EOCX"
+  CountCTNum2Marker.df[CountCTNum2Marker.df$Match_EOCX_Sum <=0,]$CCState <- "PreCX"
 
   CountCTNum2Marker.df$Genes <- factor(CountCTNum2Marker.df$Genes,levels = CountCTNum2Marker.df$Genes)
   CountCTNum2Marker.df.p <- ggplot(data=CountCTNum2Marker.df, aes(x=Genes, y=Match_Sum ,fill=CCState))  +
