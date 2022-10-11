@@ -6,7 +6,7 @@ if(SampleType == "PBMC"){
   # For PBMC
   scRNA.SeuObj <- PBMC.combined
 
-}else{
+}else if(SampleType == "SC"){
   # For SC
   scRNA.SeuObj <- SC.combined
 
