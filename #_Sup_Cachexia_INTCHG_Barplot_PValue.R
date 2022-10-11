@@ -21,14 +21,21 @@ library(ggpubr)
 # load("D:/Dropbox/##_GitHub/##_CAESAR/MagicDisc/2022-06-06_CC_PBMC/06_Cell_type_annotation.RData")
 load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-04_PBMC_Main/06_Cell_type_annotation.RData")
 
-## INTCHG: Interchangeable
-  # For PBMC
-  scRNA.SeuObj <- PBMC.combined
-  SampleType = "PBMC"
+SampleType = "PBMC"
 
-  ## For SC
-  # scRNA.SeuObj <- SC.combined
-  # SampleType = "SC"
+## INTCHG: Interchangeable
+## SubType Setting
+  if(SampleType == "PBMC"){
+    # For PBMC
+    scRNA.SeuObj <- PBMC.combined
+    SampleType = "PBMC"
+
+  }else{
+    # For SC
+    scRNA.SeuObj <- SC.combined
+    SampleType = "SC"
+
+  }
 
 # Clean up
 rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType")))
