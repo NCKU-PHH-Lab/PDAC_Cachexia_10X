@@ -1,7 +1,7 @@
 ##### Script info #####
   # Project: cachexia scRNA analysis
   # Data from Charlene
-  # Aim: to generate heatmap of EO and LO marker pattern
+  # Aim: to generate heatmap of EOCX and PreCX marker pattern
   # Notice the setting when you see the symbol "*"
 
 ##### Packages #####
@@ -67,7 +67,7 @@
                       "Mast", "NK", "Neu", "Ery"),
     "Cell_type_2" = c("All", "Fib1", "Fib2", "Fib3", "Duc1", "Duc2", "Duc3", "Duc4",
                       "Duc5", "Duc6", "Mac1", "Mac2", "Mac3", "Mac4", "Mac5"),
-    "State" = c("EO", "LO"),
+    "State" = c("EOCX", "PreCX"),
     "Strategy" = c("SPA", "I", "F", "M")
   )
   ## check
