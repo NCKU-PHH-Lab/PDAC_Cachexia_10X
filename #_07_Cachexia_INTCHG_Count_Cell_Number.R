@@ -22,34 +22,34 @@
   Freq_Sex.df <- table(Pheno.df$Sex) %>% as.data.frame()
 
   #
-  Pheno_EO_M.df <- Pheno.df[Pheno.df$sample=="EO.M",]
-  Pheno_LO_M.df <- Pheno.df[Pheno.df$sample=="LO.M",]
-  Pheno_EO_F.df <- Pheno.df[Pheno.df$sample=="EO.F",]
-  Pheno_LO_F.df <- Pheno.df[Pheno.df$sample=="LO.F",]
+  Pheno_EOCX_M.df <- Pheno.df[Pheno.df$sample=="EOCX.M",]
+  Pheno_PreCX_M.df <- Pheno.df[Pheno.df$sample=="PreCX.M",]
+  Pheno_EOCX_F.df <- Pheno.df[Pheno.df$sample=="EOCX.F",]
+  Pheno_PreCX_F.df <- Pheno.df[Pheno.df$sample=="PreCX.F",]
 
-  # Count EO_M_CT
-  Freq_EO_M_CT.df <- table(Pheno_EO_M.df$celltype) %>% as.data.frame()
-  Freq_EO_M_CT.df <- data.frame(Type="EO.M",Freq_EO_M_CT.df)
-  Freq_EO_M_CT.df$Percent <- Freq_EO_M_CT.df$Freq/sum(Freq_EO_M_CT.df$Freq)
+  # Count EOCX_M_CT
+  Freq_EOCX_M_CT.df <- table(Pheno_EOCX_M.df$celltype) %>% as.data.frame()
+  Freq_EOCX_M_CT.df <- data.frame(Type="EOCX.M",Freq_EOCX_M_CT.df)
+  Freq_EOCX_M_CT.df$Percent <- Freq_EOCX_M_CT.df$Freq/sum(Freq_EOCX_M_CT.df$Freq)
 
-  # Count LO_M_CT
-  Freq_LO_M_CT.df <- table(Pheno_LO_M.df$celltype) %>% as.data.frame()
-  Freq_LO_M_CT.df <- data.frame(Type="LO.M",Freq_LO_M_CT.df)
-  Freq_LO_M_CT.df$Percent <- Freq_LO_M_CT.df$Freq/sum(Freq_LO_M_CT.df$Freq)
+  # Count PreCX_M_CT
+  Freq_PreCX_M_CT.df <- table(Pheno_PreCX_M.df$celltype) %>% as.data.frame()
+  Freq_PreCX_M_CT.df <- data.frame(Type="PreCX.M",Freq_PreCX_M_CT.df)
+  Freq_PreCX_M_CT.df$Percent <- Freq_PreCX_M_CT.df$Freq/sum(Freq_PreCX_M_CT.df$Freq)
 
-  # Count EO_F_CT
-  Freq_EO_F_CT.df <- table(Pheno_EO_F.df$celltype) %>% as.data.frame()
-  Freq_EO_F_CT.df <- data.frame(Type="EO.F",Freq_EO_F_CT.df)
-  Freq_EO_F_CT.df$Percent <- Freq_EO_F_CT.df$Freq/sum(Freq_EO_F_CT.df$Freq)
+  # Count EOCX_F_CT
+  Freq_EOCX_F_CT.df <- table(Pheno_EOCX_F.df$celltype) %>% as.data.frame()
+  Freq_EOCX_F_CT.df <- data.frame(Type="EOCX.F",Freq_EOCX_F_CT.df)
+  Freq_EOCX_F_CT.df$Percent <- Freq_EOCX_F_CT.df$Freq/sum(Freq_EOCX_F_CT.df$Freq)
 
-  # Count LO_F_CT
-  Freq_LO_F_CT.df <- table(Pheno_LO_F.df$celltype) %>% as.data.frame()
-  Freq_LO_F_CT.df <- data.frame(Type="LO.F",Freq_LO_F_CT.df)
-  Freq_LO_F_CT.df$Percent <- Freq_LO_F_CT.df$Freq/sum(Freq_LO_F_CT.df$Freq)
+  # Count PreCX_F_CT
+  Freq_PreCX_F_CT.df <- table(Pheno_PreCX_F.df$celltype) %>% as.data.frame()
+  Freq_PreCX_F_CT.df <- data.frame(Type="PreCX.F",Freq_PreCX_F_CT.df)
+  Freq_PreCX_F_CT.df$Percent <- Freq_PreCX_F_CT.df$Freq/sum(Freq_PreCX_F_CT.df$Freq)
 
   # Combind all count of sample
-  Freq_All.df <- rbind(Freq_EO_M_CT.df,Freq_LO_M_CT.df,
-                       Freq_EO_F_CT.df,Freq_LO_F_CT.df)
+  Freq_All.df <- rbind(Freq_EOCX_M_CT.df,Freq_PreCX_M_CT.df,
+                       Freq_EOCX_F_CT.df,Freq_PreCX_F_CT.df)
   Freq_All.df <- data.frame(Index = row.names(Freq_All.df),Freq_All.df )
   colnames(Freq_All.df) <- c("Index","Pheno_Type","Cell_Type","Number","Percent")
   # Freq_All.df$Index <- factor(Freq_All.df$Index,
@@ -90,23 +90,23 @@
 
 #### All type compare to Combine Sex ####
   ##
-  Pheno_EO.df <- Pheno.df[Pheno.df$Cachexia=="EO",]
-  Pheno_LO.df <- Pheno.df[Pheno.df$Cachexia=="LO",]
+  Pheno_EOCX.df <- Pheno.df[Pheno.df$Cachexia=="EOCX",]
+  Pheno_PreCX.df <- Pheno.df[Pheno.df$Cachexia=="PreCX",]
 
-  # Count EO_CT
-  Freq_EO_CT.df <- table(Pheno_EO.df$celltype) %>% as.data.frame()
-  Freq_EO_CT.df <- data.frame(Type="EO",Freq_EO_CT.df)
-  Freq_EO_CT.df$Percent <- Freq_EO_CT.df$Freq/sum(Freq_EO_CT.df$Freq)
+  # Count EOCX_CT
+  Freq_EOCX_CT.df <- table(Pheno_EOCX.df$celltype) %>% as.data.frame()
+  Freq_EOCX_CT.df <- data.frame(Type="EOCX",Freq_EOCX_CT.df)
+  Freq_EOCX_CT.df$Percent <- Freq_EOCX_CT.df$Freq/sum(Freq_EOCX_CT.df$Freq)
 
-  # Count LO_CT
-  Freq_LO_CT.df <- table(Pheno_LO.df$celltype) %>% as.data.frame()
-  Freq_LO_CT.df <- data.frame(Type="LO",Freq_LO_CT.df)
-  Freq_LO_CT.df$Percent <- Freq_LO_CT.df$Freq/sum(Freq_LO_CT.df$Freq)
+  # Count PreCX_CT
+  Freq_PreCX_CT.df <- table(Pheno_PreCX.df$celltype) %>% as.data.frame()
+  Freq_PreCX_CT.df <- data.frame(Type="PreCX",Freq_PreCX_CT.df)
+  Freq_PreCX_CT.df$Percent <- Freq_PreCX_CT.df$Freq/sum(Freq_PreCX_CT.df$Freq)
 
   # Combind all count of sample
-  Freq_All_Ca.df <- rbind(Freq_EO_M_CT.df,Freq_LO_M_CT.df,
-                          Freq_EO_F_CT.df,Freq_LO_F_CT.df,
-                          Freq_EO_CT.df,Freq_LO_CT.df)
+  Freq_All_Ca.df <- rbind(Freq_EOCX_M_CT.df,Freq_PreCX_M_CT.df,
+                          Freq_EOCX_F_CT.df,Freq_PreCX_F_CT.df,
+                          Freq_EOCX_CT.df,Freq_PreCX_CT.df)
 
   Freq_All_Ca.df <- data.frame(Index = row.names(Freq_All_Ca.df),Freq_All_Ca.df )
   colnames(Freq_All_Ca.df) <- c("Index","Pheno_Type","Cell_Type","Number","Percent")
@@ -143,7 +143,7 @@
     geom_line(size=1.5) +
     scale_linetype_manual(name="Pheno_Type",
                           values=c("solid",  "dotted","dotdash", "solid", "dotted", "dotdash"), #  values=c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
-                          labels=c("EO","EO.F","EO.M","LO","LO.F","LO.M")) +
+                          labels=c("EOCX","EOCX.F","EOCX.M","PreCX","PreCX.F","PreCX.M")) +
     scale_color_manual(values = c('#ba0449','#ff52bd','#f0679b','#3d3c99','#5292f2','#33aef5'))+
     geom_point(shape = 12, size = 4, fill = "white") + theme_bw()+
     theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
@@ -165,7 +165,7 @@
     geom_line(size=1.5) +
     scale_linetype_manual(name="Pheno_Type",
                           values=c("solid",  "dotted","dotdash", "solid", "dotted", "dotdash"), #  values=c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
-                          labels=c("EO","EO.F","EO.M","LO","LO.F","LO.M")) +
+                          labels=c("EOCX","EOCX.F","EOCX.M","PreCX","PreCX.F","PreCX.M")) +
     scale_color_manual(values = c('#ba0449','#ff52bd','#f0679b','#3d3c99','#5292f2','#33aef5'))+
     geom_point(shape = 12, size = 4, fill = "white") +
     theme(panel.border = element_blank(),panel.grid.major = element_blank(),
@@ -181,24 +181,24 @@
   CellNum_P4
 
 ##### Clean the dataframe #####
-  CellPheno.lt <- list(Pheno.df, Pheno_EO.df, Pheno_LO.df,
-                       Pheno_EO_M.df,Pheno_LO_M.df,Pheno_EO_F.df,Pheno_LO_F.df)
-  names(CellPheno.lt) <- c("Pheno.df", "Pheno_EO.df", "Pheno_LO.df",
-                           "Pheno_EO_M.df","Pheno_LO_M.df","Pheno_EO_F.df","Pheno_LO_F.df")
-  rm(Pheno_EO.df, Pheno_LO.df, Pheno_EO_M.df,Pheno_LO_M.df,Pheno_EO_F.df,Pheno_LO_F.df)
+  CellPheno.lt <- list(Pheno.df, Pheno_EOCX.df, Pheno_PreCX.df,
+                       Pheno_EOCX_M.df,Pheno_PreCX_M.df,Pheno_EOCX_F.df,Pheno_PreCX_F.df)
+  names(CellPheno.lt) <- c("Pheno.df", "Pheno_EOCX.df", "Pheno_PreCX.df",
+                           "Pheno_EOCX_M.df","Pheno_PreCX_M.df","Pheno_EOCX_F.df","Pheno_PreCX_F.df")
+  rm(Pheno_EOCX.df, Pheno_PreCX.df, Pheno_EOCX_M.df,Pheno_PreCX_M.df,Pheno_EOCX_F.df,Pheno_PreCX_F.df)
 
   CellFreq.lt <- list(Freq_All_Ca.df, Freq_All.df, Freq_sample.df,
                       Freq_Sex.df,Freq_Cach.df, Freq_CT.df,
-                      Freq_EO_CT.df, Freq_EO_F_CT.df, Freq_EO_M_CT.df,
-                      Freq_LO_CT.df, Freq_LO_F_CT.df, Freq_LO_M_CT.df)
+                      Freq_EOCX_CT.df, Freq_EOCX_F_CT.df, Freq_EOCX_M_CT.df,
+                      Freq_PreCX_CT.df, Freq_PreCX_F_CT.df, Freq_PreCX_M_CT.df)
   names(CellFreq.lt) <- c("Freq_All_Ca.df", "Freq_All.df", "Freq_sample.df",
                           "Freq_Sex.df", "Freq_Cach.df", "Freq_CT.df",
-                          "Freq_EO_CT.df", "Freq_EO_F_CT.df", "Freq_EO_M_CT.df",
-                          "Freq_LO_CT.df", "Freq_LO_F_CT.df", "Freq_LO_M_CT.df")
+                          "Freq_EOCX_CT.df", "Freq_EOCX_F_CT.df", "Freq_EOCX_M_CT.df",
+                          "Freq_PreCX_CT.df", "Freq_PreCX_F_CT.df", "Freq_PreCX_M_CT.df")
   rm(Freq_sample.df,
      Freq_Sex.df,Freq_Cach.df, Freq_CT.df,
-     Freq_EO_CT.df, Freq_EO_F_CT.df, Freq_EO_M_CT.df,
-     Freq_LO_CT.df, Freq_LO_F_CT.df, Freq_LO_M_CT.df)
+     Freq_EOCX_CT.df, Freq_EOCX_F_CT.df, Freq_EOCX_M_CT.df,
+     Freq_PreCX_CT.df, Freq_PreCX_F_CT.df, Freq_PreCX_M_CT.df)
 
 ##### BarPlot #####
   # https://blog.gtwang.org/r/ggplot2-tutorial-layer-by-layer-plotting/3/

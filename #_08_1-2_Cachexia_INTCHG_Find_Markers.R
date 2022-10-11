@@ -30,7 +30,7 @@
   for(i in c(1:length(CellType.list))){
     try({
       CCMarker_Male.lt[[i]] <- Find_Markers(scRNA.SeuObj,
-                                            paste0(CellType.list[i],"_EO_Male"),
+                                            paste0(CellType.list[i],"_EOCX_Male"),
                                             paste0(CellType.list[i],"_LO_Male"),
                                             CellType.list[i],
                                             Path = Save.Path,
@@ -87,7 +87,7 @@
   for(i in c(1:length(CellType.list))){
     try({
       CCMarker_Female.lt[[i]] <- Find_Markers(scRNA.SeuObj,
-                                              paste0(CellType.list[i],"_EO_Female"),
+                                              paste0(CellType.list[i],"_EOCX_Female"),
                                               paste0(CellType.list[i],"_LO_Female"),
                                               CellType.list[i],
                                               Path = Save.Path,
@@ -196,7 +196,7 @@
   for(i in c(1:length(CellType.list))){
     try({
       CCMarker_SPA.lt[[i]] <- Find_Markers(scRNA.SeuObj,
-                                           paste0(CellType.list[i],"_EO"),
+                                           paste0(CellType.list[i],"_EOCX"),
                                            paste0(CellType.list[i],"_LO"),
                                            CellType.list[i],
                                            Path = Save.Path,
