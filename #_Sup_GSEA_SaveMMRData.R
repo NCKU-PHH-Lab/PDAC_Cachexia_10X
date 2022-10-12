@@ -2,23 +2,7 @@
   rm(list = ls()) # Clean variable
   memory.limit(150000)
 
-##### Version information ######
-  # platform       x86_64-w64-mingw32
-  # arch           x86_64
-  # os             mingw32
-  # system         x86_64, mingw32
-  # status
-  # major          4
-  # minor          1.1
-  # year           2021
-  # month          08
-  # day            10
-  # svn rev        80725
-  # language       R
-  # version.string R version 4.1.1 (2021-08-10)
-  # nickname       Kick Things
-
-# ##### Current path and new folder setting #####
+##### Current path and new folder setting #####
   Save.Path = paste0(getwd(),"/20220214_PBMC")
   # dir.create(Save.Path)
   # SampleType = "PBMC"
@@ -33,17 +17,6 @@
   ## Call function
   source("FUN_GSEA_LargeGeneSet.R")
   source("FUN_HSsymbol2MMsymbol.R")
-
-##### Abbreviated Notes #####
-  # CCM: Cancer Cachexia Marker
-  # SPA: Sex Pooled Analysis
-  # SSA: Sex Separated Analysis
-  # EO: Early Onset
-  # LO: Late Onset
-  # CT: Cell Type
-
-  # list:lt
-  # dataframe: df
 
 ##### Load RData  #####
   load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
