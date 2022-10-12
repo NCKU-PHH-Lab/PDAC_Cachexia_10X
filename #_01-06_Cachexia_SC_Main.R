@@ -30,6 +30,10 @@
   source("FUN_GSEA_ggplot.R")
 
 ##### Current path and new folder setting*  #####
+  ## SampleType
+  SampleType = "SC"
+
+  ## Save.Path
   Version = paste0(Sys.Date(),"_","SC_Main")
   Save.Path = paste0(getwd(),"/",Version)
   dir.create(Save.Path)

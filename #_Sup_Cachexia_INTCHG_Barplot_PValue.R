@@ -18,10 +18,8 @@ if(!require("ggpubr")) install.packages("ggpubr")
 library(ggpubr)
 
 ##### Load RData* #####
-# load("D:/Dropbox/##_GitHub/##_CAESAR/MagicDisc/2022-06-06_CC_PBMC/06_Cell_type_annotation.RData")
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-04_PBMC_Main/06_Cell_type_annotation.RData")
-
-SampleType = "PBMC"
+# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-04_PBMC_Main/06_Cell_type_annotation.RData")
+load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
 
 ## INTCHG: Interchangeable
 ## SubType Setting

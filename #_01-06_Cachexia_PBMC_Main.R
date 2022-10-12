@@ -30,6 +30,10 @@
   source("FUN_GSEA_ggplot.R")
 
 ##### Current path and new folder setting*  #####
+  ## SampleType
+  SampleType = "PBMC"
+
+  ## Save.Path
   Version = paste0(Sys.Date(),"_","PBMC_Main")
   Save.Path = paste0(getwd(),"/",Version)
   dir.create(Save.Path)

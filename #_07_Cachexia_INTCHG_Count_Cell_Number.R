@@ -1,5 +1,3 @@
-SampleType = "PBMC"
-
 ## INTCHG: Interchangeable
 ## SubType Setting
   if(SampleType == "PBMC"){
