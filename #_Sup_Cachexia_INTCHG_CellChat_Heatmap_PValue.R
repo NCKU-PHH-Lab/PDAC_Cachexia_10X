@@ -53,17 +53,8 @@ CCDBType = "ECM" # c("ECM","CC","Secret")
 ##### Load RData* #####
 
 ## Load Seurat.Obj
-
-
-if(SampleTypeSet == "PBMC"){
-  Load.Path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main"
-
-}else if(SampleTypeSet == "SC"){
-  Load.Path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_SC_Main"
-}
-
-load(paste0(Load.Path,"/06_Cell_type_annotation.RData"))
 # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
+load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
 
 if(SampleTypeSet == "PBMC"){
   ## For PBMC
@@ -90,7 +81,7 @@ if(SampleTypeSet == "PBMC"){
 }
 
   # Clean up
-  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Load.Path","CCDBType","CellType.Order")))
+  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path","CCDBType","CellType.Order")))
 
   # ## Modify the Cachexia state name
   # scRNA.SeuObj@meta.data$Cachexia <-  gsub("EO", "EOCX", scRNA.SeuObj@meta.data$Cachexia)
@@ -99,8 +90,8 @@ if(SampleTypeSet == "PBMC"){
 
 
 ## Load CellChat rds
-cellchat.EOCX <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
-cellchat.PreCX <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_PreCX_CellChat.rds"))
+cellchat.EOCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
+cellchat.PreCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_PreCX_CellChat.rds"))
 
 object.list <- list(PreCX = cellchat.PreCX, EOCX = cellchat.EOCX)
 cellchat <- mergeCellChat(object.list, add.names = names(object.list))
@@ -109,8 +100,8 @@ rm(object.list, cellchat.EOCX, cellchat.PreCX)
 
 ##### Current path and new folder setting  #####
 Version = paste0(Sys.Date(),"_", SampleType, "_", CCDBType, "_CellChat_PVal")
-Save.Path = paste0(getwd(),"/",Version)
-dir.create(Save.Path)
+SaveCC.Path = paste0(Save.Path,"/",Version)
+dir.create(SaveCC.Path)
 
 
 
@@ -260,13 +251,13 @@ SummaryTable.df <- relocate(SummaryTable.df,pathway_name,.before = gene)
 
 
 write.table( SummaryTable.df ,
-             file = paste0(Save.Path,"/",Version,"_LR_Stats.tsv"),
+             file = paste0(SaveCC.Path,"/",Version,"_LR_Stats.tsv"),
              sep = "\t",
              quote = F,
              row.names = F
 )
 
 ##### Save RData #####
-save.image(paste0(Save.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
+save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
 
 

@@ -10,38 +10,38 @@ memory.limit(150000)
 
 
 #### Installation and load the required libraries ####
-#### Basic installation ####
-## Package.set
-Package.set <- c("tidyverse","CellChat","patchwork","NMF","ggalluvial","Seurat","ggpubr", "stringr")
-## Check whether the installation of those packages is required
-for (i in 1:length(Package.set)) {
-  if (!requireNamespace(Package.set[i], quietly = TRUE)){
-    install.packages(Package.set[i])
+  #### Basic installation ####
+  ## Package.set
+  Package.set <- c("tidyverse","CellChat","patchwork","NMF","ggalluvial","Seurat","ggpubr", "stringr")
+  ## Check whether the installation of those packages is required
+  for (i in 1:length(Package.set)) {
+    if (!requireNamespace(Package.set[i], quietly = TRUE)){
+      install.packages(Package.set[i])
+    }
   }
-}
-## Load Packages
-lapply(Package.set, library, character.only = TRUE)
-rm(Package.set,i)
+  ## Load Packages
+  lapply(Package.set, library, character.only = TRUE)
+  rm(Package.set,i)
 
-#### BiocManager installation ####
-## Package.set
-Package.set <- c("ComplexHeatmap")
-## Check whether the installation of those packages is required from BiocManager
-if (!require("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
+  #### BiocManager installation ####
+  ## Package.set
+  Package.set <- c("ComplexHeatmap")
+  ## Check whether the installation of those packages is required from BiocManager
+  if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
 
-for (i in 1:length(Package.set)) {
-  if (!requireNamespace(Package.set[i], quietly = TRUE)){
-    BiocManager::install(Package.set[i])
+  for (i in 1:length(Package.set)) {
+    if (!requireNamespace(Package.set[i], quietly = TRUE)){
+      BiocManager::install(Package.set[i])
+    }
   }
-}
-## Load Packages
-lapply(Package.set, library, character.only = TRUE)
-rm(Package.set,i)
+  ## Load Packages
+  lapply(Package.set, library, character.only = TRUE)
+  rm(Package.set,i)
 
 ##### Function setting  #####
-## Call function
-source("FUN_CellChatOne.R")
+  ## Call function
+  source("FUN_CellChatOne.R")
 
 ##### Condition Setting ####
 ## INTCHG: Interchangeable
@@ -53,16 +53,7 @@ CCDBType = "ECM" # c("ECM","CC","Secret")
 ##### Load RData* #####
 
 ## Load Seurat.Obj
-
-
-if(SampleTypeSet == "PBMC"){
-  Load.Path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main"
-
-}else if(SampleTypeSet == "SC"){
-  Load.Path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_SC_Main"
-}
-
-load(paste0(Load.Path,"/06_Cell_type_annotation.RData"))
+load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
 # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
 
 if(SampleTypeSet == "PBMC"){
@@ -90,7 +81,7 @@ if(SampleTypeSet == "PBMC"){
 }
 
   # Clean up
-  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Load.Path","CCDBType","CellType.Order")))
+  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path","CCDBType","CellType.Order")))
 
   # ## Modify the Cachexia state name
   # scRNA.SeuObj@meta.data$Cachexia <-  gsub("EO", "EOCX", scRNA.SeuObj@meta.data$Cachexia)
@@ -99,8 +90,8 @@ if(SampleTypeSet == "PBMC"){
 
 
 ## Load CellChat rds
-cellchat.EOCX <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
-cellchat.PreCX <- readRDS(paste0(Load.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_PreCX_CellChat.rds"))
+cellchat.EOCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
+cellchat.PreCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_PreCX_CellChat.rds"))
 
 object.list <- list(PreCX = cellchat.PreCX, EOCX = cellchat.EOCX)
 cellchat <- mergeCellChat(object.list, add.names = names(object.list))
@@ -109,8 +100,8 @@ rm(object.list, cellchat.EOCX, cellchat.PreCX)
 
 ##### Current path and new folder setting  #####
 Version = paste0(Sys.Date(),"_", SampleType, "_", CCDBType, "_CellChat_PVal")
-Save.Path = paste0(getwd(),"/",Version)
-dir.create(Save.Path)
+SaveCC.Path = paste0(Save.Path,"/",Version)
+dir.create(SaveCC.Path)
 
 
 
@@ -140,7 +131,7 @@ scRNA_Ori.SeuObj <- scRNA.SeuObj
 
 
 ##### Summarize all signal #####
-pdf(file = paste0(Save.Path,"/",Version,"_LR_BarplotMulti.pdf"),width = 15, height = 20 )
+pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BarplotMulti.pdf"),width = 15, height = 20 )
 SummaryTable.df <-  as.data.frame(matrix(nrow=0,ncol=10))
 colnames(SummaryTable.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.adj", "p.format", "p.signif", "method","pathway_name")
 
@@ -254,7 +245,7 @@ try({
   source("FUN_Beautify_ggplot.R")
 
   # ##### Export PDF #####
-  # pdf(file = paste0(Save.Path,"/",Version,"_BarplotMulti.pdf"),width = 13, height = 13 )
+  # pdf(file = paste0(SaveCC.Path,"/",Version,"_BarplotMulti.pdf"),width = 13, height = 13 )
   #   plt.ManyGroup2_Sum
   #   plt.ManyGroup3_Sum
   # dev.off()
@@ -383,7 +374,7 @@ SummaryTable.df <- relocate(SummaryTable.df,pathway_name,.before = gene)
 
 
 write.table( SummaryTable.df ,
-             file = paste0(Save.Path,"/",Version,"_LR_Stats.tsv"),
+             file = paste0(SaveCC.Path,"/",Version,"_LR_Stats.tsv"),
              sep = "\t",
              quote = F,
              row.names = F
@@ -415,7 +406,7 @@ write.table( SummaryTable.df ,
 #             split.by = "Cachexia",ncol = 2, coord.fixed = 1) & theme(legend.position = c(0.9,0.2)) -> plt.UMAP4
 #
 # ##### Export PDF #####
-# pdf(file = paste0(Save.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 )
+# pdf(file = paste0(SaveCC.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 )
 #   plt.UMAP1
 #   plt.UMAP2
 #   plt.UMAP3
