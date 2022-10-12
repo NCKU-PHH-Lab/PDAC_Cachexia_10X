@@ -15,7 +15,6 @@
   library(ggplot2)
   library(Seurat)
 
-  SampleType = "PBMC"
 
   ## INTCHG: Interchangeable
   ## SubType Setting

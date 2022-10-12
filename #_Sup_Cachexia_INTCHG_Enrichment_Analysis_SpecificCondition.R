@@ -44,7 +44,6 @@
 
 ##### Load RData* #####
   load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
-  SampleType = "PBMC"
 
   ## INTCHG: Interchangeable
   ## SubType Setting
