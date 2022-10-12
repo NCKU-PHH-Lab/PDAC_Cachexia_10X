@@ -5,28 +5,29 @@ memory.limit(150000)
 source("FUN_netVisual_heatmap_Ch.R")
 
 #### PBMC CC ####
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-16_PBMC_CellChat_Multi_CC/010_Cell_Cell_Interaction_Multi.RData")
+# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-16_PBMC_CellChat_Multi_CC/010_Cell_Cell_Interaction_Multi.RData")
+load(paste0(Save.Path,"/PBMC_CellChat_Multi_CC/010_Cell_Cell_Interaction_Multi.RData"))
 cellchat_PBMC_CC <- cellchat
 rm(cellchat)
 
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-16_PBMC_CellChat_Multi_ECM/010_Cell_Cell_Interaction_Multi.RData")
+load(paste0(Save.Path,"/PBMC_CellChat_Multi_ECM/010_Cell_Cell_Interaction_Multi.RData"))
 cellchat_PBMC_ECM <- cellchat
 rm(cellchat)
 
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-16_PBMC_CellChat_Multi_Secret/010_Cell_Cell_Interaction_Multi.RData")
+load(paste0(Save.Path,"/PBMC_CellChat_Multi_Secret/010_Cell_Cell_Interaction_Multi.RData"))
 cellchat_PBMC_Secret <- cellchat
 rm(cellchat)
 
 #### SC CC ####
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-16_SC_CellChat_Multi_CC/010_Cell_Cell_Interaction_Multi.RData")
+load(paste0(Save.Path,"/SC_CellChat_Multi_CC/010_Cell_Cell_Interaction_Multi.RData"))
 cellchat_SC_CC <- cellchat
 rm(cellchat)
 
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-16_SC_CellChat_Multi_ECM/010_Cell_Cell_Interaction_Multi.RData")
+load(paste0(Save.Path,"/SC_CellChat_Multi_ECM/010_Cell_Cell_Interaction_Multi.RData"))
 cellchat_SC_ECM <- cellchat
 rm(cellchat)
 
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-16_SC_CellChat_Multi_Secret/010_Cell_Cell_Interaction_Multi.RData")
+load(paste0(Save.Path,"/SC_CellChat_Multi_Secret/010_Cell_Cell_Interaction_Multi.RData"))
 cellchat_SC_Secret <- cellchat
 rm(cellchat)
 
