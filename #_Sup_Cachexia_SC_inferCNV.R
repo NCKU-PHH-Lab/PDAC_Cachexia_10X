@@ -54,7 +54,7 @@
 
   infercnv_obj = infercnv::run(infercnv_obj,
                                 cutoff=0.1, # cutoff=1 works well for Smart-seq2, and cutoff=0.1 works well for 10x Genomics
-                                out_dir=tempfile(),
+                                out_dir=SaveinferCNV.Path, # out_dir=tempfile(),
                                 cluster_by_groups=TRUE,
                                 denoise=TRUE,
                                 HMM=TRUE,
