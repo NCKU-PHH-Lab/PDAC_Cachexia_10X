@@ -1,11 +1,16 @@
-# ## INTCHG: Interchangeable
-#   # For PBMC
-#   scRNA.SeuObj <- PBMC.combined
-#   SampleType = "PBMC"
-#
-#   ## For SC
-#   # scRNA.SeuObj <- SC.combined
-#   # SampleType = "SC"
+  SampleType = "PBMC"
+
+  ## INTCHG: Interchangeable
+  ## SubType Setting
+  if(SampleType == "PBMC"){
+    # For PBMC
+    scRNA.SeuObj <- PBMC.combined
+
+  }else if(SampleType == "SC"){
+    # For SC
+    scRNA.SeuObj <- SC.combined
+
+  }
 
 source("FUN_HSsymbol2MMsymbol.R")
 
