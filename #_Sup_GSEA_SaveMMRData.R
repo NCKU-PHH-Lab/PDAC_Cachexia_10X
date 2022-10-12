@@ -44,8 +44,11 @@
   Pathway.all.MM <- data.frame(Pathway.all[,1:2],Pathway.all.MM)
   colnames(Pathway.all.MM) <- seq(1:ncol(Pathway.all.MM))
 
+#### Export RData ####
+  ## For 09_1
   save.image(paste0(Save.Path,"/09_0_GSEA_Analysis(Geneset_Prepare).RData"))
 
+  ## MM Pathway Genesets
   rm(list=setdiff(ls(), "Pathway.all.MM"))
   save.image(paste0(Save.Path,"/GSEA_Analysis_Geneset.RData"))
 
