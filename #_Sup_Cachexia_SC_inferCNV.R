@@ -1,10 +1,14 @@
 ##### Load Packages  #####
   library(infercnv)
 
+##### Input Ref #####
+Input_Ref.Path <- paste0(getwd(),"/Input_inferCNV_Ref/mm10_genomic_mapinfo_one.tsv")
+
 ##### Current path and new folder setting #####
   PathName = setwd(getwd())
   RVersion = "20221012_inferCNV"
   dir.create(paste0(PathName,"/",RVersion))
+
 
 # ##### Example #####
 #
@@ -46,7 +50,7 @@
   infercnv_obj = CreateInfercnvObject(raw_counts_matrix = SC_Exp.mx,
                                       annotations_file = SC_Ano_CT.mx,
                                       delim="\t",
-                                      gene_order_file = paste0(PathName,"/",RVersion,"/mm10_genomic_mapinfo_one.tsv"),
+                                      gene_order_file = Input_Ref.Path,
                                       ref_group_names = c("Fib1_PreCX","Fib2_PreCX","Fib3_PreCX"))
 
   infercnv_obj = infercnv::run(infercnv_obj,
