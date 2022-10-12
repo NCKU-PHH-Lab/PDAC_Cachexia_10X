@@ -291,6 +291,7 @@ source("FUN_HSsymbol2MMsymbol.R")
   dev.off() # graphics.off()
 
 
-
+##### Clean up the obj #####
+  rm(p1, p2, p3, p4, p5, p6, p7, p8)
 
 
