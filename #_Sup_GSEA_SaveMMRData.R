@@ -2,11 +2,6 @@
   rm(list = ls()) # Clean variable
   memory.limit(150000)
 
-##### Current path and new folder setting #####
-  Save.Path = paste0(getwd(),"/20220214_PBMC")
-  # dir.create(Save.Path)
-  # SampleType = "PBMC"
-
 ##### Load libray #####
   library(dplyr)
   library(stringr)
