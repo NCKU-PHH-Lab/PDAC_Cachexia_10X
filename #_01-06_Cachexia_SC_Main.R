@@ -3,8 +3,9 @@
   memory.limit(150000)
 
 ##### Load Packages  #####
-  library(Seurat)
-  library(SeuratData)
+  library("tidyverse")
+  library("Seurat")
+  library("SeuratData")
   library(patchwork)
   library(ggplot2)
   library(ggpmisc)
