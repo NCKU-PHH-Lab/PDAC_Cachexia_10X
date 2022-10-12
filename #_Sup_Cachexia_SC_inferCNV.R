@@ -1,5 +1,6 @@
+##### Load Packages  #####
+  library(infercnv)
 
-library(infercnv)
 ##### Current path and new folder setting #####
   PathName = setwd(getwd())
   RVersion = "20220114_inferCNV"
