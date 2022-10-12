@@ -39,19 +39,28 @@
 
   # options(stringsAsFactors = FALSE)
 
-
   # Sys.setlocale(category = "LC_ALL", locale = "UTF-8")
 
 
-
-
 ##### Load RData* #####
-  # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-08-13_PBMC_Main/06_Cell_type_annotation.RData")
-  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
+  load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
+  SampleType = "PBMC"
 
-  # Clean up Object
-  scRNA.SeuObj <- PBMC.combined
-  rm(list=setdiff(ls(), "scRNA.SeuObj"))
+  ## INTCHG: Interchangeable
+  ## SubType Setting
+    if(SampleType == "PBMC"){
+      # For PBMC
+      scRNA.SeuObj <- PBMC.combined
+
+    }else if(SampleType == "SC"){
+      # For SC
+      scRNA.SeuObj <- SC.combined
+
+    }
+
+
+  #### Clean up Object ####
+  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType")))
 
   ## Save Ori
   scRNA_Ori.SeuObj <- scRNA.SeuObj
@@ -101,7 +110,7 @@
 
 ##### Current path and new folder setting* #####
   ProjectName = "CC10X"
-  SampleType = "PBMC"
+  # SampleType = "PBMC"
 
   ExportAnno2 = "EOPre_Neu"
   if(Group_Mode == "GoupByGeneExp"){
