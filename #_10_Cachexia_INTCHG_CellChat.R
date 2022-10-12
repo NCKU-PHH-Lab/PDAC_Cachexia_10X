@@ -140,11 +140,10 @@
 
   ##### Current path and new folder setting*  #####
   ProjectName = paste0(SampleType,"_CellChat_Multi_ECM") # Secret, ECM, CC
-  Version = paste0(Sys.Date(),"_",ProjectName)
-  Save.Path = paste0(getwd(),"/",Version)
+  SaveCCMulti.Path = paste0(Save.Path,"/",ProjectName)
   ## Create new folder
-  if (!dir.exists(Save.Path)){
-    dir.create(Save.Path)
+  if (!dir.exists(SaveCCMulti.Path)){
+    dir.create(SaveCCMulti.Path)
   }
 
 
@@ -152,7 +151,7 @@
   CellType.set <- cellchat@meta[["celltype"]] %>% unique()
   Pathway.set <- c(cellchat@netP[["EOCX"]][["pathways"]],cellchat@netP[["PreCX"]][["pathways"]]) %>% unique()
 
-  pdf(file = paste0(Save.Path,"/",ProjectName,"_01_Predict_general_principles.pdf"),
+  pdf(file = paste0(SaveCCMulti.Path,"/",ProjectName,"_01_Predict_general_principles.pdf"),
       width = 12,  height = 7
   )
 
@@ -224,7 +223,7 @@
   dev.off()
 
 
-  pdf(file = paste0(Save.Path,"/",ProjectName,"_01_Predict_general_principles_Compare_Sourcestargets_in2D.pdf"),
+  pdf(file = paste0(SaveCCMulti.Path,"/",ProjectName,"_01_Predict_general_principles_Compare_Sourcestargets_in2D.pdf"),
       width = 12,  height = 7
   )
     ## Compare the major sources and targets in 2D space
@@ -246,7 +245,7 @@
 
 
 ##### Part II: Identify the conserved and context-specific signaling pathways #####
-  pdf(file = paste0(Save.Path,"/",ProjectName,"_02_Identify_the_conserved_and_context-specific_SigPath.pdf"),
+  pdf(file = paste0(SaveCCMulti.Path,"/",ProjectName,"_02_Identify_the_conserved_and_context-specific_SigPath.pdf"),
       width = 7,  height = 7
   )
 
@@ -355,7 +354,7 @@
   gene.down <- extractGeneSubsetFromPair(net.down, cellchat)
 
   #### Bubble_Plot_Summarize ####
-  pdf(file = paste0(Save.Path,"/",ProjectName,"_03_Identify_Up_down_signaling_ligand-receptor_pairs_Bubble_Sum.pdf"),
+  pdf(file = paste0(SaveCCMulti.Path,"/",ProjectName,"_03_Identify_Up_down_signaling_ligand-receptor_pairs_Bubble_Sum.pdf"),
       width = 20,  height = 20
   )
     ## Identify dysfunctional signaling by comparing the communication probabities
@@ -381,7 +380,7 @@
   dev.off()
 
   #### Bubble_Plot_CellTypeAll ####
-  pdf(file = paste0(Save.Path,"/",ProjectName,"_03_Identify_Up_down_signaling_ligand-receptor_pairs_Bubble_AllCT.pdf"),
+  pdf(file = paste0(SaveCCMulti.Path,"/",ProjectName,"_03_Identify_Up_down_signaling_ligand-receptor_pairs_Bubble_AllCT.pdf"),
       width = 8,  height = 12
   )
     for (i in 1:length(CellType.set)) {
@@ -406,7 +405,7 @@
 
   #### Chord diagram ####
 
-  pdf(file = paste0(Save.Path,"/",ProjectName,"_03_Identify_Up_down_signaling_ligand-receptor_pairs.pdf"),
+  pdf(file = paste0(SaveCCMulti.Path,"/",ProjectName,"_03_Identify_Up_down_signaling_ligand-receptor_pairs.pdf"),
       width = 10,  height = 7
   )
 
@@ -455,7 +454,7 @@
   dev.off()
 
 ##### Part IV: Visually compare cell-cell communication using Hierarchy plot, Circle plot or Chord diagram #####
-  pdf(file = paste0(Save.Path,"/",ProjectName,"_04_Visually_compare_cell-cell_communication.pdf"),
+  pdf(file = paste0(SaveCCMulti.Path,"/",ProjectName,"_04_Visually_compare_cell-cell_communication.pdf"),
       width = 12,  height = 7
   )
     # pathways.show <- c("CXCL")
@@ -529,7 +528,7 @@
 
 
 ##### Part V: Compare the signaling gene expression distribution between different datasets #####
-  pdf(file = paste0(Save.Path,"/",ProjectName,"_05_Compare_the_signaling_gene_expression_distribution.pdf"),
+  pdf(file = paste0(SaveCCMulti.Path,"/",ProjectName,"_05_Compare_the_signaling_gene_expression_distribution.pdf"),
       width = 10,  height = 7
   )
     # pathways.show <- c("CXCL")
@@ -563,7 +562,7 @@
 
 # ##### Save the merged CellChat object #####
   ## save rds
-  saveRDS(cellchat, file = paste0(Save.Path,"/",ProjectName,"Cell_Cell_Interaction_Multi.rds"))
+  saveRDS(cellchat, file = paste0(SaveCCMulti.Path,"/",ProjectName,"Cell_Cell_Interaction_Multi.rds"))
 
   ## save RData
-  save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction_Multi.RData"))
+  save.image(paste0(SaveCCMulti.Path,"/010_Cell_Cell_Interaction_Multi.RData"))
