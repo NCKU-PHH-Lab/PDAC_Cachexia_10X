@@ -44,8 +44,8 @@ rm(Package.set,i)
 source("FUN_CellChatOne.R")
 
 ##### Condition Setting ####
-## INTCHG: Interchangeable
-SampleTypeSet = "PBMC"
+# ## INTCHG: Interchangeable
+# SampleTypeSet = "PBMC"
 
 ## CellChat DB Set
 CCDBType = "ECM" # c("ECM","CC","Secret")
