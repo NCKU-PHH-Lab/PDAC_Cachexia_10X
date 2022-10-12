@@ -3,7 +3,7 @@
 
 ##### Current path and new folder setting #####
   PathName = setwd(getwd())
-  RVersion = "20220114_inferCNV"
+  RVersion = "20221012_inferCNV"
   dir.create(paste0(PathName,"/",RVersion))
 
 # ##### Example #####
@@ -47,7 +47,7 @@
                                       annotations_file = SC_Ano_CT.mx,
                                       delim="\t",
                                       gene_order_file = paste0(PathName,"/",RVersion,"/mm10_genomic_mapinfo_one.tsv"),
-                                      ref_group_names = c("Fib1_LO","Fib2_LO","Fib3_LO"))
+                                      ref_group_names = c("Fib1_PreCX","Fib2_PreCX","Fib3_PreCX"))
 
   infercnv_obj = infercnv::run(infercnv_obj,
                                 cutoff=0.1, # cutoff=1 works well for Smart-seq2, and cutoff=0.1 works well for 10x Genomics
