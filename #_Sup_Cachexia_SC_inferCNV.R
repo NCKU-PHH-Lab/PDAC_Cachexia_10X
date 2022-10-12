@@ -2,13 +2,12 @@
   library(infercnv)
 
 ##### Input Ref #####
-Input_Ref.Path <- paste0(getwd(),"/Input_inferCNV_Ref/mm10_genomic_mapinfo_one.tsv")
+  Input_Ref.Path <- paste0(getwd(),"/Input_inferCNV_Ref/mm10_genomic_mapinfo_one.tsv")
 
 ##### Current path and new folder setting #####
-  PathName = setwd(getwd())
-  RVersion = "20221012_inferCNV"
-  dir.create(paste0(PathName,"/",RVersion))
+  SaveinferCNV.Path <- paste0(Save.Path,"/", SampleType, "inferCNV")
 
+  Ref_group.Set = c("Fib1_PreCX","Fib2_PreCX","Fib3_PreCX")
 
 # ##### Example #####
 #
@@ -51,7 +50,7 @@ Input_Ref.Path <- paste0(getwd(),"/Input_inferCNV_Ref/mm10_genomic_mapinfo_one.t
                                       annotations_file = SC_Ano_CT.mx,
                                       delim="\t",
                                       gene_order_file = Input_Ref.Path,
-                                      ref_group_names = c("Fib1_PreCX","Fib2_PreCX","Fib3_PreCX"))
+                                      ref_group_names = Ref_group.Set)
 
   infercnv_obj = infercnv::run(infercnv_obj,
                                 cutoff=0.1, # cutoff=1 works well for Smart-seq2, and cutoff=0.1 works well for 10x Genomics
