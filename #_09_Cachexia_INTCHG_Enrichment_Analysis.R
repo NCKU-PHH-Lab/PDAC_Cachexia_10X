@@ -61,8 +61,8 @@ if(SampleType == "PBMC"){
   SubGrp4 <- c("Neu")
 }else{
   ## For SC
-  # SubGrp1 = c("CD4+T","CD8+T","T")
-  # SubGrp1_DS <- c("F_CD4+T","F_CD8+T","F_T",  "M_CD4+T","M_CD8+T","M_T",  "SPA_CD4+T","SPA_CD8+T","SPA_T")
+  SubGrp1 = c("Fib1","Fib2","Fib3")
+  SubGrp1_DS <- c("F_Fib1","F_Fib2","F_Fib3",  "M_Fib1","M_Fib2","M_Fib3",  "SPA_Fib1","SPA_Fib2","SPA_Fib3")
   SubGrp2 = c("Duct")
   SubGrp3 <- c("Fib")
   SubGrp4 <- c("Mac")
