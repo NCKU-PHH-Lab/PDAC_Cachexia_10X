@@ -105,7 +105,7 @@
   ## QC for all samples
   PBMC.combined_Ori <- PBMC.combined # Save the original obj
   #Test# PBMC.combined_Ori.list <- SplitObject(PBMC.combined_Ori, split.by = "ID")
-  PBMC.combined_QCTry <- scRNAQC(PBMC.combined,FileName = paste0(Version,"/PBMC_QC/PBMC_QCTry"))
+  PBMC.combined_QCTry <- scRNAQC(PBMC.combined,FileName = paste0(Version,"/PBMC_QC/PBMC_QC"))
 
   # specify that we will perform downstream analysis on the corrected data note that the
   # original unmodified data still resides in the 'RNA' assay
