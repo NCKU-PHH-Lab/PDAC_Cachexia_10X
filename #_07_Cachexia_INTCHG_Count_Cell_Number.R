@@ -265,16 +265,16 @@
 ##### Export PDF file #####
   pdf(file = paste0(Save.Path,"/",SampleType,"_CellCount_LinePlot.pdf"),
       width = 7, height = 7 )
-    CellNum_P4
-    CellNum_P3
-    CellNum_P1
-    CellNum_P2
-    BarPlot1_1
-    BarPlot1_2
-    BarPlot2_1
-    BarPlot2_2
-    BarPlot3_1
-    BarPlot3_2
+    CellNum_P4 %>% print()
+    CellNum_P3 %>% print()
+    CellNum_P1 %>% print()
+    CellNum_P2 %>% print()
+    BarPlot1_1 %>% print()
+    BarPlot1_2 %>% print()
+    BarPlot2_1 %>% print()
+    BarPlot2_2 %>% print()
+    BarPlot3_1 %>% print()
+    BarPlot3_2 %>% print()
   dev.off() # graphics.off()
 
   rm(CellNum_P1, CellNum_P2, CellNum_P3, CellNum_P4, BarPlot1_1, BarPlot1_2,
