@@ -278,14 +278,14 @@ source("FUN_HSsymbol2MMsymbol.R")
 ##### Export PDF file #####
   pdf(file = paste0(Save.Path,"/PBMC_GSEA_Violin.pdf"),
       width = 7, height = 7 )
-    p1
-    p2
-    p3
-    p4
-    p5
-    p6
-    p7
-    p8
+    p1 %>% print()
+    p2 %>% print()
+    p3 %>% print()
+    p4 %>% print()
+    p5 %>% print()
+    p6 %>% print()
+    p7 %>% print()
+    p8 %>% print()
   dev.off() # graphics.off()
 
 
