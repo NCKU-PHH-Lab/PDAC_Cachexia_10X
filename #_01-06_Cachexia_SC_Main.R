@@ -238,23 +238,24 @@
       )
 
         DimPlot(SC.combined, reduction = "umap", group.by = "sample") %>%
-                BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18)
-        DimPlot(SC.combined, reduction = "umap", label = TRUE, label.size = 7, repel = TRUE) %>% BeautifyggPlot(.,LegPos = c(1, 0.5),AxisTitleSize=1.2, LegTextSize = 14)
+                BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18) %>% print()
+        DimPlot(SC.combined, reduction = "umap", label = TRUE, label.size = 7, repel = TRUE) %>%
+                BeautifyggPlot(.,LegPos = c(1, 0.5),AxisTitleSize=1.2, LegTextSize = 14)  %>% print()
 
         DimPlot(SC.combined, reduction = "umap", ncol = 2,split.by = "sample", label = TRUE, label.size = 4) %>%
                 BeautifyggPlot(.,LegPos = c(1, 0.5),AxisTitleSize=1.2, TitleSize = 20,
-                               SubTitSize = 17, LegTextSize = 14, XaThick=0.9, YaThick=0.9)
+                               SubTitSize = 17, LegTextSize = 14, XaThick=0.9, YaThick=0.9)  %>% print()
 
         DimPlot(SC.combined, reduction = "umap", ncol = 2,split.by = "Cachexia", label = TRUE, label.size = 4) %>%
                 BeautifyggPlot(.,LegPos = "top",AxisTitleSize=1.2, TitleSize = 20,
-                LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)
+                LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)  %>% print()
         DimPlot(SC.combined, reduction = "umap", ncol = 2,split.by = "Sex", label = TRUE, label.size = 4) %>%
           BeautifyggPlot(.,LegPos = "top",AxisTitleSize=1.2, TitleSize = 20,
-                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)
+                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)  %>% print()
 
         ## tSNE
         DimPlot(SC.combined, reduction = "tsne", group.by = "sample") %>%
-          BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18)
+          BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18)  %>% print()
 
       dev.off()
       # graphics.off()
@@ -350,7 +351,7 @@
         DoHeatmap(SC.combined, features = top_N$gene,size = 2,angle = 60) +
         scale_fill_gradient2(low="#5283ff",mid ="white", high ="#ff5c5c") +
         theme(axis.text.y = element_text(size  = 5)) +
-        theme(legend.position = "bottom" )
+        theme(legend.position = "bottom" ) %>% print()
 
     dev.off()
 
@@ -364,62 +365,62 @@
       ## Summary
       markers.to.plot <- c("Sox9", "Csf1r","Lyz","Chil3","Col1a1","Col3a1","Dcn")
 
-      FeaturePlot(SC.combined, features = markers.to.plot, min.cutoff = "q9", coord.fixed = 1 ,ncol =3)
+      FeaturePlot(SC.combined, features = markers.to.plot, min.cutoff = "q9", coord.fixed = 1 ,ncol =3) %>% print()
 
       # Duc : "Sox9"; Macrophages: "Csf1r","Lyz","Chil3"; Fib: "Col1a1","Col3a1","Dcn"
 
 
       FeaturePlot(SC.combined, features = c("Krt19", "Prss1", "Chg8", "Cdh5", "Lum", "Rgs5", "Aif1",
                                             "Cd3d", "Ms4a1","Ms4a2"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
       # Ductal cells
       # https://pubmed.ncbi.nlm.nih.gov/24418153/
       FeaturePlot(SC.combined, features = c("Tff2", "Mmp7", "Tspan8", "Sox9", "Lcn2","Ceacam1","Ceacam5","Ceacam6","Krt19"),
-                  min.cutoff = "q9", ncol = 3, coord.fixed = 1)
+                  min.cutoff = "q9", ncol = 3, coord.fixed = 1)  %>% print()
 
       # Acinar cells
       # https://www.panglaodb.se/markers.html?cell_type=%27Acinar%20cells%27
       FeaturePlot(SC.combined, features = c("Cela3a","Prss1","Pnlip","Olfm4","Pnliprp1","Ctrc"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
 
       # Pancreatic stellate cells
       # https://www.panglaodb.se/markers.html?cell_type=%27Pancreatic%20stellate%20cells%27
       FeaturePlot(SC.combined, features = c("Col6a1","Col6a2","Col6a3","Sfrp2","Thy1","Tnfaip6"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
 
       # Fibroblast
       # https://www.novusbio.com/research-areas/cellular-markers/fibroblast-cell-markers.html
       FeaturePlot(SC.combined, features = c("Mas516","Fsp1","P4hb"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
 
       # Fibroblast
       # https://cancerdiscovery.aacrjournals.org/content/9/8/1102
       FeaturePlot(SC.combined, features = c("Col1a1","Col3a1","Lum","Dcn"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
 
       # Macrophages
       FeaturePlot(SC.combined, features = c("Mgl2","Clec4a2","Ccl12","Parp14","Fcgr1","Rbpj",
                                             "Naaa","March1",'Fgl2',"Cd68",'Tyrobp'), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
 
       ## Macrophages
       FeaturePlot(SC.combined, features = c("Chil3",'Cd86','Tnf',"Cxcl2"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
       # M1
       FeaturePlot(SC.combined, features = c('Cd68','Cd80',"Tlr2","Tlr4"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
       # M1
       FeaturePlot(SC.combined, features = c("Marco","Nos2","Tlr2","Cd80","Cd86","Csf2",
                                             "Tnf","Il1b","Il6","Tlr4","Cxcl2","Ifng","Il1r1"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
 
 
       # M2
       FeaturePlot(SC.combined, features = c('IL-4','IL-13',"Tgm2","Mrc1","Marco"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
       FeaturePlot(SC.combined, features = c("Cd4",'Cd8a','Chil3',"Il1b"), min.cutoff = "q9")
       FeaturePlot(SC.combined, features = c("Stat3",'Mtor','MyoD',"Erk","Nf","MuRF1","E3","Ifn","Sirt1","Lmcd1"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
 
       FeaturePlot(SC.combined, features = c("Chil3","Csf1r","Mrc1","Pparg","Arg1","Cd163","Clec10a","Clec7a","Cd206",
                                             "Cd209","Ccl18","Fizz1"), min.cutoff = "q9", ncol = 3, coord.fixed = 1)
@@ -428,22 +429,22 @@
       ## CAF
       # iCAF
       FeaturePlot(SC.combined, features = c('Clec3b','Col14a1',"Has1","IL6"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
       FeaturePlot(SC.combined, features = c("Igf1","Ly6a","li6ra","Ly6c1","Il6","IL15ra"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
       # myCAF
-      FeaturePlot(SC.combined, features = c('Tagln','Thy1',"Col12a2","Thbs2"), min.cutoff = "q9")
+      FeaturePlot(SC.combined, features = c('Tagln','Thy1',"Col12a2","Thbs2"), min.cutoff = "q9")  %>% print()
       FeaturePlot(SC.combined, features = c("Cdkn2a", "Epha3", "Pdgfrb", "Myo1b", "Fap", "Heyl", "Inhba"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
       # apCAF
       FeaturePlot(SC.combined, features = c('Cd74','Saa3',"Col12a2","Slpi"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
       FeaturePlot(SC.combined, features = c("Nfe2l3","NKain4","Trem2","Cxadr","Cd74","Bcam","F11r","Ezr","Irf5","H2-Ab1"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
 
       # PanCAF
       FeaturePlot(SC.combined, features = c('Col1a1','Col1a2',"Pdpn","Dcn"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1)  %>% print()
 
 
     dev.off()
@@ -486,7 +487,7 @@
                                        high = Heatmap_Color.lt[["high"]]) +
                   theme(axis.text.y = element_text(size  = 5)) +
                   theme(legend.position = "bottom")+
-                  theme(aspect.ratio=1)
+                  theme(aspect.ratio=1) %>% print()
       dev.off()
 
     # ## Ch
@@ -537,19 +538,19 @@
 
         DimPlot(SC.combined, reduction = "umap", ncol = 2,split.by = "sample", label = TRUE) %>%
           BeautifyggPlot(.,LegPos = c(1, 0.5),AxisTitleSize=1.2, TitleSize = 20,
-                         SubTitSize = 17, LegTextSize = 14, XaThick=0.9, YaThick=0.9)
+                         SubTitSize = 17, LegTextSize = 14, XaThick=0.9, YaThick=0.9) %>% print()
 
         DimPlot(SC.combined, reduction = "umap", ncol = 2,split.by = "Cachexia", label = TRUE, label.size = 4) %>%
           BeautifyggPlot(.,LegPos = "top",AxisTitleSize=1.2, TitleSize = 20,
-                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)
+                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1) %>% print()
 
         DimPlot(SC.combined, reduction = "umap", ncol = 2,split.by = "Sex", label = TRUE, label.size = 4) %>%
           BeautifyggPlot(.,LegPos = "top",AxisTitleSize=1.2, TitleSize = 20,
-                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)
+                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1) %>% print()
 
         ## tSNE
         DimPlot(SC.combined, reduction = "tsne", group.by = "sample") %>%
-          BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18)
+          BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18) %>% print()
 
       dev.off()
 
@@ -568,18 +569,18 @@
       DotPlot(SC.combined, features = markers.to.plot, cols = c("lightgrey", "blue"),
               dot.scale = 8) + RotatedAxis()%>%
         BeautifyggPlot(.,LegPos = "bottom",AxisTitleSize=1, TitleSize = 20, xangle =90,
-                       LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12)
+                       LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12) %>% print()
 
       DotPlot(SC.combined, features = markers.to.plot, cols = DotPlot_Color1.set,
-              dot.scale = 8, split.by = "sample") + RotatedAxis()
+              dot.scale = 8, split.by = "sample") + RotatedAxis() %>% print()
 
 
       # https://github.com/satijalab/seurat/issues/1541
       DotPlot(SC.combined, features = markers.to.plot, cols = DotPlot_Color2.set,
-              dot.scale = 8, split.by = "Cachexia") + RotatedAxis()
+              dot.scale = 8, split.by = "Cachexia") + RotatedAxis() %>% print()
 
       DotPlot(SC.combined, features = markers.to.plot, cols = DotPlot_Color3.set,
-              dot.scale = 8, split.by = "Sex") + RotatedAxis()
+              dot.scale = 8, split.by = "Sex") + RotatedAxis() %>% print()
 
     dev.off()
 
@@ -633,7 +634,7 @@
   Test <- intersect(row.names(SC.combined@assays[["RNA"]]@counts) ,  c("Top2a", "Ptk2"))
   Test2 <- intersect(row.names(SC.combined@assays[["integrated"]]@data) ,  c("Top2a", "Ptk2"))
   FeaturePlot(SC.combined, features = c("Kras", "Braf", "Myc","Egfr","Pik3ca"), min.cutoff = "q9",ncol = 3)
-  FeaturePlot(SC.combined, features = c("Il4"), min.cutoff = "q9",ncol = 3)
+  # FeaturePlot(SC.combined, features = c("Il4"), min.cutoff = "q9",ncol = 3)
   FeaturePlot(SC.combined, features = c("Il4ra"), min.cutoff = "q9",ncol = 3)
   FeaturePlot(SC.combined, features = c("Il13ra1"), min.cutoff = "q9",ncol = 3)
   FeaturePlot(SC.combined, features = c("Stat6"), min.cutoff = "q9",ncol = 3)

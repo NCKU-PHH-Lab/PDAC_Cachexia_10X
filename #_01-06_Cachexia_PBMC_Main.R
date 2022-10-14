@@ -235,23 +235,24 @@
       )
 
         DimPlot(PBMC.combined, reduction = "umap", group.by = "sample") %>%
-                BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18)
-        DimPlot(PBMC.combined, reduction = "umap", label = TRUE, label.size = 7, repel = TRUE) %>% BeautifyggPlot(.,LegPos = c(1, 0.5),AxisTitleSize=1.2, LegTextSize = 14)
+                BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18) %>% print()
+        DimPlot(PBMC.combined, reduction = "umap", label = TRUE, label.size = 7, repel = TRUE) %>%
+                BeautifyggPlot(.,LegPos = c(1, 0.5),AxisTitleSize=1.2, LegTextSize = 14) %>% print()
 
         DimPlot(PBMC.combined, reduction = "umap", ncol = 2,split.by = "sample", label = TRUE, label.size = 4) %>%
                 BeautifyggPlot(.,LegPos = c(1, 0.5),AxisTitleSize=1.2, TitleSize = 20,
-                               SubTitSize = 17, LegTextSize = 14, XaThick=0.9, YaThick=0.9)
+                               SubTitSize = 17, LegTextSize = 14, XaThick=0.9, YaThick=0.9) %>% print()
 
         DimPlot(PBMC.combined, reduction = "umap", ncol = 2,split.by = "Cachexia", label = TRUE, label.size = 4) %>%
                 BeautifyggPlot(.,LegPos = "top",AxisTitleSize=1.2, TitleSize = 20,
-                LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)
+                LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1) %>% print()
         DimPlot(PBMC.combined, reduction = "umap", ncol = 2,split.by = "Sex", label = TRUE, label.size = 4) %>%
           BeautifyggPlot(.,LegPos = "top",AxisTitleSize=1.2, TitleSize = 20,
-                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)
+                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1) %>% print()
 
         ## tSNE
         DimPlot(PBMC.combined, reduction = "tsne", group.by = "sample") %>%
-          BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18)
+          BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18) %>% print()
 
       dev.off()
       # graphics.off()
@@ -347,7 +348,7 @@
         DoHeatmap(PBMC.combined, features = top_N$gene,size = 2,angle = 60) +
         scale_fill_gradient2(low="#5283ff",mid ="white", high ="#ff5c5c") +
         theme(axis.text.y = element_text(size  = 5)) +
-        theme(legend.position = "bottom" )
+        theme(legend.position = "bottom" ) %>% print()
 
     dev.off()
 
@@ -363,28 +364,28 @@
       markers.to.plot <- c("Cd3d","Cd3e", "Cd4","Cd8a", "Csf1r", "Lyz2","Chil3","Il1b", "S100a9","Nkg7",
                            "Gzmb", "Cd79a", "Ms4a1","Clu","Hbb-bs","Ppbp")
 
-      FeaturePlot(PBMC.combined, features = markers.to.plot, min.cutoff = "q9", coord.fixed = 1)
+      FeaturePlot(PBMC.combined, features = markers.to.plot, min.cutoff = "q9", coord.fixed = 1) %>% print()
       # T Cell: Cd3d,Cd3e;  CD4+ T Cell: Cd4; CD8+ T Cell: Cd8a; Macrophages: Csf1r,Lyz,Chil3;  Neutrophils: S100a9;
       # NK Cell: Nkg7,Gzmb; B Cell: Cd79a,Ms4a1; Mast Cell: Clu; Erythrocytes: Hbb-bs; Platelet: Ppbp
 
 
       # PMID: 31771616 #!!!!!!
       FeaturePlot(PBMC.combined, features = c("Cd3d", "Cd4", "Cd8a", "Csf1r", "Foxp3", "S100a9"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1) %>% print()
       # T Cell: Cd3d;  CD4+ T Cell: Cd4; CD8+ T Cell: Cd8a; Macrophages: Csf1r; regulatory T cells(Treg): Foxp3; Neutrophils: S100a9
 
       # PMID: 34296197 #!!!!!
       FeaturePlot(PBMC.combined, features = c("Cd3d", "Cd3e", "Lyz1", "Lyz2","Clu","Cd79a","Ms4a1","Nkg7","Gzmb"), min.cutoff = "q9",
-                  ncol = 3, coord.fixed = 1)
+                  ncol = 3, coord.fixed = 1) %>% print()
       # T Cell: Cd3d,Cd3e;  Macrophages: Lyz; Mast Cell: Clu; B Cell: Cd79a,Ms4a1; NK Cell: Nkg7,Gzmb
 
       # http://biocc.hrbmu.edu.cn/CellMarker/
       # Mast cell
-      FeaturePlot(PBMC.combined, features = c("Cd117", "Cd25","Cd203c","Slc18a2","Kit","Fcer1a","Cd9"), min.cutoff = "q9", coord.fixed = 1)
+      FeaturePlot(PBMC.combined, features = c("Cd117", "Cd25","Cd203c","Slc18a2","Kit","Fcer1a","Cd9"), min.cutoff = "q9", coord.fixed = 1) %>% print()
       # PMID: 30356731
-      FeaturePlot(PBMC.combined, features = c("Cd9"), min.cutoff = "q9", coord.fixed = 1)
+      FeaturePlot(PBMC.combined, features = c("Cd9"), min.cutoff = "q9", coord.fixed = 1) %>% print()
       # PMID: 34296197 #!!!!!
-      FeaturePlot(PBMC.combined, features = c("Cpa3"), min.cutoff = "q9", coord.fixed = 1)
+      FeaturePlot(PBMC.combined, features = c("Cpa3"), min.cutoff = "q9", coord.fixed = 1) %>% print()
       # https://www.panglaodb.se/markers.html?cell_type=%27Mast%20cells%27
 
       ## Mac
@@ -392,37 +393,37 @@
       # https://www.biocompare.com/Editorial-Articles/566347-A-Guide-to-Macrophage-Markers/
       ## M0
       FeaturePlot(PBMC.combined, features = c("Cd68", "Adgre1","Cd14","Csf1r","Ly6c1",
-                                              "Cx3cr1","Fcgr1a","Itgam","Mertk"), min.cutoff = "q9", coord.fixed = 1)
+                                              "Cx3cr1","Fcgr1a","Itgam","Mertk"), min.cutoff = "q9", coord.fixed = 1) %>% print()
 
       ## M1
       # M1 http://biocc.hrbmu.edu.cn/CellMarker/
-      FeaturePlot(PBMC.combined, features = c("Cd16","Cd32","Cd64","Cd68","Cd80","Cd86"), min.cutoff = "q9", coord.fixed = 1)
+      FeaturePlot(PBMC.combined, features = c("Cd16","Cd32","Cd64","Cd68","Cd80","Cd86"), min.cutoff = "q9", coord.fixed = 1) %>% print()
       # M1 https://www.biocompare.com/Editorial-Articles/566347-A-Guide-to-Macrophage-Markers/
       FeaturePlot(PBMC.combined, features = c("Marco","Nos2","Tlr2","Cd80","Cd86","Csf2",
-                                              "Tnf","Il1b","Il6","Tlr4","Cxcl2","Ifng","Il1r1"), min.cutoff = "q9", coord.fixed = 1)
-      FeaturePlot(PBMC.combined, features = c("Il1a","Il1b","Il6","Nos2","Tlr2","Tlr4","Cd80","Cd86"), min.cutoff = "q9", coord.fixed = 1)
+                                              "Tnf","Il1b","Il6","Tlr4","Cxcl2","Ifng","Il1r1"), min.cutoff = "q9", coord.fixed = 1) %>% print()
+      FeaturePlot(PBMC.combined, features = c("Il1a","Il1b","Il6","Nos2","Tlr2","Tlr4","Cd80","Cd86"), min.cutoff = "q9", coord.fixed = 1) %>% print()
 
 
       ## M2
       # M2 http://biocc.hrbmu.edu.cn/CellMarker/
        FeaturePlot(PBMC.combined, features = c("Chil3","Csf1r","Mrc1","Pparg","Arg1","Cd163","Clec10a","Clec7a",
-                                              "Cd206","Cd209","Ccl18","Fizz1"), min.cutoff = "q9", coord.fixed = 1)
+                                              "Cd206","Cd209","Ccl18","Fizz1"), min.cutoff = "q9", coord.fixed = 1) %>% print()
       # https://www.biocompare.com/Editorial-Articles/566347-A-Guide-to-Macrophage-Markers/
        FeaturePlot(PBMC.combined, features = c("Cd115", "Cd206", "Pparg", "Arg1", "Cd163", "Cd301",
-                                               "Dectin-1", "Pdcd1lg2", "Fizz1"), min.cutoff = "q9", coord.fixed = 1)
+                                               "Dectin-1", "Pdcd1lg2", "Fizz1"), min.cutoff = "q9", coord.fixed = 1) %>% print()
 
-       FeaturePlot(PBMC.combined, features = c("Chil3"), min.cutoff = "q9", coord.fixed = 1)
+       FeaturePlot(PBMC.combined, features = c("Chil3"), min.cutoff = "q9", coord.fixed = 1) %>% print()
 
 
 
       ## Tumor associated macrophage(TAM)
       FeaturePlot(PBMC.combined, features = c("Ccr2","Csf1r","Marco","Pdl2","Cd40","Ccl2","Csf1","Cd16"),
-                  min.cutoff = "q9", coord.fixed = 1)
+                  min.cutoff = "q9", coord.fixed = 1) %>% print()
 
       # Erythrocytes
-      FeaturePlot(PBMC.combined, features = c("Hbb-bs"), min.cutoff = "q9", coord.fixed = 1)
+      FeaturePlot(PBMC.combined, features = c("Hbb-bs"), min.cutoff = "q9", coord.fixed = 1) %>% print()
       # Platelet
-      FeaturePlot(PBMC.combined, features = c("Ppbp"), min.cutoff = "q9", coord.fixed = 1)
+      FeaturePlot(PBMC.combined, features = c("Ppbp"), min.cutoff = "q9", coord.fixed = 1) %>% print()
 
 
     dev.off()
@@ -471,7 +472,7 @@
                                        high = Heatmap_Color.lt[["high"]]) +
                   theme(axis.text.y = element_text(size  = 5)) +
                   theme(legend.position = "bottom")+
-                  theme(aspect.ratio=1)
+                  theme(aspect.ratio=1) %>% print()
       dev.off()
 
     # ## Ch
@@ -490,18 +491,18 @@
 
     DoHeatmap(PBMC.combined, features = top_N$gene,group.by = "seurat_clusters",size = 3,angle = 90) + NoLegend()
 
-    pdf(
-        file = paste0(Save.Path,"/PBMC_Heatmap_CellType_top",top_NSet,".pdf"),
-        width = 10,  height = 8
-    )
-      DoHeatmap(PBMC.combined, features = top_N$gene,group.by = "celltype",size = 2,angle = 45) +
-                scale_fill_gradient2(low = Heatmap_Color.lt[["low"]],
-                                     mid = Heatmap_Color.lt[["mid"]],
-                                     high = Heatmap_Color.lt[["high"]])  +
-                theme(axis.text.y = element_text(size = 5)) +
-                theme(legend.position = "bottom" )
-
-    dev.off()
+    # pdf(
+    #     file = paste0(Save.Path,"/PBMC_Heatmap_CellType_top",top_NSet,".pdf"),
+    #     width = 10,  height = 8
+    # )
+    #   DoHeatmap(PBMC.combined, features = top_N$gene,group.by = "celltype",size = 2,angle = 45) +
+    #             scale_fill_gradient2(low = Heatmap_Color.lt[["low"]],
+    #                                  mid = Heatmap_Color.lt[["mid"]],
+    #                                  high = Heatmap_Color.lt[["high"]])  +
+    #             theme(axis.text.y = element_text(size = 5)) +
+    #             theme(legend.position = "bottom" ) %>% print()
+    #
+    # dev.off()
 
   ## UMAP tSNE
     DimPlot(PBMC.combined, label = TRUE) %>% BeautifyggPlot(.,LegPos = c(1, 0.5))
@@ -522,19 +523,19 @@
 
         DimPlot(PBMC.combined, reduction = "umap", ncol = 2,split.by = "sample", label = TRUE) %>%
           BeautifyggPlot(.,LegPos = c(1, 0.5),AxisTitleSize=1.2, TitleSize = 20,
-                         SubTitSize = 17, LegTextSize = 14, XaThick=0.9, YaThick=0.9)
+                         SubTitSize = 17, LegTextSize = 14, XaThick=0.9, YaThick=0.9) %>% print()
 
         DimPlot(PBMC.combined, reduction = "umap", ncol = 2,split.by = "Cachexia", label = TRUE, label.size = 4) %>%
           BeautifyggPlot(.,LegPos = "top",AxisTitleSize=1.2, TitleSize = 20,
-                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)
+                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1) %>% print()
 
         DimPlot(PBMC.combined, reduction = "umap", ncol = 2,split.by = "Sex", label = TRUE, label.size = 4) %>%
           BeautifyggPlot(.,LegPos = "top",AxisTitleSize=1.2, TitleSize = 20,
-                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1)
+                         LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1) %>% print()
 
         ## tSNE
         DimPlot(PBMC.combined, reduction = "tsne", group.by = "sample") %>%
-          BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18)
+          BeautifyggPlot(.,TV= -5,TitleSize = 25,LegPos = c(0.85, 0.15),AxisTitleSize=1.2, LegTextSize = 18) %>% print()
 
       dev.off()
 
@@ -545,26 +546,26 @@
     DotPlot_Color3.set <- c("#de3767", "#4169e1")
 
     pdf(
-      file = paste0(Save.Path,"/PBMC_DotPlot_CellType",".pdf"),
+      file = paste0(Save.Path,"/PBMC_DotPlot_CellType.pdf"),
       width = 10,  height = 8
     )
 
       # https://satijalab.org/seurat/reference/dotplot
       DotPlot(PBMC.combined, features = markers.to.plot, cols = c("lightgrey", "blue"),
-              dot.scale = 8) + RotatedAxis()%>%
+              dot.scale = 8) + RotatedAxis() %>%
         BeautifyggPlot(.,LegPos = "bottom",AxisTitleSize=1, TitleSize = 20, xangle =90,
-                       LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12)
+                       LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12) %>% print()
 
       DotPlot(PBMC.combined, features = markers.to.plot, cols = DotPlot_Color1.set,
-              dot.scale = 8, split.by = "sample") + RotatedAxis()
+              dot.scale = 8, split.by = "sample") + RotatedAxis()  %>% print()
 
 
       # https://github.com/satijalab/seurat/issues/1541
       DotPlot(PBMC.combined, features = markers.to.plot, cols = DotPlot_Color2.set,
-              dot.scale = 8, split.by = "Cachexia") + RotatedAxis()
+              dot.scale = 8, split.by = "Cachexia") + RotatedAxis() %>% print()
 
       DotPlot(PBMC.combined, features = markers.to.plot, cols = DotPlot_Color3.set,
-              dot.scale = 8, split.by = "Sex") + RotatedAxis()
+              dot.scale = 8, split.by = "Sex") + RotatedAxis() %>% print()
 
     dev.off()
 
