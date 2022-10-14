@@ -5,9 +5,9 @@
 ## https://github.com/kassambara/ggpubr/issues/111
 
 
-##### Presetting ######
-rm(list = ls()) # Clean variable
-memory.limit(150000)
+# ##### Presetting ######
+# rm(list = ls()) # Clean variable
+# memory.limit(150000)
 
 ##### Load Packages #####
 if(!require("tidyverse")) install.packages("tidyverse")
@@ -218,24 +218,20 @@ plt.ManyGroup3
 
 ##### Export PDF #####
 pdf(file = paste0(Save.Path,"/",Version,"_Barplot.pdf"),width = 10, height = 10 )
-  plt.2Group1
-  plt.FewGroup1
-  plt.ManyGroup1
-  plt.ManyGroup2
-  plt.ManyGroup2_Sum
-  plt.ManyGroup3
-  plt.ManyGroup3_Sum
+  plt.2Group1 %>% print()
+  plt.FewGroup1 %>% print()
+  plt.ManyGroup1 %>% print()
+  plt.ManyGroup2 %>% print()
+  plt.ManyGroup2_Sum %>% print()
+  plt.ManyGroup3 %>% print()
+  plt.ManyGroup3_Sum %>% print()
 dev.off()
 
 ##### Export PDF #####
 pdf(file = paste0(Save.Path,"/",Version,"_BarplotMulti.pdf"),width = 13, height = 13 )
-  plt.ManyGroup2_Sum
-  plt.ManyGroup3_Sum
+  plt.ManyGroup2_Sum %>% print()
+  plt.ManyGroup3_Sum %>% print()
 dev.off()
-
-
-##### Save RData #####
-save.image(paste0(Save.Path,"/",Version,".RData"))
 
 
 
@@ -261,11 +257,14 @@ FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
 
 ##### Export PDF #####
 pdf(file = paste0(Save.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 )
-  plt.UMAP1
-  plt.UMAP2
-  plt.UMAP3
-  plt.UMAP4
+  plt.UMAP1 %>% print()
+  plt.UMAP2 %>% print()
+  plt.UMAP3 %>% print()
+  plt.UMAP4 %>% print()
 dev.off()
+
+##### Save RData #####
+save.image(paste0(Save.Path,"/",Version,".RData"))
 
 # ## Example
 # # Load myeloma data from GitHub
