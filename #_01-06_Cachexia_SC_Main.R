@@ -105,7 +105,7 @@
   ## QC for all samples
   SC.combined_Ori <- SC.combined # Save the original obj
   #Test# SC.combined_Ori.list <- SplitObject(SC.combined_Ori, split.by = "ID")
-  SC.combined_QCTry <- scRNAQC(SC.combined,FileName = paste0(Version,"/SC_QC/SC_QCTry"))
+  SC.combined_QCTry <- scRNAQC(SC.combined,FileName = paste0(Version,"/SC_QC/SC_QC"))
 
   # specify that we will perform downstream analysis on the corrected data note that the
   # original unmodified data still resides in the 'RNA' assay
