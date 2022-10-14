@@ -56,10 +56,11 @@ CCDBType = "ECM" # c("ECM","CC","Secret")
 load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
 # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
 
-if(SampleTypeSet == "PBMC"){
+## INTCHG: Interchangeable
+## SubType Setting
+if(SampleType == "PBMC"){
   ## For PBMC
   scRNA.SeuObj <- PBMC.combined
-  SampleType = "PBMC"
 
   # Order the cell type
   CellType.Order = c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery")
@@ -67,7 +68,7 @@ if(SampleTypeSet == "PBMC"){
                                                  levels = CellType.Order)
 
 
-}else if(SampleTypeSet == "SC"){
+}else if(SampleType == "SC"){
   ## For SC
   scRNA.SeuObj <- SC.combined
   SampleType = "SC"
