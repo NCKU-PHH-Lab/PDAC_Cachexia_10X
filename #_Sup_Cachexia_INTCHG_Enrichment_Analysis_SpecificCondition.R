@@ -1,7 +1,7 @@
 
-##### Presetting ######
-  rm(list = ls()) # Clean variable
-  memory.limit(150000)
+# ##### Presetting ######
+#   rm(list = ls()) # Clean variable
+#   memory.limit(150000)
 
 ##### Load Packages #####
   # if(!require("tidyverse")) install.packages("tidyverse")

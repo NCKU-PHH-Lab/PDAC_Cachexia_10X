@@ -6,9 +6,9 @@
 
 ## https://davidbaranger.com/2018/03/05/showing-your-data-scatter-box-violin-plots/
 
-##### Presetting ######
-rm(list = ls()) # Clean variable
-memory.limit(150000)
+# ##### Presetting ######
+# rm(list = ls()) # Clean variable
+# memory.limit(150000)
 
 
 #### Installation and load the required libraries ####

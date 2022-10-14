@@ -4,9 +4,9 @@
 ## https://www.middleprofessor.com/files/applied-biostatistics_bookdown/_book/plotting-models.html
 ## https://github.com/kassambara/ggpubr/issues/111
 
-##### Presetting ######
-rm(list = ls()) # Clean variable
-memory.limit(150000)
+# ##### Presetting ######
+# rm(list = ls()) # Clean variable
+# memory.limit(150000)
 
 
 #### Installation and load the required libraries ####

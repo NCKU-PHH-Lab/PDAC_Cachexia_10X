@@ -1,6 +1,6 @@
-##### Presetting ######
-rm(list = ls()) # Clean variable
-memory.limit(150000)
+# ##### Presetting ######
+# rm(list = ls()) # Clean variable
+# memory.limit(150000)
 
 source("FUN_netVisual_heatmap_Ch.R")
 
