@@ -506,18 +506,18 @@
 
     DoHeatmap(SC.combined, features = top_N$gene,group.by = "seurat_clusters",size = 3,angle = 90) + NoLegend()
 
-    pdf(
-        file = paste0(Save.Path,"/SC_Heatmap_CellType_top",top_NSet,".pdf"),
-        width = 10,  height = 8
-    )
-      DoHeatmap(SC.combined, features = top_N$gene,group.by = "celltype",size = 2,angle = 45) +
-                scale_fill_gradient2(low = Heatmap_Color.lt[["low"]],
-                                     mid = Heatmap_Color.lt[["mid"]],
-                                     high = Heatmap_Color.lt[["high"]])  +
-                theme(axis.text.y = element_text(size = 5)) +
-                theme(legend.position = "bottom" )
-
-    dev.off()
+    # pdf(
+    #     file = paste0(Save.Path,"/SC_Heatmap_CellType_top",top_NSet,".pdf"),
+    #     width = 10,  height = 8
+    # )
+    #   DoHeatmap(SC.combined, features = top_N$gene,group.by = "celltype",size = 2,angle = 45) +
+    #             scale_fill_gradient2(low = Heatmap_Color.lt[["low"]],
+    #                                  mid = Heatmap_Color.lt[["mid"]],
+    #                                  high = Heatmap_Color.lt[["high"]])  +
+    #             theme(axis.text.y = element_text(size = 5)) +
+    #             theme(legend.position = "bottom" )
+    #
+    # dev.off()
 
   ## UMAP tSNE
     DimPlot(SC.combined, label = TRUE) %>% BeautifyggPlot(.,LegPos = c(1, 0.5))

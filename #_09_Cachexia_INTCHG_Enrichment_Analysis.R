@@ -118,10 +118,10 @@ GSEA_Large.df.TOP.S <- GSEA_ggplot_SPA.lt[["GSEA_TOP.df"]]
 # GSEA_Large.df.TOP.S <- GSEA_Large.df.TOP.S[abs(GSEA_Large.df.TOP.S$pval) < 0.05,]
 
 pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_SPA.pdf"),width = 17, height = 12 )
-  GSEA_ggplot_SPA.lt[["BBPlot_Ori"]]
-  GSEA_ggplot_SPA.lt[["BBPlot"]]
-  GSEA_ggplot_SPA.lt[["BBPlot2"]]
-  GSEA_ggplot_SPA.lt[["BBPlotB1"]]
+  GSEA_ggplot_SPA.lt[["BBPlot_Ori"]] %>% print()
+  GSEA_ggplot_SPA.lt[["BBPlot"]] %>% print()
+  GSEA_ggplot_SPA.lt[["BBPlot2"]] %>% print()
+  GSEA_ggplot_SPA.lt[["BBPlotB1"]] %>% print()
 dev.off()
 
 
@@ -171,10 +171,10 @@ GSEA_ggplot_SSA_Male.lt <- GSEA_ggplot(GSEA_Large_Male.df.TOP,NES_Th = NES_Th_Se
 GSEA_Large_Male.df.TOP.S <- GSEA_ggplot_SSA_Male.lt[["GSEA_TOP.df"]]
 
 pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_SSA_Male.pdf"),width = 17, height = 12 )
-  GSEA_ggplot_SSA_Male.lt[["BBPlot_Ori"]]
-  GSEA_ggplot_SSA_Male.lt[["BBPlot"]]
-  GSEA_ggplot_SSA_Male.lt[["BBPlot2"]]
-  GSEA_ggplot_SSA_Male.lt[["BBPlotB1"]]
+  GSEA_ggplot_SSA_Male.lt[["BBPlot_Ori"]] %>% print()
+  GSEA_ggplot_SSA_Male.lt[["BBPlot"]] %>% print()
+  GSEA_ggplot_SSA_Male.lt[["BBPlot2"]] %>% print()
+  GSEA_ggplot_SSA_Male.lt[["BBPlotB1"]] %>% print()
 dev.off()
 
 ##### Extract SubType #####
@@ -222,10 +222,10 @@ GSEA_ggplot_SSA_Female.lt <- GSEA_ggplot(GSEA_Large_Female.df.TOP,NES_Th = NES_T
 GSEA_Large_Female.df.TOP.S <- GSEA_ggplot_SSA_Female.lt[["GSEA_TOP.df"]]
 
 pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_SSA_Female.pdf"),width = 17, height = 12 )
-  GSEA_ggplot_SSA_Female.lt[["BBPlot_Ori"]]
-  GSEA_ggplot_SSA_Female.lt[["BBPlot"]]
-  GSEA_ggplot_SSA_Female.lt[["BBPlot2"]]
-  GSEA_ggplot_SSA_Female.lt[["BBPlotB1"]]
+  GSEA_ggplot_SSA_Female.lt[["BBPlot_Ori"]] %>% print()
+  GSEA_ggplot_SSA_Female.lt[["BBPlot"]] %>% print()
+  GSEA_ggplot_SSA_Female.lt[["BBPlot2"]] %>% print()
+  GSEA_ggplot_SSA_Female.lt[["BBPlotB1"]] %>% print()
 dev.off()
 
 
@@ -370,25 +370,25 @@ BBPlotB2 <- BBPlotB2 %>% insert_left(GSEA_ggplot_SSA.lt[["Y_Order"]], width = 0.
 BBPlotB2
 
 pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_Sum.pdf"),width = 35, height = 17 )
-  GSEA_ggplot_SSA.lt[["BBPlot"]]
-  GSEA_ggplot_SSA.lt[["BBPlotB1"]]
-  BBPlotB2
+  GSEA_ggplot_SSA.lt[["BBPlot"]] %>% print()
+  GSEA_ggplot_SSA.lt[["BBPlotB1"]] %>% print()
+  BBPlotB2 %>% print()
 
-  BBPlot_SPA_B
-  BBPlot_SPA_B1
+  BBPlot_SPA_B %>% print()
+  BBPlot_SPA_B1 %>% print()
 
-  BBPlot_F_B
-  BBPlot_F_B1
-  BBPlot_M_B
-  BBPlot_M_B1
-  BBPlot_T_B
-  BBPlot_T_B1
-  BBPlot_Mac_B
-  BBPlot_Mac_B1
-  BBPlot_Mast_B
-  BBPlot_Mast_B1
-  BBPlot_Neu_B
-  BBPlot_Neu_B1
+  BBPlot_F_B %>% print()
+  BBPlot_F_B1 %>% print()
+  BBPlot_M_B %>% print()
+  BBPlot_M_B1 %>% print()
+  BBPlot_T_B %>% print()
+  BBPlot_T_B1 %>% print()
+  BBPlot_Mac_B %>% print()
+  BBPlot_Mac_B1 %>% print()
+  BBPlot_Mast_B %>% print()
+  BBPlot_Mast_B1 %>% print()
+  BBPlot_Neu_B %>% print()
+  BBPlot_Neu_B1 %>% print()
 dev.off()
 
 
@@ -405,18 +405,18 @@ pdf(file = paste0(Subfolder.Path,"/",SampleType,"_GSEA_Bubble_SSA.pdf"),width = 
 
 ggplot(GSEA_Large_SumTOP_Sex.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
   geom_point() + scale_colour_gradient2(low = "#0077b6", mid = "white", high = "#ef476f",
-                                        guide = "colourbar",midpoint = 0)
+                                        guide = "colourbar",midpoint = 0) %>% print()
 ggplot(GSEA_Large_SumTOP_Sex.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
   geom_point() + scale_colour_gradient2(low = "#04873f", mid = "white", high = "#e3672d",
-                                        guide = "colourbar",midpoint = 0)
+                                        guide = "colourbar",midpoint = 0) %>% print()
 
 
 BBPlot <- ggplot(GSEA_Large_SumTOP_Sex.df.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
   geom_point() + scale_colour_gradient2(low = "#ef476f", mid = "white", high = "#0077b6",
-                                        guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom")
+                                        guide = "colourbar",midpoint = 0)+ theme(legend.position = "bottom") %>% print()
 
 BBPlot %>% BeautifyggPlot(LegPos  = "bottom",LegBox = "horizontal",LegDir="horizontal", xangle =90,
-                          XtextSize=10,  YtextSize=5,AxisTitleSize=1, AspRat=1, XaThick=0.8, YaThick=0.8 ,OL_Thick = 1.5)
+                          XtextSize=10,  YtextSize=5,AxisTitleSize=1, AspRat=1, XaThick=0.8, YaThick=0.8 ,OL_Thick = 1.5) %>% print()
 
 dev.off()
 

@@ -570,16 +570,16 @@
   ##### Export PDF #####
 
   pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_GeneCount.pdf"),width = 7, height = 7 )
-    Sum_GF_log.P2
-    Sum_GF.P
-    EOCX1.P
-    PreCX1.P
-    EOCXSS.P
-    PreCXSS.P
+    Sum_GF_log.P2 %>% print()
+    Sum_GF.P %>% print()
+    EOCX1.P %>% print()
+    PreCX1.P %>% print()
+    EOCXSS.P %>% print()
+    PreCXSS.P %>% print()
   dev.off()
 
   pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_GeneCount_Main.pdf"),width = 14, height = 7 )
-   Sum_GF_log.P
+   Sum_GF_log.P %>% print()
   dev.off()
 
 
@@ -868,8 +868,8 @@
 
   ##### Export PDF #####
     pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_CCMark_CTCount.pdf"),width = 7, height = 7 )
-      CCM_CT_Num.p
-      CCM_CT_Num.p2
+      CCM_CT_Num.p %>% print()
+      CCM_CT_Num.p2 %>% print()
     dev.off()
 
   ##### Table #####
@@ -945,9 +945,9 @@
 
   pdf(file = paste0(Save_Sub.Path,"/",SampleType,"_CCM_Dot.pdf"),
       width = 10, height = 10 )
-    CountCTNum2Marker.df.p
-    CountCTNum2Marker.df.DotPlot
-    CountCTNum2Marker.df.DotPlot2
+    CountCTNum2Marker.df.p %>% print()
+    CountCTNum2Marker.df.DotPlot %>% print()
+    CountCTNum2Marker.df.DotPlot2 %>% print()
   dev.off() # graphics.off()
 
 #### Save RData ####
