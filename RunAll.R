@@ -15,6 +15,8 @@ source("#_Sup_Cachexia_INTCHG_CTMarker_For_Metascape.R")
 source("#_Sup_Cachexia_INTCHG_Enrichment_Analysis_SpecificCondition.R")
 source("#_Sup_Cachexia_INTCHG_EnrichmentUMAP.R")
 
+rm(list = ls()) # Clean variable
+memory.limit(150000)
 
 ## For SC
 source("#_01-06_Cachexia_SC_Main.R")
