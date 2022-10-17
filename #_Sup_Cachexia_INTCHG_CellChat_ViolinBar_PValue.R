@@ -133,7 +133,7 @@ scRNA_Ori.SeuObj <- scRNA.SeuObj
 
 
 ##### Summarize all signal #####
-pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BarplotMulti.pdf"),width = 15, height = 20 )
+pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_ViolinPlotMulti.pdf"),width = 15, height = 20 )
 SummaryTable.df <-  as.data.frame(matrix(nrow=0,ncol=10))
 colnames(SummaryTable.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.adj", "p.format", "p.signif", "method","pathway_name")
 
