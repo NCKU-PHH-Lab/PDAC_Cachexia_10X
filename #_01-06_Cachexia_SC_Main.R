@@ -642,29 +642,29 @@
 
 
   pdf(
-    file = paste0(Save.Path,"/SC_UMAP_SubCTMarkers",".pdf"),
+    file = paste0(Save.Path,"/SC_UMAP_SubCTMarkers.pdf"),
     width = 10,  height = 8
   )
 
     # https://pubmed.ncbi.nlm.nih.gov/31197017/
     # iCAF
-    FeaturePlot(SC.combined, features = c("Clec3b","Col14a1","Has1","Il6"), min.cutoff = "q9",ncol = 2)
+    FeaturePlot(SC.combined, features = c("Clec3b","Col14a1","Has1","Il6"), min.cutoff = "q9",ncol = 2) %>% print()
     # apCAF
-    FeaturePlot(SC.combined, features = c("H2-Ab1","Cd74","Saa3","Slpi"), min.cutoff = "q9",ncol = 2)
+    FeaturePlot(SC.combined, features = c("H2-Ab1","Cd74","Saa3","Slpi"), min.cutoff = "q9",ncol = 2) %>% print()
     # myCAF
-    FeaturePlot(SC.combined, features = c("Tagln","Thy1","Col12a1","Thbs2"), min.cutoff = "q9",ncol = 2)
+    FeaturePlot(SC.combined, features = c("Tagln","Thy1","Col12a1","Thbs2"), min.cutoff = "q9",ncol = 2) %>% print()
 
     # EMT-like cells
-    FeaturePlot(SC.combined, features = c("Cdkn2a","S100a6","Igfbp4","Sparc","Vim","Spp1"), min.cutoff = "q9",ncol = 2)
+    FeaturePlot(SC.combined, features = c("Cdkn2a","S100a6","Igfbp4","Sparc","Vim","Spp1"), min.cutoff = "q9",ncol = 2) %>% print()
   dev.off()
 
   pdf(
-    file = paste0(Save.Path,"/SC_UMAP_SubCTMarkers2",".pdf"),
+    file = paste0(Save.Path,"/SC_UMAP_SubCTMarkers2.pdf"),
     width = 10,  height = 14
   )
 
     # EMT-like cells
-    FeaturePlot(SC.combined, features = c("Cdkn2a","S100a6","Igfbp4","Sparc","Vim","Spp1"), min.cutoff = "q9",ncol = 2)
+    FeaturePlot(SC.combined, features = c("Cdkn2a","S100a6","Igfbp4","Sparc","Vim","Spp1"), min.cutoff = "q9",ncol = 2) %>% print()
   dev.off()
 
   rm(Test,Test2)
