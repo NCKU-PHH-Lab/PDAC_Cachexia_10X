@@ -44,8 +44,8 @@ scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype
 ##### Current path and new folder setting  #####
 TarGene <- "Chil3"
 Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
-Save.Path = paste0(getwd(),"/",Version)
-dir.create(Save.Path)
+SaveSup.Path = paste0(getwd(),"/",Version)
+dir.create(SaveSup.Path)
 
 ##### Extract df #####
 ## Old version (Without normalizaiton) ## GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
@@ -217,7 +217,7 @@ plt.ManyGroup3
 
 
 ##### Export PDF #####
-pdf(file = paste0(Save.Path,"/",Version,"_Barplot.pdf"),width = 10, height = 10 )
+pdf(file = paste0(SaveSup.Path,"/",Version,"_Barplot.pdf"),width = 10, height = 10 )
   plt.2Group1 %>% print()
   plt.FewGroup1 %>% print()
   plt.ManyGroup1 %>% print()
@@ -228,7 +228,7 @@ pdf(file = paste0(Save.Path,"/",Version,"_Barplot.pdf"),width = 10, height = 10 
 dev.off()
 
 ##### Export PDF #####
-pdf(file = paste0(Save.Path,"/",Version,"_BarplotMulti.pdf"),width = 13, height = 13 )
+pdf(file = paste0(SaveSup.Path,"/",Version,"_BarplotMulti.pdf"),width = 13, height = 13 )
   plt.ManyGroup2_Sum %>% print()
   plt.ManyGroup3_Sum %>% print()
 dev.off()
@@ -256,7 +256,7 @@ FeaturePlot(scRNA.SeuObj, features = TarGene, min.cutoff = "q9",
             split.by = "Cachexia",ncol = 2, coord.fixed = 1) & theme(legend.position = c(0.9,0.2)) -> plt.UMAP4
 
 ##### Export PDF #####
-pdf(file = paste0(Save.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 )
+pdf(file = paste0(SaveSup.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 )
   plt.UMAP1 %>% print()
   plt.UMAP2 %>% print()
   plt.UMAP3 %>% print()
