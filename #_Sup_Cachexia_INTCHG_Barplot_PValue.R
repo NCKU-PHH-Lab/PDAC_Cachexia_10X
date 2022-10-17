@@ -34,7 +34,7 @@ load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
   }
 
 # Clean up
-rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType")))
+rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path")))
 
 # Order the cell type
 scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,

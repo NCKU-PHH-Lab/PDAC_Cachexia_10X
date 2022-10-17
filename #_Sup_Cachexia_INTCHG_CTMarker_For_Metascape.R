@@ -4,10 +4,9 @@
 #
 #
 #
-# # ##### Load RData  #####
-#   load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
-#
-#
+##### Load RData* #####
+# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-04_PBMC_Main/06_Cell_type_annotation.RData")
+load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
 
 ##### Load libray #####
   library(tidyverse)
@@ -30,10 +29,10 @@
 
 ##### Current path and new folder setting #####
   Version = paste0(Sys.Date(),"_",SampleType,"_CTMarker")
-  Save.Path = paste0(getwd(),"/",Version)
-  dir.create(Save.Path)
+  SaveSub.Path = paste0(getwd(),"/",Version)
+  dir.create(SaveSub.Path)
 
-  PathName <- Save.Path
+  PathName <- SaveSub.Path
 
 ##### Cluster marker gene for Metascape #####
   Idents(scRNA.SeuObj) <- "celltype"
