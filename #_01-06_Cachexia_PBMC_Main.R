@@ -349,7 +349,7 @@
         scale_fill_gradient2(low="#5283ff",mid ="white", high ="#ff5c5c") +
         theme(axis.text.y = element_text(size  = 5)) +
         theme(legend.position = "bottom" ) -> p # %>% print()
-        print()
+        print(p)
 
     dev.off()
 
