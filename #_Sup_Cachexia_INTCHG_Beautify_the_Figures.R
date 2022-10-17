@@ -239,8 +239,8 @@ p7 +
   theme(legend.position = c(0.9, 0.8))
 
 
-##### Bubble TypeID #####
-Bubble1 <- DotPlot(scRNA.SeuObj, features = markers.to.plot, cols = c("#1f2041","#4b3f72","#119da4", "#19647e"), dot.scale = 8, split.by = "TypeID") +
+##### Bubble Sample #####
+Bubble1 <- DotPlot(scRNA.SeuObj, features = markers.to.plot, cols = c("#1f2041","#4b3f72","#119da4", "#19647e"), dot.scale = 8, split.by = "sample") +
   RotatedAxis()
 
 Bubble1 +
@@ -302,7 +302,7 @@ Bubble3 +
 
 
 ##### Bubble plot #####
-ggplot(GSEA.Large.Sum.TOP.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
+ggplot(GSEA_Large.df.TOP.S,aes(x=PhenoType, y = pathway, color = NES, size = -log10(padj))) +
   geom_point() +
   scale_colour_gradient2(low = "#04873f", mid = "white", high = "#e3672d",
                          guide = "colourbar",midpoint = 0)+
@@ -320,7 +320,7 @@ ggplot(GSEA.Large.Sum.TOP.S,aes(x=PhenoType, y = pathway, color = NES, size = -l
                                         size = 1))+ theme(legend.position = "bottom")
 
 ##### Bubble Candidate genes #####
-Bubble4 <- DotPlot(scRNA.SeuObj, features = Cachexia_Marker_HM, cols = c("#e864a4", "#c90c5e","#4169e1","#092e9c"), dot.scale = 8, split.by = "TypeID") +
+Bubble4 <- DotPlot(scRNA.SeuObj, features = CCM_TOP.set, cols = c("#e864a4", "#c90c5e","#4169e1","#092e9c"), dot.scale = 8, split.by = "sample") +
   RotatedAxis()
 Bubble4+
   theme(axis.text.x = element_text(face="bold",  size=10),
