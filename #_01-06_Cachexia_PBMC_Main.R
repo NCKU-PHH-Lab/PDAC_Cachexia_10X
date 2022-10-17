@@ -348,10 +348,12 @@
         DoHeatmap(PBMC.combined, features = top_N$gene,size = 2,angle = 60) +
         scale_fill_gradient2(low="#5283ff",mid ="white", high ="#ff5c5c") +
         theme(axis.text.y = element_text(size  = 5)) +
-        theme(legend.position = "bottom" ) %>% print()
+        theme(legend.position = "bottom" ) -> p # %>% print()
+        print()
 
     dev.off()
 
+    rm(p)
 
   # --------------- Check specific tissue marker --------------- #
 
@@ -472,8 +474,11 @@
                                        high = Heatmap_Color.lt[["high"]]) +
                   theme(axis.text.y = element_text(size  = 5)) +
                   theme(legend.position = "bottom")+
-                  theme(aspect.ratio=1) %>% print()
+                  theme(aspect.ratio=1) -> p # %>% print()
+        print(p)
       dev.off()
+      rm(p)
+
 
     # ## Ch
     # # https://github.com/satijalab/seurat/issues/2960
@@ -500,9 +505,11 @@
     #                                  mid = Heatmap_Color.lt[["mid"]],
     #                                  high = Heatmap_Color.lt[["high"]])  +
     #             theme(axis.text.y = element_text(size = 5)) +
-    #             theme(legend.position = "bottom" ) %>% print()
+    #             theme(legend.position = "bottom" ) -> p # %>% print()
+    #   print(p)
     #
     # dev.off()
+    # rm(p)
 
   ## UMAP tSNE
     DimPlot(PBMC.combined, label = TRUE) %>% BeautifyggPlot(.,LegPos = c(1, 0.5))
@@ -554,22 +561,27 @@
       DotPlot(PBMC.combined, features = markers.to.plot, cols = c("lightgrey", "blue"),
               dot.scale = 8) + RotatedAxis() %>%
         BeautifyggPlot(.,LegPos = "bottom",AxisTitleSize=1, TitleSize = 20, xangle =90,
-                       LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12) %>% print()
+                       LegDir = "horizontal",SubTitSize = 17 , LegTextSize = 14, XaThick=1, YaThick=1,XtextSize=12,  YtextSize=12) -> p1 # %>% print()
+      print(p1)
 
       DotPlot(PBMC.combined, features = markers.to.plot, cols = DotPlot_Color1.set,
-              dot.scale = 8, split.by = "sample") + RotatedAxis()  %>% print()
-
+              dot.scale = 8, split.by = "sample") + RotatedAxis() -> p2  # %>% print()
+      print(p2)
 
       # https://github.com/satijalab/seurat/issues/1541
       DotPlot(PBMC.combined, features = markers.to.plot, cols = DotPlot_Color2.set,
-              dot.scale = 8, split.by = "Cachexia") + RotatedAxis() %>% print()
+              dot.scale = 8, split.by = "Cachexia") + RotatedAxis() -> p3  # %>% print()
+      print(p3)
+
 
       DotPlot(PBMC.combined, features = markers.to.plot, cols = DotPlot_Color3.set,
-              dot.scale = 8, split.by = "Sex") + RotatedAxis() %>% print()
+              dot.scale = 8, split.by = "Sex") + RotatedAxis() -> p4  # %>% print()
+      print(p4)
+
 
     dev.off()
 
-    rm(top_N, top_NSet)
+    rm(p1,p2,p3,p4)
 
     #### Save RData ####
     save.image(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
