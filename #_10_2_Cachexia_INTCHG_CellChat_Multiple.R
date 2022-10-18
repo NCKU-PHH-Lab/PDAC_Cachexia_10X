@@ -501,13 +501,12 @@
     #### save rds ####
     saveRDS(cellchat, file = paste0(SaveCCMulti.Path,"/",ProjectName,"Cell_Cell_Interaction_Multi",CCDBType,".rds"))
 
-    cellchat.lt <- list()
-    cellchat.lt[c] <- cellchat
-    names(cellchat.lt[c]) <- CCDBType
-
-   # }
-
+    # cellchat.lt <- list()
+    # cellchat.lt[c] <- cellchat
+    # names(cellchat.lt[c]) <- CCDBType
+    #  }
 
 
-  ##### save RData #####
-  save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction_Multi.RData"))
+
+  # ##### save RData #####
+  # save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction_Multi.RData"))
