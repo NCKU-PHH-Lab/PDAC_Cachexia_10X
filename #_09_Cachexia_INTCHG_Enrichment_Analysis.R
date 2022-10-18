@@ -63,7 +63,7 @@ if(SampleType == "PBMC"){
   ## For SC
   SubGrp1 = c("Fib1","Fib2","Fib3")
   SubGrp1_DS <- c("F_Fib1","F_Fib2","F_Fib3",  "M_Fib1","M_Fib2","M_Fib3",  "SPA_Fib1","SPA_Fib2","SPA_Fib3")
-  SubGrp2 = c("Duct")
+  SubGrp2 = c("Duc")
   SubGrp3 <- c("Fib")
   SubGrp4 <- c("Mac")
 }
