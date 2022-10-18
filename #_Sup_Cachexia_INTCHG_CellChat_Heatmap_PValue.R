@@ -380,26 +380,26 @@ ha_row = rowAnnotation(
 # Set Heatmap color
 col_HMap <- c("#416db0", "#1a2938", "#bf627e")
 
-# Heatmap without clustering
-Heatmap(
-  matrix.df,
-  cluster_rows = F,
-  cluster_columns = F,
-  show_column_names = F,
-  show_row_names = F,
-  name = "GeneExp",
-  # set color
-  col = colorRamp2(
-    c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-    col_HMap
-  ),
-  show_heatmap_legend = T,
-  use_raster = F,
-  top_annotation = ha_column_T,
-  # right_annotation = ha_row
-) -> P.Heatmap1
-
-P.Heatmap1 %>% print
+# # Heatmap without clustering
+# Heatmap(
+#   matrix.df,
+#   cluster_rows = F,
+#   cluster_columns = F,
+#   show_column_names = F,
+#   show_row_names = F,
+#   name = "GeneExp",
+#   # set color
+#   col = colorRamp2(
+#     c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+#     col_HMap
+#   ),
+#   show_heatmap_legend = T,
+#   use_raster = F,
+#   top_annotation = ha_column_T,
+#   # right_annotation = ha_row
+# ) -> P.Heatmap1
+#
+# P.Heatmap1 %>% print
 
 # # Heatmap with clustering
 # Heatmap(
