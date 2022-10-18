@@ -124,12 +124,14 @@
 ##***************************************************************************##
 
 ##### Merge cellchat #####
-  CCDBType.set <- c("ECM","CC","Secret")
-  for (c in 1:length(CCDBType.set)) {
+  # CCDBType.set <- c("ECM","CC","Secret")
+  # for (c in 1:length(CCDBType.set)) {
+  #
+  #   ##### Load rds #####
+  #   # CCDBType = "ECM"
+  #   CCDBType = CCDBType.set[c]
 
-    ##### Load rds #####
-    # CCDBType = "ECM"
-    CCDBType = CCDBType.set[c]
+    CCDBType = "CC"
     cellchat.EOCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
     cellchat.PreCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_PreCX_CellChat.rds"))
 
@@ -142,7 +144,7 @@
     #                                     levels = Cell_Type_Order.set)
 
     ##### Current path and new folder setting*  #####
-    ProjectName = paste0(SampleType,"_CellChat_Multi_",CCDBType.set) # Secret, ECM, CC
+    ProjectName = paste0(SampleType,"_CellChat_Multi_",CCDBType) # Secret, ECM, CC
     SaveCCMulti.Path = paste0(Save.Path,"/",ProjectName)
     ## Create new folder
     if (!dir.exists(SaveCCMulti.Path)){
@@ -570,9 +572,9 @@
     cellchat.lt[c] <- cellchat
     names(cellchat.lt[c]) <- CCDBType
 
-  }
+  # }
 
 
 
-  ##### save RData #####
-  save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction_Multi.RData"))
+  # ##### save RData #####
+  # save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction_Multi.RData"))
