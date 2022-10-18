@@ -130,8 +130,8 @@
   #   ##### Load rds #####
   #   # CCDBType = "ECM"
   #   CCDBType = CCDBType.set[c]
+      CCDBType = "CC"
 
-    CCDBType = "CC"
     cellchat.EOCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
     cellchat.PreCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_PreCX_CellChat.rds"))
 
@@ -317,23 +317,26 @@
     ## Compare outgoing (or incoming) signaling associated with each cell population
     library(ComplexHeatmap)
 
-    i = 1
-    ### combining all the identified signaling pathways from different datasets
-    ## outgoing
-    pathway.union <- union(object.list[[i]]@netP$pathways, object.list[[i+1]]@netP$pathways)
-    ht2_1 <- netAnalysis_signalingRole_heatmap(object.list[[i]], pattern = "outgoing", signaling = pathway.union, title = names(object.list)[i], width = 5, height = 6)
-    ht2_2 <- netAnalysis_signalingRole_heatmap(object.list[[i+1]], pattern = "outgoing", signaling = pathway.union, title = names(object.list)[i+1], width = 5, height = 6)
-    draw(ht2_1 + ht2_2, ht_gap = unit(0.5, "cm"))
+    try({
+      i = 1
+      ### combining all the identified signaling pathways from different datasets
+      ## outgoing
+      pathway.union <- union(object.list[[i]]@netP$pathways, object.list[[i+1]]@netP$pathways)
+      ht2_1 <- netAnalysis_signalingRole_heatmap(object.list[[i]], pattern = "outgoing", signaling = pathway.union, title = names(object.list)[i], width = 5, height = 6)
+      ht2_2 <- netAnalysis_signalingRole_heatmap(object.list[[i+1]], pattern = "outgoing", signaling = pathway.union, title = names(object.list)[i+1], width = 5, height = 6)
+      draw(ht2_1 + ht2_2, ht_gap = unit(0.5, "cm"))
 
-    ## incoming
-    ht2_3 <- netAnalysis_signalingRole_heatmap(object.list[[i]], pattern = "incoming", signaling = pathway.union, title = names(object.list)[i], width = 5, height = 6, color.heatmap = "GnBu")
-    ht2_4 <- netAnalysis_signalingRole_heatmap(object.list[[i+1]], pattern = "incoming", signaling = pathway.union, title = names(object.list)[i+1], width = 5, height = 6, color.heatmap = "GnBu")
-    draw(ht2_3 + ht2_4, ht_gap = unit(0.5, "cm"))
+      ## incoming
+      ht2_3 <- netAnalysis_signalingRole_heatmap(object.list[[i]], pattern = "incoming", signaling = pathway.union, title = names(object.list)[i], width = 5, height = 6, color.heatmap = "GnBu")
+      ht2_4 <- netAnalysis_signalingRole_heatmap(object.list[[i+1]], pattern = "incoming", signaling = pathway.union, title = names(object.list)[i+1], width = 5, height = 6, color.heatmap = "GnBu")
+      draw(ht2_3 + ht2_4, ht_gap = unit(0.5, "cm"))
 
-    ## all
-    ht2_5 <- netAnalysis_signalingRole_heatmap(object.list[[i]], pattern = "all", signaling = pathway.union, title = names(object.list)[i], width = 5, height = 6, color.heatmap = "OrRd")
-    ht2_6 <- netAnalysis_signalingRole_heatmap(object.list[[i+1]], pattern = "all", signaling = pathway.union, title = names(object.list)[i+1], width = 5, height = 6, color.heatmap = "OrRd")
-    draw(ht2_5 + ht2_6, ht_gap = unit(0.5, "cm"))
+      ## all
+      ht2_5 <- netAnalysis_signalingRole_heatmap(object.list[[i]], pattern = "all", signaling = pathway.union, title = names(object.list)[i], width = 5, height = 6, color.heatmap = "OrRd")
+      ht2_6 <- netAnalysis_signalingRole_heatmap(object.list[[i+1]], pattern = "all", signaling = pathway.union, title = names(object.list)[i+1], width = 5, height = 6, color.heatmap = "OrRd")
+      draw(ht2_5 + ht2_6, ht_gap = unit(0.5, "cm"))
+
+    })
 
     dev.off() # graphics.off()
 
@@ -572,7 +575,7 @@
     cellchat.lt[c] <- cellchat
     names(cellchat.lt[c]) <- CCDBType
 
-  # }
+   # }
 
 
 
