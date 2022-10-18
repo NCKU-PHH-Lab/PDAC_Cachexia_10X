@@ -255,8 +255,6 @@ Anno.df <- left_join(Anno.df,TarGeneEXP.df)
 matrix.df <- Anno.df[,TarGene_Sum] %>% t()
 colnames(matrix.df) <- Anno.df$ID
 
-TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
-
 
 ##### Export TSV #####
 colnames(SummaryTable.df)[2] <- "gene"
@@ -349,6 +347,7 @@ ha_column_T2 = HeatmapAnnotation(
 
 ## Set row annotation
 ## Color setting
+TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
 Pathway.set <- TarGeneAnno_Temp.df[,"pathway_name"] %>% unique()
 col3 = pal_npg("nrc", alpha = 0.7)(length(Pathway.set))
 colPT <- col3[1:length(Pathway.set)]
@@ -481,9 +480,9 @@ P.Heatmap3 %>% print
 #
 # P.Heatmap4 %>% print
 
-# Test Combine Fig
-P.Heatmap3+P.Heatmap3
-# P.Heatmap3+P.Heatmap4
+# # Test Combine Fig
+# P.Heatmap3+P.Heatmap3
+# # P.Heatmap3+P.Heatmap4
 
 
 TarGeneAnnoMax.df <- TarGeneAnno.df %>% t() # %>% as.data.frame()
