@@ -247,12 +247,15 @@ try({
 TarGene_Sum <- SummaryTable.df$.y. %>% unique()
 
 ## Extract Target gene and combine to the annotation table
-TarGene.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene_Sum,] %>% t() %>% as.data.frame()
+TarGeneEXP.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene_Sum,] %>% t() %>% as.data.frame()
 
-TarGene.df <- data.frame(ID = row.names(TarGene.df), TarGene.df)
-Anno.df <- left_join(Anno.df,TarGene.df)
+TarGeneEXP.df <- data.frame(ID = row.names(TarGeneEXP.df), TarGeneEXP.df)
+Anno.df <- left_join(Anno.df,TarGeneEXP.df)
 
 matrix.df <- Anno.df[,TarGene_Sum] %>% t()
+colnames(matrix.df) <- Anno.df$ID
+
+TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
 
 
 ##### Export TSV #####
@@ -291,10 +294,8 @@ names(sample) <- Anno.df$sample %>% unique()
 library(ggsci)
 library(ggplot2)
 # vignette( "ggsci")
-col3 = pal_npg("nrc", alpha = 0.7)(length(CellType.Order))
+# col3 = pal_npg("nrc", alpha = 0.7)(length(CellType.Order))
 col3 = 	pal_d3("category20", alpha = 0.7)(length(CellType.Order))
-
-
 colCT <- col3[1:length(CellType.Order)]
 names(colCT) <- CellType.Order
 
@@ -305,7 +306,6 @@ ha_column_T = HeatmapAnnotation(
   col = list(Sample = sample,
              Celltype = colCT ,#pal_npg(), #colCT ,
              Cachexia = c("EOCX"="#38761d", "PreCX"="#e69138")), #,"Medium"="#b57545"
-
              # Gender = c("Male"="#4382b5", "Female"="#c25988"), #,"Medium"="#b57545"
              # Celltype = c("High"="#db8051", "Low"="#c26334")), # #b6d4ca
   show_legend = T
@@ -318,9 +318,6 @@ ha_column_T2 = HeatmapAnnotation(
   col = list(Sample = sample,
              Celltype = colCT ,#pal_npg(), #colCT ,
              Cachexia = c("EOCX"="#38761d", "PreCX"="#e69138")), #,"Medium"="#b57545"
-
-  # Gender = c("Male"="#4382b5", "Female"="#c25988"), #,"Medium"="#b57545"
-  # Celltype = c("High"="#db8051", "Low"="#c26334")), # #b6d4ca
   show_legend = T,
   show_annotation_name = F
 )
@@ -352,22 +349,31 @@ ha_column_T2 = HeatmapAnnotation(
 
 ## Set row annotation
 ## Color setting
-col_exp <-  colorRamp2(
-  c(min(anno_row.df$PValue), mean(anno_row.df$PValue), max(anno_row.df$PValue)),
-  c("#3f705a", "#52bf8e","#b6d4ca")
+Pathway.set <- TarGeneAnno_Temp.df[,"pathway_name"] %>% unique()
+col3 = pal_npg("nrc", alpha = 0.7)(length(Pathway.set))
+colPT <- col3[1:length(Pathway.set)]
+names(colPT) <- Pathway.set
 
-)
-col_exp2 <-  colorRamp2(
-  c(min(anno_row.df$logFC), mean(anno_row.df$logFC), max(anno_row.df$logFC)),
-  c("#488c67", "#333333","#edd493")
-)
+TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% count(pathway_name)
+TarGeneAnno.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
+TarGeneAnno.df <- gsub("0","F",TarGeneAnno.df)
+TarGeneAnno.df <- gsub("1","T",TarGeneAnno.df)
+
+rownames(TarGeneAnno.df)[2]
+
+colPT <- c("#45818e","#d0e0e3")
+names(colPT) <- c("T","F")
 
 ha_row = rowAnnotation(
-  p.value = anno_row.df$PValue,
-  LogFC = anno_row.df$logFC,
-  col = list(p.value = col_exp, LogFC = col_exp2),
-  show_legend = T
+  Pathway = TarGeneAnno.df[row.names(TarGeneAnno.df)[2],], # %>% as.character(),  # anno_colum.df$sample_type,
+  col = list(#Sample = sample,
+             Pathway = colPT
+              ),
+  show_legend = T,
+  show_annotation_name = T
 )
+
+
 
 ## Plot Heatmap
 
@@ -436,7 +442,7 @@ Heatmap(
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T2,
-  # right_annotation = ha_row
+  right_annotation = ha_row
 ) -> P.Heatmap3
 
 P.Heatmap3 %>% print
@@ -470,8 +476,49 @@ P.Heatmap3 %>% print
 #
 # P.Heatmap4 %>% print
 
+# Test Combine Fig
 P.Heatmap3+P.Heatmap3
 # P.Heatmap3+P.Heatmap4
+
+
+
+
+
+
+## ********************************************************************************************************************************* ##
+
+
+
+
+
+## Set row annotation
+## Color setting
+col_exp <-  colorRamp2(
+  c(min(anno_row.df$PValue), mean(anno_row.df$PValue), max(anno_row.df$PValue)),
+  c("#3f705a", "#52bf8e","#b6d4ca")
+
+)
+col_exp2 <-  colorRamp2(
+  c(min(anno_row.df$logFC), mean(anno_row.df$logFC), max(anno_row.df$logFC)),
+  c("#488c67", "#333333","#edd493")
+)
+
+ha_row = rowAnnotation(
+  p.value = anno_row.df$PValue,
+  LogFC = anno_row.df$logFC,
+  col = list(p.value = col_exp, LogFC = col_exp2),
+  show_legend = T
+)
+
+
+
+
+
+
+
+
+
+
 
 ##### Save RData #####
 save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
