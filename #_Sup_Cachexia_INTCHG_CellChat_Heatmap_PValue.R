@@ -356,6 +356,8 @@ names(colPT) <- Pathway.set
 
 TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% count(pathway_name)
 TarGeneAnno.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
+colnames(TarGeneAnno.df) <- TarGeneAnno.df[1,]
+TarGeneAnno.df <- TarGeneAnno.df[-1,]
 TarGeneAnno.df <- gsub("0","F",TarGeneAnno.df)
 TarGeneAnno.df <- gsub("1","T",TarGeneAnno.df)
 
@@ -428,7 +430,7 @@ col_HMap <- c("#416db0", "#1a2938", "#bf627e")
 # https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#row-and_column_orders
 Heatmap(
   matrix.df,
-  cluster_rows = T,
+  cluster_rows = F,
   cluster_columns = F,
   column_order = order(Anno.df$celltype,Anno.df$Cachexia),
   show_column_names = F,
@@ -442,7 +444,7 @@ Heatmap(
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T2,
-  right_annotation = ha_row
+  # right_annotation = ha_row
 ) -> P.Heatmap3
 
 P.Heatmap3 %>% print
@@ -481,9 +483,33 @@ P.Heatmap3+P.Heatmap3
 # P.Heatmap3+P.Heatmap4
 
 
+TarGeneAnnoMax.df <- TarGeneAnno.df %>% t() # %>% as.data.frame()
+TarGeneAnnoMax.df <- TarGeneAnnoMax.df[row.names(matrix.df), ,drop=F]
 
+colPT <- c("#45818e","#d0e0e3")
+names(colPT) <- c("T","F")
+col_HMap2 <- c("#45818e","#d0e0e3")
+Heatmap(
+  TarGeneAnnoMax.df ,
+  cluster_rows = F,
+  cluster_columns = F,
+  # column_order = order(Anno.df$celltype,Anno.df$Cachexia),
+  show_column_names = T,
+  show_row_names = T,
+  name = "Pathway",
+  # set color
+  col = col_HMap2,
+  show_heatmap_legend = T,
+  use_raster = F,
+  # top_annotation = ha_column_T2,
+  # right_annotation = ha_row
+  width = ncol(TarGeneAnnoMax.df)*unit(5, "mm"),
+  height = nrow(TarGeneAnnoMax.df)*unit(5, "mm")
+) -> P.Heatmap3TTT
 
+P.Heatmap3TTT %>% print
 
+P.Heatmap3 + P.Heatmap3TTT
 
 ## ********************************************************************************************************************************* ##
 
