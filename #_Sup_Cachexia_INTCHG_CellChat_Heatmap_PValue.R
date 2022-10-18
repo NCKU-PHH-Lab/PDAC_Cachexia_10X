@@ -129,6 +129,11 @@ Anno_Ori.df <- Anno.df
 scRNA_Ori.SeuObj <- scRNA.SeuObj
 
 
+## Clean up data (Remove Other)
+Anno.df <- Anno.df[!grepl("Other", Anno.df$celltype),]
+GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df$ID]
+scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"]] )]
+
 
 ##### Summarize all signal #####
 SummaryTable.df <-  as.data.frame(matrix(nrow=0,ncol=10))
@@ -172,27 +177,23 @@ try({
 
   ##### Data preprocessing #####
   ## Extract Target gene and combine to the annotation table
-  TarGene.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene,] %>% t() %>% as.data.frame()
+  TarGene_Temp.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene,] %>% t() %>% as.data.frame()
 
-  TarGene.df <- data.frame(ID = row.names(TarGene.df), TarGene.df)
-  Anno.df <- left_join(Anno.df,TarGene.df)
-
-  ## Clean up data
-  Anno.df <- Anno.df[!grepl("Other", Anno.df$celltype),]
-  GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df$ID]
-  scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"]] )]
+  TarGene_Temp.df <- data.frame(ID = row.names(TarGene_Temp.df), TarGene_Temp.df)
+  Anno_Temp.df <- left_join(Anno.df,TarGene_Temp.df)
+  # rm(TarGene_Temp.df)
 
 
   # ## Summary Statistic Table
-  # #(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno.df, group.by = "celltype"	)
+  # #(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
   #
   # # ## Error (Solved)
-  # # TTT <- compare_means( Anno.df[,TarGene[1]] ~ Cachexia, data = Anno.df, group.by = "celltype"	)
+  # # TTT <- compare_means( Anno_Temp.df[,TarGene[1]] ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
   #
   # # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
   # # convert string column name to name/symbol
   # f <- paste0(TarGene[1]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
-  # SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno.df, group.by = "celltype"))
+  # SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype"))
   # rm(f)
   # SummaryTable.df$celltype <- factor(SummaryTable.df$celltype  ,levels = CellType.Order)
   # SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
@@ -207,7 +208,7 @@ try({
       # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
       # convert string column name to name/symbol
       f <- paste0(TarGene[i]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
-      SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data=Anno.df, group.by = "celltype"))
+      SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype"))
       rm(f)
       SummaryTable_Temp.df$celltype <- factor(SummaryTable_Temp.df$celltype  ,levels = CellType.Order)
       SummaryTable_Temp.df <- SummaryTable_Temp.df[order(SummaryTable_Temp.df$celltype), ]
@@ -239,11 +240,20 @@ try({
   SummaryTable_Sub.df$pathway_name <- pathways.show[j]
   SummaryTable.df <- rbind(SummaryTable.df, SummaryTable_Sub.df)
 
-  TarGene <- SummaryTable_Sub.df$.y. %>% unique()
+  # TarGene <- SummaryTable_Sub.df$.y. %>% unique()
 })
 
 }
 TarGene_Sum <- SummaryTable.df$.y. %>% unique()
+
+## Extract Target gene and combine to the annotation table
+TarGene.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene_Sum,] %>% t() %>% as.data.frame()
+
+TarGene.df <- data.frame(ID = row.names(TarGene.df), TarGene.df)
+Anno.df <- left_join(Anno.df,TarGene.df)
+
+matrix.df <- Anno.df[,TarGene_Sum] %>% t()
+
 
 ##### Export TSV #####
 colnames(SummaryTable.df)[2] <- "gene"
@@ -256,6 +266,212 @@ write.table( SummaryTable.df ,
              quote = F,
              row.names = F
 )
+
+## ********************************************************************************************************************************* ##
+##### ComplexHeatmap #####
+## https://jokergoo.github.io/ComplexHeatmap-reference/book/
+
+##### Load Packages #####
+Package.set <- c("tidyverse","circlize","ComplexHeatmap","stringr")
+## Check whether the installation of those packages is required from basic
+for (i in 1:length(Package.set)) {
+  if (!requireNamespace(Package.set[i], quietly = TRUE)){
+    install.packages(Package.set[i])
+  }
+}
+## Load Packages
+lapply(Package.set, library, character.only = TRUE)
+rm(Package.set,i)
+
+##### Heatmap plotting #####
+## Set column annotation
+sample = c("#2267a4", "#8e7cc3", "#e06666", "#c27ba0")
+names(sample) <- Anno.df$sample %>% unique()
+
+library(ggsci)
+library(ggplot2)
+# vignette( "ggsci")
+col3 = pal_npg("nrc", alpha = 0.7)(length(CellType.Order))
+col3 = 	pal_d3("category20", alpha = 0.7)(length(CellType.Order))
+
+
+colCT <- col3[1:length(CellType.Order)]
+names(colCT) <- CellType.Order
+
+ha_column_T = HeatmapAnnotation(
+  Sample = Anno.df[,"sample"],  # anno_colum.df$sample_type,
+  Cachexia = Anno.df[,"Cachexia"], # anno_colum.df$gender,
+  Celltype = Anno.df[,"celltype"],
+  col = list(Sample = sample,
+             Celltype = colCT ,#pal_npg(), #colCT ,
+             Cachexia = c("EOCX"="#38761d", "PreCX"="#e69138")), #,"Medium"="#b57545"
+
+             # Gender = c("Male"="#4382b5", "Female"="#c25988"), #,"Medium"="#b57545"
+             # Celltype = c("High"="#db8051", "Low"="#c26334")), # #b6d4ca
+  show_legend = T
+)
+
+ha_column_T2 = HeatmapAnnotation(
+  Sample = Anno.df[,"sample"],  # anno_colum.df$sample_type,
+  Cachexia = Anno.df[,"Cachexia"], # anno_colum.df$gender,
+  Celltype = Anno.df[,"celltype"],
+  col = list(Sample = sample,
+             Celltype = colCT ,#pal_npg(), #colCT ,
+             Cachexia = c("EOCX"="#38761d", "PreCX"="#e69138")), #,"Medium"="#b57545"
+
+  # Gender = c("Male"="#4382b5", "Female"="#c25988"), #,"Medium"="#b57545"
+  # Celltype = c("High"="#db8051", "Low"="#c26334")), # #b6d4ca
+  show_legend = T,
+  show_annotation_name = F
+)
+
+# # top_annotation = ha_column_T,
+# top_annotation = HeatmapAnnotation(foo = anno_block(gp = gpar(fill = 2:4))),
+
+
+# rm(sample)
+
+# ## Set column annotation
+# col_ha_column <- list(c("#9b6ab8", "#6e6970"),
+#                       c("#4382b5", "#c25988"),
+#                       c("#db8051", "#c26334"))
+# names(col_ha_column) <- c(PhenoGroupType, PhenoGroupType2, TarGene_name)
+#
+# ha_column_Anno <- list(anno_colum.df[,PhenoGroupType],
+#                        anno_colum.df[,PhenoGroupType2],
+#                        anno_colum.df[,TarGene_name],
+#                        col = col_ha_column %>% as.vector.factor(),
+#                        show_legend = T)
+# names(ha_column_Anno)[1:3] <- c(PhenoGroupType, PhenoGroupType2, TarGene_name)
+#
+# formals(HeatmapAnnotation)[names(ha_column_Anno)] <- ha_column_Anno
+# formals(HeatmapAnnotation)[names(ha_column_Anno)] <- ha_column_Anno
+# ha_column_T = HeatmapAnnotation()
+#
+# rm(col_ha_column, ha_column_Anno)
+
+## Set row annotation
+## Color setting
+col_exp <-  colorRamp2(
+  c(min(anno_row.df$PValue), mean(anno_row.df$PValue), max(anno_row.df$PValue)),
+  c("#3f705a", "#52bf8e","#b6d4ca")
+
+)
+col_exp2 <-  colorRamp2(
+  c(min(anno_row.df$logFC), mean(anno_row.df$logFC), max(anno_row.df$logFC)),
+  c("#488c67", "#333333","#edd493")
+)
+
+ha_row = rowAnnotation(
+  p.value = anno_row.df$PValue,
+  LogFC = anno_row.df$logFC,
+  col = list(p.value = col_exp, LogFC = col_exp2),
+  show_legend = T
+)
+
+## Plot Heatmap
+
+# Set Heatmap color
+col_HMap <- c("#416db0", "#1a2938", "#bf627e")
+
+# Heatmap without clustering
+Heatmap(
+  matrix.df,
+  cluster_rows = F,
+  cluster_columns = F,
+  show_column_names = F,
+  show_row_names = F,
+  name = "GeneExp",
+  # set color
+  col = colorRamp2(
+    c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+    col_HMap
+  ),
+  show_heatmap_legend = T,
+  use_raster = F,
+  top_annotation = ha_column_T,
+  # right_annotation = ha_row
+) -> P.Heatmap1
+
+P.Heatmap1 %>% print
+
+# # Heatmap with clustering
+# Heatmap(
+#   matrix.df,
+#   # column_title = target_gene,
+#   # column_title_side = "top",
+#   cluster_rows = T,
+#   cluster_columns = T,
+#   show_column_names = F,
+#   show_row_names = F,
+#   name = "GeneExp",
+#   # set color
+#   col = colorRamp2(
+#     c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+#     col_HMap
+#   ),
+#   show_heatmap_legend = T,
+#   use_raster = F,
+#   top_annotation = ha_column_T,
+#   # right_annotation = ha_row
+# ) -> P.Heatmap2
+#
+# P.Heatmap2 %>% print
+
+# Reorder Heatmap
+# https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#row-and_column_orders
+Heatmap(
+  matrix.df,
+  cluster_rows = T,
+  cluster_columns = F,
+  column_order = order(Anno.df$celltype,Anno.df$Cachexia),
+  show_column_names = F,
+  show_row_names = T,
+  name = "GeneExp",
+  # set color
+  col = colorRamp2(
+    c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+    col_HMap
+  ),
+  show_heatmap_legend = T,
+  use_raster = F,
+  top_annotation = ha_column_T2,
+  # right_annotation = ha_row
+) -> P.Heatmap3
+
+P.Heatmap3 %>% print
+
+
+# ## Block annotation
+# split = rep(1:le, each = 10)
+#
+# Heatmap(
+#   matrix.df,
+#   cluster_rows = T,
+#   cluster_columns = F,
+#
+#   column_order = order(Anno.df$celltype,Anno.df$Cachexia),
+#   show_column_names = F,
+#   show_row_names = T,
+#   name = "GeneExp",
+#   # set color
+#   col = colorRamp2(
+#     c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+#     col_HMap
+#   ),
+#   show_heatmap_legend = T,
+#   use_raster = F,
+#   # top_annotation = ha_column_T,
+#   top_annotation = HeatmapAnnotation(foo = anno_block(gp = gpar(fill = 2:4))),
+#   # right_annotation = ha_row
+#   column_split = Anno.df$celltype,
+#
+# ) -> P.Heatmap4
+#
+# P.Heatmap4 %>% print
+
+P.Heatmap3+P.Heatmap3
+# P.Heatmap3+P.Heatmap4
 
 ##### Save RData #####
 save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
