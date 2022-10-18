@@ -198,6 +198,7 @@ try({
   # SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
 
   ##### Summary Statistic Table #####
+
   SummaryTable_Sub.df <-  as.data.frame(matrix(nrow=0,ncol=9))
   colnames(SummaryTable_Sub.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.adj", "p.format", "p.signif", "method"  )
   for (i in 1:length(TarGene)) {
@@ -239,7 +240,6 @@ try({
   SummaryTable.df <- rbind(SummaryTable.df, SummaryTable_Sub.df)
 
   TarGene <- SummaryTable_Sub.df$.y. %>% unique()
-  TarGene_Sum <- c(TarGene_Sum,TarGene)
 })
 
 }
