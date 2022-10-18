@@ -142,7 +142,7 @@
     #                                     levels = Cell_Type_Order.set)
 
     ##### Current path and new folder setting*  #####
-    ProjectName = paste0(SampleType,"_CellChat_Multi_ECM") # Secret, ECM, CC
+    ProjectName = paste0(SampleType,"_CellChat_Multi_",CCDBType.set) # Secret, ECM, CC
     SaveCCMulti.Path = paste0(Save.Path,"/",ProjectName)
     ## Create new folder
     if (!dir.exists(SaveCCMulti.Path)){
