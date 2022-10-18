@@ -288,7 +288,7 @@ rm(Package.set,i)
 
 ##### Heatmap plotting #####
 ## Set column annotation
-sample = c("#2267a4", "#8e7cc3", "#e06666", "#c27ba0")
+sample = c("#2267a4", "#3d85c6", "#d5a6bd", "#c27ba0")
 names(sample) <- Anno.df$sample %>% unique()
 
 library(ggsci)
@@ -305,7 +305,7 @@ ha_column_T = HeatmapAnnotation(
   Celltype = Anno.df[,"celltype"],
   col = list(Sample = sample,
              Celltype = colCT ,#pal_npg(), #colCT ,
-             Cachexia = c("EOCX"="#38761d", "PreCX"="#e69138")), #,"Medium"="#b57545"
+             Cachexia = c("EOCX"="#46785c", "PreCX"="#8fc2a6")), #,"Medium"="#b57545"
              # Gender = c("Male"="#4382b5", "Female"="#c25988"), #,"Medium"="#b57545"
              # Celltype = c("High"="#db8051", "Low"="#c26334")), # #b6d4ca
   show_legend = T
@@ -317,7 +317,7 @@ ha_column_T2 = HeatmapAnnotation(
   Celltype = Anno.df[,"celltype"],
   col = list(Sample = sample,
              Celltype = colCT ,#pal_npg(), #colCT ,
-             Cachexia = c("EOCX"="#38761d", "PreCX"="#e69138")), #,"Medium"="#b57545"
+             Cachexia = c("EOCX"="#5b517d", "PreCX"="#a095c7")), #,"Medium"="#b57545"
   show_legend = T,
   show_annotation_name = F
 )
@@ -381,6 +381,7 @@ ha_row = rowAnnotation(
 
 # Set Heatmap color
 col_HMap <- c("#416db0", "#1a2938", "#bf627e")
+col_HMap <- c("#f0f4fc", "#6e8cc2", "#37558c")
 
 # # Heatmap without clustering
 # Heatmap(
@@ -438,7 +439,9 @@ Heatmap(
   name = "GeneExp",
   # set color
   col = colorRamp2(
-    c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+    # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+    c(min(matrix.df), max(matrix.df)*2/3 , max(matrix.df)),
+
     col_HMap
   ),
   show_heatmap_legend = T,
@@ -486,9 +489,8 @@ P.Heatmap3+P.Heatmap3
 TarGeneAnnoMax.df <- TarGeneAnno.df %>% t() # %>% as.data.frame()
 TarGeneAnnoMax.df <- TarGeneAnnoMax.df[row.names(matrix.df), ,drop=F]
 
-colPT <- c("#45818e","#d0e0e3")
-names(colPT) <- c("T","F")
-col_HMap2 <- c("#45818e","#d0e0e3")
+
+col_HMap2 <- c("#d0e0e3","#45818e")
 Heatmap(
   TarGeneAnnoMax.df ,
   cluster_rows = F,
