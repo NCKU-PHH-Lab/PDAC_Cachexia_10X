@@ -575,4 +575,4 @@
 
 
   ##### save RData #####
-  save.image(paste0(SaveCCMulti.Path,"/010_Cell_Cell_Interaction_Multi.RData"))
+  save.image(paste0(Save.Path,"/010_Cell_Cell_Interaction_Multi.RData"))
