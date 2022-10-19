@@ -493,6 +493,13 @@ P.Heatmap_LogFC %>% print
 P.Heatmap_GeneExp + P.Heatmap_LogFC + P.Heatmap_FDR + P.Heatmap_GenePath
 
 
+##### Export PDF #####
+pdf(file = paste0(SaveCC.Path,"/",Version,"_LR.pdf"),width = 20, height = 20 )
+P.Heatmap_GeneExp + P.Heatmap_LogFC + P.Heatmap_FDR + P.Heatmap_GenePath
+
+dev.off()
+
+
 # ##### Save RData #####
 # save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
 
