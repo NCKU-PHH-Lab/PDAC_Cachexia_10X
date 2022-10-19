@@ -104,6 +104,7 @@ Pathways_Sig.set <- unique(cellchat@netP[["EOCX"]][["pathways"]],
 TarGene_Ori.set <- cellchat@data.signaling %>% rownames
 LR.df <- rbind(cellchat@LR[["EOCX"]][["LRsig"]],cellchat@LR[["PreCX"]][["LRsig"]]) %>% unique()
 
+
 ##### Extract information #####
 ## Gene Expression
 ## Old version (Without normalizaiton) ## GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
@@ -115,18 +116,39 @@ Colr_GE.set <- c(min(GeneExp.df), max(GeneExp.df) %>% ceiling())
 # Cell annotation
 Anno_Cell.df <- scRNA.SeuObj@meta.data
 Anno_Cell.df <- data.frame(ID=row.names(Anno_Cell.df), Anno_Cell.df)
+
 # Gene annotation
+Ligand.set <- LR.df$ligand
+Receptor.set <- LR.df$receptor %>%
+                str_split(pattern = "_", n = Inf, simplify = FALSE) %>%
+                unlist() %>% str_split(pattern = " ", n = Inf, simplify = FALSE) %>% unlist() %>%
+                unique() %>% tolower() %>% capitalize()
+# Receptor.set <- setdiff(Receptor.set, Ligand.set) %>% unlist()
+TarGene_Anno.df <- data.frame(gene = TarGene_Ori.set, Ligand ="", Receptor ="")
+for (i in 1:nrow(TarGene_Anno.df)) {
+  if(TarGene_Anno.df[i,"gene"] %in% Ligand.set){
+    TarGene_Anno.df[i,"Ligand"] = "T"
+  }else{
+    TarGene_Anno.df[i,"Ligand"] = "F"
+  }
+  if(TarGene_Anno.df[i,"gene"] %in% Receptor.set){
+    TarGene_Anno.df[i,"Receptor"] = "T"
+  }else{
+    TarGene_Anno.df[i,"Receptor"] = "F"
+  }
+}
+rm(i)
 
 ## Save Ori
-GeneExp_Ori.df <- GeneExp.df
-Anno_Cell_Ori.df <- Anno_Cell.df
-scRNA_Ori.SeuObj <- scRNA.SeuObj
+OriSave.lt <- list(GeneExp.df = GeneExp.df,
+               Anno_Cell.df = Anno_Cell.df,
+               scRNA.SeuObj = scRNA.SeuObj,
+               TarGene_Anno.df = TarGene_Anno.df)
 
 
 ##### Summarize all signal #####
 SummaryTable.df <-  as.data.frame(matrix(nrow=0,ncol=10))
 colnames(SummaryTable.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.adj", "p.format", "p.signif", "method","pathway_name")
-
 
 for (j in 1:length(Pathways_Sig.set)) {
 try({
