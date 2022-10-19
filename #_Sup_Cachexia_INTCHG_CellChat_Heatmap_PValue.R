@@ -50,11 +50,10 @@ source("FUN_CellChatOne.R")
 ## CellChat DB Set
 CCDBType = "ECM" # c("ECM","CC","Secret")
 
-##### Load RData* #####
-
-## Load Seurat.Obj
+##### Load Data* #####
+## Load RData
 # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
-load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
+load(paste0(Save.Path,"/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData"))
 
 ## INTCHG: Interchangeable
 ## SubType Setting
@@ -81,13 +80,8 @@ if(SampleType == "PBMC"){
 }
 
   # Clean up
-  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path","CCDBType","CellType.Order")))
-
-  # ## Modify the Cachexia state name
-  # scRNA.SeuObj@meta.data$Cachexia <-  gsub("EO", "EOCX", scRNA.SeuObj@meta.data$Cachexia)
-  # scRNA.SeuObj@meta.data$Cachexia <-  gsub("LO", "PreCX", scRNA.SeuObj@meta.data$Cachexia)
-  #
-
+  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path","CCDBType","CellType.Order",
+                          "CCMarker_Female.lt","CCMarker_Male.lt","CCMarker_SPA.lt")))
 
 ## Load CellChat rds
 cellchat.EOCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
@@ -99,17 +93,13 @@ rm(object.list, cellchat.EOCX, cellchat.PreCX)
 
 
 ##### Current path and new folder setting  #####
-Version = paste0(Sys.Date(),"_", SampleType, "_", CCDBType, "_CellChat_PVal")
+Version = paste0(Sys.Date(),"_", SampleType, "_", CCDBType, "_CellChat_Heatmap")
 SaveCC.Path = paste0(Save.Path,"/",Version)
 dir.create(SaveCC.Path)
 
-
-
 ##### Pathway and TarGene Setting  #####
-pathways.show1 <-cellchat@netP[["EOCX"]][["pathways"]]
-pathways.show2 <-cellchat@netP[["PreCX"]][["pathways"]]
-pathways.show <- unique(pathways.show1,pathways.show2)
-rm(pathways.show1,pathways.show2)
+Pathways_Sig.set <- unique(cellchat@netP[["EOCX"]][["pathways"]],
+                           cellchat@netP[["PreCX"]][["pathways"]])
 
 TarGene_All <- cellchat@data.signaling %>% rownames
 LR.df <- rbind(cellchat@LR[["EOCX"]][["LRsig"]],cellchat@LR[["PreCX"]][["LRsig"]])
@@ -140,10 +130,10 @@ SummaryTable.df <-  as.data.frame(matrix(nrow=0,ncol=10))
 colnames(SummaryTable.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.adj", "p.format", "p.signif", "method","pathway_name")
 
 
-for (j in 1:length(pathways.show)) {
+for (j in 1:length(Pathways_Sig.set)) {
 try({
 
-  LR_Tar.df <- LR.df[LR.df$pathway_name == pathways.show[j],]
+  LR_Tar.df <- LR.df[LR.df$pathway_name == Pathways_Sig.set[j],]
 
   # ## Method1
   # # TarGene <- c("Vwf","Itga2b","Itgb3","Gp9")
@@ -237,7 +227,7 @@ try({
 
     })
   }
-  SummaryTable_Sub.df$pathway_name <- pathways.show[j]
+  SummaryTable_Sub.df$pathway_name <- Pathways_Sig.set[j]
   SummaryTable.df <- rbind(SummaryTable.df, SummaryTable_Sub.df)
 
   # TarGene <- SummaryTable_Sub.df$.y. %>% unique()
@@ -298,18 +288,6 @@ colCT <- col3[1:length(CellType.Order)]
 names(colCT) <- CellType.Order
 
 ha_column_T = HeatmapAnnotation(
-  Sample = Anno.df[,"sample"],  # anno_colum.df$sample_type,
-  Cachexia = Anno.df[,"Cachexia"], # anno_colum.df$gender,
-  Celltype = Anno.df[,"celltype"],
-  col = list(Sample = sample,
-             Celltype = colCT ,#pal_npg(), #colCT ,
-             Cachexia = c("EOCX"="#46785c", "PreCX"="#8fc2a6")), #,"Medium"="#b57545"
-             # Gender = c("Male"="#4382b5", "Female"="#c25988"), #,"Medium"="#b57545"
-             # Celltype = c("High"="#db8051", "Low"="#c26334")), # #b6d4ca
-  show_legend = T
-)
-
-ha_column_T2 = HeatmapAnnotation(
   Sample = Anno.df[,"sample"],  # anno_colum.df$sample_type,
   Cachexia = Anno.df[,"Cachexia"], # anno_colum.df$gender,
   Celltype = Anno.df[,"celltype"],
@@ -379,7 +357,6 @@ ha_row = rowAnnotation(
 ## Plot Heatmap
 
 # Set Heatmap color
-col_HMap <- c("#416db0", "#1a2938", "#bf627e")
 col_HMap <- c("#f0f4fc", "#6e8cc2", "#37558c")
 
 # # Heatmap without clustering
@@ -445,7 +422,7 @@ Heatmap(
   ),
   show_heatmap_legend = T,
   use_raster = F,
-  top_annotation = ha_column_T2,
+  top_annotation = ha_column_T,
   # right_annotation = ha_row
 ) -> P.Heatmap3
 
@@ -502,7 +479,7 @@ Heatmap(
   col = col_HMap2,
   show_heatmap_legend = T,
   use_raster = F,
-  # top_annotation = ha_column_T2,
+  # top_annotation = ha_column_T,
   # right_annotation = ha_row
   width = ncol(TarGeneAnnoMax.df)*unit(5, "mm"),
   height = nrow(TarGeneAnnoMax.df)*unit(5, "mm")
