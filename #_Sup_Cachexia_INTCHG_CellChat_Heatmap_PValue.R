@@ -242,6 +242,24 @@ Anno_Cell.df <- left_join(Anno_Cell.df,TarGeneEXP.df)
 matrix.df <- Anno_Cell.df[,TarGene_Sum.set] %>% t()
 colnames(matrix.df) <- Anno_Cell.df$ID
 
+## TarGene with PathAnno Matrix
+TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum.set) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
+Pathway.set <- TarGeneAnno_Temp.df[,"pathway_name"] %>% unique()
+col3 = pal_npg("nrc", alpha = 0.7)(length(Pathway.set))
+colPT <- col3[1:length(Pathway.set)]
+names(colPT) <- Pathway.set
+
+TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% count(pathway_name)
+TarGeneAnno_Cell.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
+colnames(TarGeneAnno_Cell.df) <- TarGeneAnno_Cell.df[1,]
+TarGeneAnno_Cell.df <- TarGeneAnno_Cell.df[-1,]
+TarGeneAnno_Cell.df <- gsub("0","F",TarGeneAnno_Cell.df)
+TarGeneAnno_Cell.df <- gsub("1","T",TarGeneAnno_Cell.df)
+rm(TarGeneAnno_Temp.df, TarGeneAnno_Temp2.df)
+
+TarGeneAnno.mtx <- TarGeneAnno_Cell.df %>% t() # %>% as.data.frame()
+TarGeneAnno.mtx <- TarGeneAnno.mtx[row.names(matrix.df), ,drop=F]
+
 
 ##### Export TSV #####
 write.table( SummaryTable.df ,
@@ -250,6 +268,8 @@ write.table( SummaryTable.df ,
              quote = F,
              row.names = F
 )
+
+
 
 ## ********************************************************************************************************************************* ##
 ##### ComplexHeatmap #####
@@ -310,8 +330,8 @@ Heatmap(
   use_raster = F,
   top_annotation = ha_column_T,
   # right_annotation = ha_row
-  width = ncol(TarGeneAnno.mtx)*unit(5, "mm"),
-  height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
+  width = ncol(TarGeneAnno.mtx)*unit(20, "mm"),
+  height = nrow(TarGeneAnno.mtx)*unit(10, "mm")
 ) -> P.Heatmap_GeneExp
 
 P.Heatmap_GeneExp %>% print
@@ -319,23 +339,6 @@ P.Heatmap_GeneExp %>% print
 
 
 ### Plat Heatmap: Gene belong by which Pathways
-## TarGene with PathAnno Matrix
-TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum.set) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
-Pathway.set <- TarGeneAnno_Temp.df[,"pathway_name"] %>% unique()
-col3 = pal_npg("nrc", alpha = 0.7)(length(Pathway.set))
-colPT <- col3[1:length(Pathway.set)]
-names(colPT) <- Pathway.set
-
-TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% count(pathway_name)
-TarGeneAnno_Cell.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
-colnames(TarGeneAnno_Cell.df) <- TarGeneAnno_Cell.df[1,]
-TarGeneAnno_Cell.df <- TarGeneAnno_Cell.df[-1,]
-TarGeneAnno_Cell.df <- gsub("0","F",TarGeneAnno_Cell.df)
-TarGeneAnno_Cell.df <- gsub("1","T",TarGeneAnno_Cell.df)
-rm(TarGeneAnno_Temp.df, TarGeneAnno_Temp2.df)
-
-TarGeneAnno.mtx <- TarGeneAnno_Cell.df %>% t() # %>% as.data.frame()
-TarGeneAnno.mtx <- TarGeneAnno.mtx[row.names(matrix.df), ,drop=F]
 
 #### Set row annotation ####
 ## Color setting
@@ -369,8 +372,8 @@ Heatmap(
   use_raster = F,
   # top_annotation = ha_column_T,
   right_annotation = ha_row,
-  width = ncol(TarGeneAnno.mtx)*unit(5, "mm"),
-  height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
+  width = ncol(TarGeneAnno.mtx)*unit(8, "mm"),
+  height = nrow(TarGeneAnno.mtx)*unit(10, "mm")
 ) -> P.Heatmap_GenePath
 
 P.Heatmap_GenePath %>% print
@@ -433,7 +436,7 @@ col_HMapST <- c("#edffef","#a4ebab","#70b577")
 col_HMapST <- c("#93db9b", "#b9f0bf","#edffef")
 col_HMapST <- c("#6e8cc2", "#37558c","#f0f4fc")
 
-col_HMapST <- c( "#ad8fd9", "#e8d9ff", "#ffffff")
+col_HMapST <- c( "#ad8fd9", "#e8d9ff" , "#ffffff")
 
 Heatmap(
   statistics_FDR.mtx,
@@ -453,15 +456,15 @@ Heatmap(
   use_raster = F,
   top_annotation = ha_column_ST,
   # right_annotation = ha_row,
-  width = ncol(TarGeneAnno.mtx)*unit(5, "mm"),
-  height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
+  width = ncol(TarGeneAnno.mtx)*unit(20, "mm"),
+  height = nrow(TarGeneAnno.mtx)*unit(10, "mm")
 ) -> P.Heatmap_FDR
 
 P.Heatmap_FDR %>% print
 
 ### Plot LogFC Heatmap
 # Set Heatmap color
-col_HMapLog <- c("#c270b0","#ffffff","#4a5aa8")
+col_HMapLog <- c("#4a5aa8","#ffffff","#c270b0")
 Heatmap(
   statistics_LogFC.mtx,
   cluster_rows = F, # Heatmap with/without clustering by rows
@@ -480,8 +483,8 @@ Heatmap(
   use_raster = F,
   top_annotation = ha_column_ST,
   # right_annotation = ha_row,
-  width = ncol(TarGeneAnno.mtx)*unit(5, "mm"),
-  height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
+  width = ncol(TarGeneAnno.mtx)*unit(20, "mm"),
+  height = nrow(TarGeneAnno.mtx)*unit(10, "mm")
 ) -> P.Heatmap_LogFC
 
 P.Heatmap_LogFC %>% print
@@ -490,8 +493,8 @@ P.Heatmap_LogFC %>% print
 P.Heatmap_GeneExp + P.Heatmap_LogFC + P.Heatmap_FDR + P.Heatmap_GenePath
 
 
-##### Save RData #####
-save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
+# ##### Save RData #####
+# save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
 
 
 ##******************************************************************************##
