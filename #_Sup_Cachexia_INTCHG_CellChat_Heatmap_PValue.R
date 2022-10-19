@@ -373,7 +373,7 @@ Heatmap(
   # top_annotation = ha_column_T,
   right_annotation = ha_row,
   width = ncol(TarGeneAnno.mtx)*unit(8, "mm"),
-  height = nrow(TarGeneAnno.mtx)*unit(10, "mm")
+  height = length(CellType.Order)*unit(17, "mm") #nrow(TarGeneAnno.mtx)*unit(10, "mm")
 ) -> P.Heatmap_GenePath
 
 P.Heatmap_GenePath %>% print
