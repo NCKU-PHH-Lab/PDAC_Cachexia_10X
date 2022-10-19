@@ -4,15 +4,17 @@
 ## https://www.middleprofessor.com/files/applied-biostatistics_bookdown/_book/plotting-models.html
 ## https://github.com/kassambara/ggpubr/issues/111
 
-# ##### Presetting ######
-# rm(list = ls()) # Clean variable
-# memory.limit(150000)
+##### Presetting ######
+rm(list = ls()) # Clean variable
+memory.limit(150000)
 
+Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
 
 #### Installation and load the required libraries ####
 #### Basic installation ####
 ## Package.set
-Package.set <- c("tidyverse","CellChat","patchwork","NMF","ggalluvial","Seurat","ggpubr", "stringr", "Hmisc")
+Package.set <- c("tidyverse","CellChat","patchwork","NMF","ggalluvial","Seurat","ggpubr", "stringr", "Hmisc",
+                 "circlize","ComplexHeatmap")
 ## Check whether the installation of those packages is required
 for (i in 1:length(Package.set)) {
   if (!requireNamespace(Package.set[i], quietly = TRUE)){
@@ -124,17 +126,17 @@ Receptor.set <- LR.df$receptor %>%
                 unlist() %>% str_split(pattern = " ", n = Inf, simplify = FALSE) %>% unlist() %>%
                 unique() %>% tolower() %>% capitalize()
 # Receptor.set <- setdiff(Receptor.set, Ligand.set) %>% unlist()
-TarGene_Anno.df <- data.frame(gene = TarGene_Ori.set, Ligand ="", Receptor ="")
-for (i in 1:nrow(TarGene_Anno.df)) {
-  if(TarGene_Anno.df[i,"gene"] %in% Ligand.set){
-    TarGene_Anno.df[i,"Ligand"] = "T"
+Anno_TarGene.df <- data.frame(gene = TarGene_Ori.set, Ligand ="", Receptor ="")
+for (i in 1:nrow(Anno_TarGene.df)) {
+  if(Anno_TarGene.df[i,"gene"] %in% Ligand.set){
+    Anno_TarGene.df[i,"Ligand"] = "T"
   }else{
-    TarGene_Anno.df[i,"Ligand"] = "F"
+    Anno_TarGene.df[i,"Ligand"] = "F"
   }
-  if(TarGene_Anno.df[i,"gene"] %in% Receptor.set){
-    TarGene_Anno.df[i,"Receptor"] = "T"
+  if(Anno_TarGene.df[i,"gene"] %in% Receptor.set){
+    Anno_TarGene.df[i,"Receptor"] = "T"
   }else{
-    TarGene_Anno.df[i,"Receptor"] = "F"
+    Anno_TarGene.df[i,"Receptor"] = "F"
   }
 }
 rm(i)
@@ -143,7 +145,7 @@ rm(i)
 OriSave.lt <- list(GeneExp.df = GeneExp.df,
                Anno_Cell.df = Anno_Cell.df,
                scRNA.SeuObj = scRNA.SeuObj,
-               TarGene_Anno.df = TarGene_Anno.df)
+               Anno_TarGene.df = Anno_TarGene.df)
 
 
 ##### Summarize all signal #####
@@ -223,12 +225,14 @@ try({
 
 }
 
-rm(TarGene_Temp.df, Anno_Temp.df,SummaryTable_Sub.df)
+rm(TarGene_Temp.df, Anno_Temp.df,SummaryTable_Sub.df,i,j)
 
 
 
 ## Extract Target gene and combine to the annotation table
 colnames(SummaryTable.df)[2] <- "gene"
+SummaryTable.df <- relocate(SummaryTable.df,pathway_name,.before = gene)
+
 TarGene_Sum.set <- SummaryTable.df$gene %>% unique()
 TarGeneEXP.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene_Sum.set,] %>% t() %>% as.data.frame()
 
@@ -240,8 +244,6 @@ colnames(matrix.df) <- Anno_Cell.df$ID
 
 
 ##### Export TSV #####
-
-SummaryTable.df <- relocate(SummaryTable.df,pathway_name,.before = gene)
 write.table( SummaryTable.df ,
              file = paste0(SaveCC.Path,"/",Version,"_LR_Stats.tsv"),
              sep = "\t",
@@ -252,28 +254,16 @@ write.table( SummaryTable.df ,
 ## ********************************************************************************************************************************* ##
 ##### ComplexHeatmap #####
 ## https://jokergoo.github.io/ComplexHeatmap-reference/book/
+library(ComplexHeatmap)
+library(circlize)
 
-##### Load Packages #####
-Package.set <- c("tidyverse","circlize","ComplexHeatmap","stringr")
-## Check whether the installation of those packages is required from basic
-for (i in 1:length(Package.set)) {
-  if (!requireNamespace(Package.set[i], quietly = TRUE)){
-    install.packages(Package.set[i])
-  }
-}
-## Load Packages
-lapply(Package.set, library, character.only = TRUE)
-rm(Package.set,i)
-
-##### Heatmap plotting #####
-## Set column annotation
+#### Set column annotation ####
 sample = c("#2267a4", "#3d85c6", "#d5a6bd", "#c27ba0")
 names(sample) <- Anno_Cell.df$sample %>% unique()
 
 library(ggsci)
 library(ggplot2)
-# vignette( "ggsci")
-# col3 = pal_npg("nrc", alpha = 0.7)(length(CellType.Order))
+# vignette( "ggsci") #Check the color setting
 col3 = 	pal_d3("category20", alpha = 0.7)(length(CellType.Order))
 colCT <- col3[1:length(CellType.Order)]
 names(colCT) <- CellType.Order
@@ -289,118 +279,22 @@ ha_column_T = HeatmapAnnotation(
   show_annotation_name = F
 )
 
-# # top_annotation = ha_column_T,
-# top_annotation = HeatmapAnnotation(foo = anno_block(gp = gpar(fill = 2:4))),
-
-
-# rm(sample)
-
-# ## Set column annotation
-# col_ha_column <- list(c("#9b6ab8", "#6e6970"),
-#                       c("#4382b5", "#c25988"),
-#                       c("#db8051", "#c26334"))
-# names(col_ha_column) <- c(PhenoGroupType, PhenoGroupType2, TarGene_name)
-#
-# ha_column_Anno <- list(anno_colum.df[,PhenoGroupType],
-#                        anno_colum.df[,PhenoGroupType2],
-#                        anno_colum.df[,TarGene_name],
-#                        col = col_ha_column %>% as.vector.factor(),
-#                        show_legend = T)
-# names(ha_column_Anno)[1:3] <- c(PhenoGroupType, PhenoGroupType2, TarGene_name)
-#
-# formals(HeatmapAnnotation)[names(ha_column_Anno)] <- ha_column_Anno
-# formals(HeatmapAnnotation)[names(ha_column_Anno)] <- ha_column_Anno
-# ha_column_T = HeatmapAnnotation()
-#
-# rm(col_ha_column, ha_column_Anno)
-
-## Set row annotation
-## Color setting
-TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum.set) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
-Pathway.set <- TarGeneAnno_Temp.df[,"pathway_name"] %>% unique()
-col3 = pal_npg("nrc", alpha = 0.7)(length(Pathway.set))
-colPT <- col3[1:length(Pathway.set)]
-names(colPT) <- Pathway.set
-
-TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% count(pathway_name)
-TarGeneAnno_Cell.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
-colnames(TarGeneAnno_Cell.df) <- TarGeneAnno_Cell.df[1,]
-TarGeneAnno_Cell.df <- TarGeneAnno_Cell.df[-1,]
-TarGeneAnno_Cell.df <- gsub("0","F",TarGeneAnno_Cell.df)
-TarGeneAnno_Cell.df <- gsub("1","T",TarGeneAnno_Cell.df)
-
-rownames(TarGeneAnno_Cell.df)[2]
-
-colPT <- c("#45818e","#d0e0e3")
-names(colPT) <- c("T","F")
-
-ha_row = rowAnnotation(
-  Pathway = TarGeneAnno_Cell.df[row.names(TarGeneAnno_Cell.df)[2],], # %>% as.character(),  # anno_colum.df$sample_type,
-  col = list(#Sample = sample,
-             Pathway = colPT
-              ),
-  show_legend = T,
-  show_annotation_name = T
-)
 
 
 
-## Plot Heatmap
-
+#### Plot Heatmap ####
 # Set Heatmap color
 col_HMap <- c("#f0f4fc", "#6e8cc2", "#37558c")
 
-# # Heatmap without clustering
-# Heatmap(
-#   matrix.df,
-#   cluster_rows = F,
-#   cluster_columns = F,
-#   show_column_names = F,
-#   show_row_names = F,
-#   name = "GeneExp",
-#   # set color
-#   col = colorRamp2(
-#     c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-#     col_HMap
-#   ),
-#   show_heatmap_legend = T,
-#   use_raster = F,
-#   top_annotation = ha_column_T,
-#   # right_annotation = ha_row
-# ) -> P.Heatmap1
-#
-# P.Heatmap1 %>% print
 
-# # Heatmap with clustering
-# Heatmap(
-#   matrix.df,
-#   # column_title = target_gene,
-#   # column_title_side = "top",
-#   cluster_rows = T,
-#   cluster_columns = T,
-#   show_column_names = F,
-#   show_row_names = F,
-#   name = "GeneExp",
-#   # set color
-#   col = colorRamp2(
-#     c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-#     col_HMap
-#   ),
-#   show_heatmap_legend = T,
-#   use_raster = F,
-#   top_annotation = ha_column_T,
-#   # right_annotation = ha_row
-# ) -> P.Heatmap2
-#
-# P.Heatmap2 %>% print
-
-# Reorder Heatmap
+### Plat GeneExpression Heatmap
+## Reorder Heatmap
 # https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#row-and_column_orders
 Heatmap(
   matrix.df,
-  cluster_rows = F,
-  cluster_columns = F,
-  column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
+  cluster_rows = F, # Heatmap with/without clustering by rows
+  cluster_columns = F, # Heatmap with/without clustering by columns
+  column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia), ## Reorder Heatmap
   show_column_names = F,
   show_row_names = T,
   name = "GeneExp",
@@ -415,9 +309,115 @@ Heatmap(
   use_raster = F,
   top_annotation = ha_column_T,
   # right_annotation = ha_row
-) -> P.Heatmap3
+) -> P.Heatmap_GeneExp
 
-P.Heatmap3 %>% print
+P.Heatmap_GeneExp %>% print
+
+
+
+### Plat Heatmap: Gene belong by which Pathways
+## TarGene with PathAnno Matrix
+TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum.set) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
+Pathway.set <- TarGeneAnno_Temp.df[,"pathway_name"] %>% unique()
+col3 = pal_npg("nrc", alpha = 0.7)(length(Pathway.set))
+colPT <- col3[1:length(Pathway.set)]
+names(colPT) <- Pathway.set
+
+TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% count(pathway_name)
+TarGeneAnno_Cell.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
+colnames(TarGeneAnno_Cell.df) <- TarGeneAnno_Cell.df[1,]
+TarGeneAnno_Cell.df <- TarGeneAnno_Cell.df[-1,]
+TarGeneAnno_Cell.df <- gsub("0","F",TarGeneAnno_Cell.df)
+TarGeneAnno_Cell.df <- gsub("1","T",TarGeneAnno_Cell.df)
+rm(TarGeneAnno_Temp.df, TarGeneAnno_Temp2.df)
+
+TarGeneAnno.mtx <- TarGeneAnno_Cell.df %>% t() # %>% as.data.frame()
+TarGeneAnno.mtx <- TarGeneAnno.mtx[row.names(matrix.df), ,drop=F]
+
+#### Set row annotation ####
+## Color setting
+Anno_TarGene.df <- left_join(data.frame(gene=row.names(matrix.df)),Anno_TarGene.df )
+colPT <- c("#646b6b","#b6baba")
+names(colPT) <- c("T","F")
+
+ha_row = rowAnnotation(
+  Ligand = Anno_TarGene.df$Ligand,
+  Receptor = Anno_TarGene.df$Receptor,
+  col = list(Ligand = colPT,
+             Receptor=colPT
+             ),
+  show_legend = T,
+  show_annotation_name = T
+)
+
+
+col_HMap2 <- c("#d0e0e3","#45818e")
+Heatmap(
+  TarGeneAnno.mtx ,
+  cluster_rows = F,
+  cluster_columns = F,
+  # column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
+  show_column_names = T,
+  show_row_names = T,
+  name = "Pathway",
+  # set color
+  col = col_HMap2,
+  show_heatmap_legend = T,
+  use_raster = F,
+  # top_annotation = ha_column_T,
+  right_annotation = ha_row,
+  width = ncol(TarGeneAnno.mtx)*unit(5, "mm"),
+  height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
+) -> P.Heatmap_GenePath
+
+P.Heatmap_GenePath %>% print
+
+P.Heatmap_GeneExp + P.Heatmap_GenePath
+
+
+##### Save RData #####
+save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
+
+
+##******************************************************************************##
+##### Record ####
+
+# ## Summary Statistic Table
+# #(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
+#
+# # ## Error (Solved)
+# # TTT <- compare_means( Anno_Temp.df[,TarGene[1]] ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
+#
+# # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
+# # convert string column name to name/symbol
+# f <- paste0(TarGene[1]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+# SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype"))
+# rm(f)
+# SummaryTable.df$celltype <- factor(SummaryTable.df$celltype  ,levels = CellType.Order)
+# SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
+
+
+#### Plot Heatmap ####
+
+# ## Set row annotation
+# ## Color setting
+# col_exp <-  colorRamp2(
+#   c(min(anno_row.df$PValue), mean(anno_row.df$PValue), max(anno_row.df$PValue)),
+#   c("#3f705a", "#52bf8e","#b6d4ca")
+#
+# )
+# col_exp2 <-  colorRamp2(
+#   c(min(anno_row.df$logFC), mean(anno_row.df$logFC), max(anno_row.df$logFC)),
+#   c("#488c67", "#333333","#edd493")
+# )
+#
+# ha_row = rowAnnotation(
+#   p.value = anno_row.df$PValue,
+#   LogFC = anno_row.df$logFC,
+#   col = list(p.value = col_exp, LogFC = col_exp2),
+#   show_legend = T
+# )
+#
 
 
 # ## Block annotation
@@ -449,89 +449,6 @@ P.Heatmap3 %>% print
 # P.Heatmap4 %>% print
 
 # # Test Combine Fig
-# P.Heatmap3+P.Heatmap3
-# # P.Heatmap3+P.Heatmap4
+# P.Heatmap_GeneExp+P.Heatmap_GeneExp
+# # P.Heatmap_GeneExp+P.Heatmap4
 
-
-TarGeneAnnoMax.df <- TarGeneAnno_Cell.df %>% t() # %>% as.data.frame()
-TarGeneAnnoMax.df <- TarGeneAnnoMax.df[row.names(matrix.df), ,drop=F]
-
-
-col_HMap2 <- c("#d0e0e3","#45818e")
-Heatmap(
-  TarGeneAnnoMax.df ,
-  cluster_rows = F,
-  cluster_columns = F,
-  # column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
-  show_column_names = T,
-  show_row_names = T,
-  name = "Pathway",
-  # set color
-  col = col_HMap2,
-  show_heatmap_legend = T,
-  use_raster = F,
-  # top_annotation = ha_column_T,
-  # right_annotation = ha_row
-  width = ncol(TarGeneAnnoMax.df)*unit(5, "mm"),
-  height = nrow(TarGeneAnnoMax.df)*unit(5, "mm")
-) -> P.Heatmap3TTT
-
-P.Heatmap3TTT %>% print
-
-P.Heatmap3 + P.Heatmap3TTT
-
-## ********************************************************************************************************************************* ##
-
-
-
-
-
-# ## Set row annotation
-# ## Color setting
-# col_exp <-  colorRamp2(
-#   c(min(anno_row.df$PValue), mean(anno_row.df$PValue), max(anno_row.df$PValue)),
-#   c("#3f705a", "#52bf8e","#b6d4ca")
-#
-# )
-# col_exp2 <-  colorRamp2(
-#   c(min(anno_row.df$logFC), mean(anno_row.df$logFC), max(anno_row.df$logFC)),
-#   c("#488c67", "#333333","#edd493")
-# )
-#
-# ha_row = rowAnnotation(
-#   p.value = anno_row.df$PValue,
-#   LogFC = anno_row.df$logFC,
-#   col = list(p.value = col_exp, LogFC = col_exp2),
-#   show_legend = T
-# )
-#
-
-
-
-
-
-
-
-
-
-
-##### Save RData #####
-save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
-
-
-##******************************************************************************##
-##### Record ####
-
-# ## Summary Statistic Table
-# #(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
-#
-# # ## Error (Solved)
-# # TTT <- compare_means( Anno_Temp.df[,TarGene[1]] ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
-#
-# # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
-# # convert string column name to name/symbol
-# f <- paste0(TarGene[1]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
-# SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype"))
-# rm(f)
-# SummaryTable.df$celltype <- factor(SummaryTable.df$celltype  ,levels = CellType.Order)
-# SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
