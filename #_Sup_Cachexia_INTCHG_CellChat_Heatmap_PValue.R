@@ -285,6 +285,7 @@ ha_column_T = HeatmapAnnotation(
 #### Plot Heatmap ####
 # Set Heatmap color
 col_HMap <- c("#f0f4fc", "#6e8cc2", "#37558c")
+col_HMap <- c( "#ffffff","#e697b3", "#c45e82")
 
 
 ### Plat GeneExpression Heatmap
@@ -301,7 +302,7 @@ Heatmap(
   # set color
   col = colorRamp2(
     # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-    c(min(GeneExp.df), max(GeneExp.df)*1/2 , max(GeneExp.df)),
+    c(min(GeneExp.df), max(GeneExp.df)*2/3 , max(GeneExp.df)),
 
     col_HMap
   ),
@@ -374,6 +375,7 @@ P.Heatmap_GenePath %>% print
 
 ### Plat Heatmap: LogFC and PValue
 
+## Create dataframe
 for (i in 1:length(CCMarker_SPA.lt)) {
   statistics_Temp.df <- CCMarker_SPA.lt[[i]][["CCMarker.All"]]
   colnames(statistics_Temp.df)[1] <- "gene"
@@ -389,8 +391,101 @@ for (i in 1:length(CCMarker_SPA.lt)) {
 }
 
 
+### PValue df Setting
+statistics_PValue.df <- statistics.df[,1:3] %>% pivot_wider(names_from = celltype, values_from = c("p_val"))
+statistics_PValue.mtx <- left_join(data.frame(gene=row.names(matrix.df)),statistics_PValue.df)
+row.names(statistics_PValue.mtx) <- statistics_PValue.mtx[,1]
+statistics_PValue.mtx <- statistics_PValue.mtx[,-1]
+## Reoder the df
+statistics_PValue.mtx <- statistics_PValue.mtx %>% select(CellType.Order)
+
+### LogFC df Setting
+statistics_LogFC.df <- statistics.df[,c(1,2,4)] %>% pivot_wider(names_from = celltype, values_from = c("avg_log2FC"))
+statistics_LogFC.mtx <- left_join(data.frame(gene=row.names(matrix.df)),statistics_LogFC.df)
+row.names(statistics_LogFC.mtx) <- statistics_LogFC.mtx[,1]
+statistics_LogFC.mtx <- statistics_LogFC.mtx[,-1]
+## Reoder the df
+statistics_LogFC.mtx <- statistics_LogFC.mtx %>% select(CellType.Order)
+
+
+### Plot PValue Heatmap
+# Set column annotation
+library(ggsci)
+library(ggplot2)
+# vignette( "ggsci") #Check the color setting
+col3 = 	pal_d3("category20", alpha = 0.7)(length(CellType.Order))
+colCT <- col3[1:length(CellType.Order)]
+names(colCT) <- CellType.Order
+
+ha_column_ST = HeatmapAnnotation(
+  Celltype = colnames(statistics_PValue.mtx),
+  col = list( Celltype = colCT),
+  show_legend = F,
+  show_annotation_name = F
+)
+
+
+# Set Heatmap color
+col_HMapST <- c("#db9569","#f5d1ba","#f7ebe4")
+col_HMapST <- c("#edffef","#a4ebab","#70b577")
+col_HMapST <- c("#93db9b", "#b9f0bf","#edffef")
+col_HMapST <- c("#6e8cc2", "#37558c","#f0f4fc")
+
+col_HMapST <- c( "#ad8fd9", "#e8d9ff", "#ffffff")
+
+Heatmap(
+  statistics_PValue.mtx,
+  cluster_rows = F, # Heatmap with/without clustering by rows
+  cluster_columns = F, # Heatmap with/without clustering by columns
+  column_order = CellType.Order, ## Reorder Heatmap
+  show_column_names = T,
+  show_row_names = T,
+  name = "PValue",
+  # set color
+  col = colorRamp2(
+    # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+    c(0, 0.0000001 , 1),
+    col_HMapST
+  ),
+  show_heatmap_legend = T,
+  use_raster = F,
+  top_annotation = ha_column_ST,
+  # right_annotation = ha_row,
+  width = ncol(TarGeneAnno.mtx)*unit(15, "mm"),
+  height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
+) -> P.Heatmap_PValue
+
+P.Heatmap_PValue %>% print
+
+### Plot LogFC Heatmap
+# Set Heatmap color
+col_HMapLog <- c("#c270b0","#ffffff","#4a5aa8")
+Heatmap(
+  statistics_LogFC.mtx,
+  cluster_rows = F, # Heatmap with/without clustering by rows
+  cluster_columns = F, # Heatmap with/without clustering by columns
+  column_order = CellType.Order, ## Reorder Heatmap
+  show_column_names = T,
+  show_row_names = T,
+  name = "LogFC",
+  # set color
+  col = colorRamp2(
+    # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+    c(min(statistics_LogFC.mtx), 0.01 , max(statistics_LogFC.mtx)),
+    col_HMapLog
+  ),
+  show_heatmap_legend = T,
+  use_raster = F,
+  top_annotation = ha_column_ST,
+  # right_annotation = ha_row,
+  width = ncol(TarGeneAnno.mtx)*unit(15, "mm"),
+  height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
+) -> P.Heatmap_LogFC
+
+P.Heatmap_LogFC %>% print
+
 #### Summary Plot ####
-P.Heatmap_GeneExp + P.Heatmap_GenePath
+P.Heatmap_GeneExp + P.Heatmap_LogFC + P.Heatmap_PValue + P.Heatmap_GenePath
 
 
 ##### Save RData #####
