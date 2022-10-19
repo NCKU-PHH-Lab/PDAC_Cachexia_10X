@@ -101,28 +101,26 @@ dir.create(SaveCC.Path)
 Pathways_Sig.set <- unique(cellchat@netP[["EOCX"]][["pathways"]],
                            cellchat@netP[["PreCX"]][["pathways"]])
 
-TarGene_All <- cellchat@data.signaling %>% rownames
-LR.df <- rbind(cellchat@LR[["EOCX"]][["LRsig"]],cellchat@LR[["PreCX"]][["LRsig"]])
+TarGene_Ori.set <- cellchat@data.signaling %>% rownames
+LR.df <- rbind(cellchat@LR[["EOCX"]][["LRsig"]],cellchat@LR[["PreCX"]][["LRsig"]]) %>% unique()
 
-##### Extract df #####
+##### Extract information #####
+## Gene Expression
 ## Old version (Without normalizaiton) ## GeneExp.df <- scRNA.SeuObj@assays[["RNA"]]@counts %>% as.data.frame()
 GeneExp.df <- GetAssayData(scRNA.SeuObj, assay = "RNA", slot = "data") %>% as.data.frame() # normalized data matrix
 ## Set y position
-LabelY <- max(GeneExp.df) %>% ceiling()
+Colr_GE.set <- c(min(GeneExp.df), max(GeneExp.df) %>% ceiling())
 
-Anno.df <- scRNA.SeuObj@meta.data
-Anno.df <- data.frame(ID=row.names(Anno.df), Anno.df)
+## Annotation
+# Cell annotation
+Anno_Cell.df <- scRNA.SeuObj@meta.data
+Anno_Cell.df <- data.frame(ID=row.names(Anno_Cell.df), Anno_Cell.df)
+# Gene annotation
 
 ## Save Ori
 GeneExp_Ori.df <- GeneExp.df
-Anno_Ori.df <- Anno.df
+Anno_Cell_Ori.df <- Anno_Cell.df
 scRNA_Ori.SeuObj <- scRNA.SeuObj
-
-
-## Clean up data (Remove Other)
-Anno.df <- Anno.df[!grepl("Other", Anno.df$celltype),]
-GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df$ID]
-scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"]] )]
 
 
 ##### Summarize all signal #####
@@ -170,7 +168,7 @@ try({
   TarGene_Temp.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene,] %>% t() %>% as.data.frame()
 
   TarGene_Temp.df <- data.frame(ID = row.names(TarGene_Temp.df), TarGene_Temp.df)
-  Anno_Temp.df <- left_join(Anno.df,TarGene_Temp.df)
+  Anno_Temp.df <- left_join(Anno_Cell.df,TarGene_Temp.df)
   # rm(TarGene_Temp.df)
 
 
@@ -240,10 +238,10 @@ TarGene_Sum <- SummaryTable.df$.y. %>% unique()
 TarGeneEXP.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene_Sum,] %>% t() %>% as.data.frame()
 
 TarGeneEXP.df <- data.frame(ID = row.names(TarGeneEXP.df), TarGeneEXP.df)
-Anno.df <- left_join(Anno.df,TarGeneEXP.df)
+Anno_Cell.df <- left_join(Anno_Cell.df,TarGeneEXP.df)
 
-matrix.df <- Anno.df[,TarGene_Sum] %>% t()
-colnames(matrix.df) <- Anno.df$ID
+matrix.df <- Anno_Cell.df[,TarGene_Sum] %>% t()
+colnames(matrix.df) <- Anno_Cell.df$ID
 
 
 ##### Export TSV #####
@@ -277,7 +275,7 @@ rm(Package.set,i)
 ##### Heatmap plotting #####
 ## Set column annotation
 sample = c("#2267a4", "#3d85c6", "#d5a6bd", "#c27ba0")
-names(sample) <- Anno.df$sample %>% unique()
+names(sample) <- Anno_Cell.df$sample %>% unique()
 
 library(ggsci)
 library(ggplot2)
@@ -288,9 +286,9 @@ colCT <- col3[1:length(CellType.Order)]
 names(colCT) <- CellType.Order
 
 ha_column_T = HeatmapAnnotation(
-  Sample = Anno.df[,"sample"],  # anno_colum.df$sample_type,
-  Cachexia = Anno.df[,"Cachexia"], # anno_colum.df$gender,
-  Celltype = Anno.df[,"celltype"],
+  Sample = Anno_Cell.df[,"sample"],  # anno_colum.df$sample_type,
+  Cachexia = Anno_Cell.df[,"Cachexia"], # anno_colum.df$gender,
+  Celltype = Anno_Cell.df[,"celltype"],
   col = list(Sample = sample,
              Celltype = colCT ,#pal_npg(), #colCT ,
              Cachexia = c("EOCX"="#5b517d", "PreCX"="#a095c7")), #,"Medium"="#b57545"
@@ -332,19 +330,19 @@ colPT <- col3[1:length(Pathway.set)]
 names(colPT) <- Pathway.set
 
 TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% count(pathway_name)
-TarGeneAnno.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
-colnames(TarGeneAnno.df) <- TarGeneAnno.df[1,]
-TarGeneAnno.df <- TarGeneAnno.df[-1,]
-TarGeneAnno.df <- gsub("0","F",TarGeneAnno.df)
-TarGeneAnno.df <- gsub("1","T",TarGeneAnno.df)
+TarGeneAnno_Cell.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
+colnames(TarGeneAnno_Cell.df) <- TarGeneAnno_Cell.df[1,]
+TarGeneAnno_Cell.df <- TarGeneAnno_Cell.df[-1,]
+TarGeneAnno_Cell.df <- gsub("0","F",TarGeneAnno_Cell.df)
+TarGeneAnno_Cell.df <- gsub("1","T",TarGeneAnno_Cell.df)
 
-rownames(TarGeneAnno.df)[2]
+rownames(TarGeneAnno_Cell.df)[2]
 
 colPT <- c("#45818e","#d0e0e3")
 names(colPT) <- c("T","F")
 
 ha_row = rowAnnotation(
-  Pathway = TarGeneAnno.df[row.names(TarGeneAnno.df)[2],], # %>% as.character(),  # anno_colum.df$sample_type,
+  Pathway = TarGeneAnno_Cell.df[row.names(TarGeneAnno_Cell.df)[2],], # %>% as.character(),  # anno_colum.df$sample_type,
   col = list(#Sample = sample,
              Pathway = colPT
               ),
@@ -409,7 +407,7 @@ Heatmap(
   matrix.df,
   cluster_rows = F,
   cluster_columns = F,
-  column_order = order(Anno.df$celltype,Anno.df$Cachexia),
+  column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
   show_column_names = F,
   show_row_names = T,
   name = "GeneExp",
@@ -437,7 +435,7 @@ P.Heatmap3 %>% print
 #   cluster_rows = T,
 #   cluster_columns = F,
 #
-#   column_order = order(Anno.df$celltype,Anno.df$Cachexia),
+#   column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
 #   show_column_names = F,
 #   show_row_names = T,
 #   name = "GeneExp",
@@ -451,7 +449,7 @@ P.Heatmap3 %>% print
 #   # top_annotation = ha_column_T,
 #   top_annotation = HeatmapAnnotation(foo = anno_block(gp = gpar(fill = 2:4))),
 #   # right_annotation = ha_row
-#   column_split = Anno.df$celltype,
+#   column_split = Anno_Cell.df$celltype,
 #
 # ) -> P.Heatmap4
 #
@@ -462,7 +460,7 @@ P.Heatmap3 %>% print
 # # P.Heatmap3+P.Heatmap4
 
 
-TarGeneAnnoMax.df <- TarGeneAnno.df %>% t() # %>% as.data.frame()
+TarGeneAnnoMax.df <- TarGeneAnno_Cell.df %>% t() # %>% as.data.frame()
 TarGeneAnnoMax.df <- TarGeneAnnoMax.df[row.names(matrix.df), ,drop=F]
 
 
@@ -471,7 +469,7 @@ Heatmap(
   TarGeneAnnoMax.df ,
   cluster_rows = F,
   cluster_columns = F,
-  # column_order = order(Anno.df$celltype,Anno.df$Cachexia),
+  # column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
   show_column_names = T,
   show_row_names = T,
   name = "Pathway",
