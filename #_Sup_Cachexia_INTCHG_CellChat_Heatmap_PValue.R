@@ -372,6 +372,24 @@ Heatmap(
 
 P.Heatmap_GenePath %>% print
 
+### Plat Heatmap: LogFC and PValue
+
+for (i in 1:length(CCMarker_SPA.lt)) {
+  statistics_Temp.df <- CCMarker_SPA.lt[[i]][["CCMarker.All"]]
+  colnames(statistics_Temp.df)[1] <- "gene"
+  statistics_Temp.df$celltype <- names(CCMarker_SPA.lt)[i]
+  statistics_Temp.df <- relocate(statistics_Temp.df,celltype,.before = gene)
+
+  if(i==1){
+    statistics.df <- statistics_Temp.df
+  }else{
+    statistics.df <- rbind(statistics.df, statistics_Temp.df)
+  }
+  rm(statistics_Temp.df)
+}
+
+
+#### Summary Plot ####
 P.Heatmap_GeneExp + P.Heatmap_GenePath
 
 
