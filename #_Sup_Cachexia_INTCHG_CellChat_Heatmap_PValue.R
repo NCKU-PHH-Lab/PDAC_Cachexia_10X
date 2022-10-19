@@ -12,7 +12,7 @@
 #### Installation and load the required libraries ####
 #### Basic installation ####
 ## Package.set
-Package.set <- c("tidyverse","CellChat","patchwork","NMF","ggalluvial","Seurat","ggpubr", "stringr")
+Package.set <- c("tidyverse","CellChat","patchwork","NMF","ggalluvial","Seurat","ggpubr", "stringr", "Hmisc")
 ## Check whether the installation of those packages is required
 for (i in 1:length(Package.set)) {
   if (!requireNamespace(Package.set[i], quietly = TRUE)){
@@ -153,29 +153,30 @@ colnames(SummaryTable.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.a
 for (j in 1:length(Pathways_Sig.set)) {
 try({
 
+  #### Extract LR genes ####
   LR_Tar.df <- LR.df[LR.df$pathway_name == Pathways_Sig.set[j],]
 
   library(stringr)
   library(Hmisc)
   TarGene <- LR_Tar.df$interaction_name %>%
              str_split(pattern = "_", n = Inf, simplify = FALSE) %>%
-             unlist() %>%
-             unique() %>% tolower() %>% capitalize()
-  TarGeneH <- LR_Tar.df$interaction_name %>%
-    str_split(pattern = "_", n = Inf, simplify = FALSE) %>%
-    unlist() %>%
-    unique()
-  TarGeneH <- intersect(TarGeneH,row.names(GeneExp.df))
+             unlist() %>% unique() %>% tolower() %>% capitalize()
+  ## Human Genes
+  TarGeneH.set <- LR_Tar.df$interaction_name %>%
+              str_split(pattern = "_", n = Inf, simplify = FALSE) %>%
+              unlist() %>% unique()
+  TarGeneH.set <- intersect(TarGeneH.set,row.names(GeneExp.df))
   TarGene <-intersect(TarGene,row.names(GeneExp.df))
 
+  ## Mouse Genes
   source("FUN_HSsymbol2MMsymbol.R")
   df <- TarGene %>% as.data.frame()
   colnames(df) <- "Gene"
 
   df1 <- HSsymbol2MMsymbol(df,"Gene")
-  TarGeneM <- df1$MM.symbol
-  TarGene <- c(TarGeneH,TarGeneM) %>% unique()
-  rm(LR_Tar.df, df, df1)
+  TarGeneM.set <- df1$MM.symbol
+  TarGene <- c(TarGeneH.set,TarGeneM.set) %>% unique()
+  rm(LR_Tar.df, df, df1, TarGeneM.set, TarGeneH.set)
 
 
   ##### Data preprocessing #####
@@ -184,8 +185,6 @@ try({
 
   TarGene_Temp.df <- data.frame(ID = row.names(TarGene_Temp.df), TarGene_Temp.df)
   Anno_Temp.df <- left_join(Anno_Cell.df,TarGene_Temp.df)
-  # rm(TarGene_Temp.df)
-
 
   ##### Summary Statistic Table #####
   SummaryTable_Sub.df <-  as.data.frame(matrix(nrow=0,ncol=9))
@@ -214,15 +213,6 @@ try({
 
       rm(SummaryTable_Temp.df)
 
-
-
-      # if(i==1){
-      #   SummaryTable_Sub.df <- SummaryTable_Temp.df
-      # }else{
-      #   SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
-      #   rm(SummaryTable_Temp.df)
-      # }
-
     })
   }
   SummaryTable_Sub.df$pathway_name <- Pathways_Sig.set[j]
@@ -232,15 +222,19 @@ try({
 })
 
 }
-TarGene_Sum <- SummaryTable.df$.y. %>% unique()
+
+rm(TarGene_Temp.df, Anno_Temp.df,SummaryTable_Sub.df)
+
+
+TarGene_Sum.set <- SummaryTable.df$.y. %>% unique()
 
 ## Extract Target gene and combine to the annotation table
-TarGeneEXP.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene_Sum,] %>% t() %>% as.data.frame()
+TarGeneEXP.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene_Sum.set,] %>% t() %>% as.data.frame()
 
 TarGeneEXP.df <- data.frame(ID = row.names(TarGeneEXP.df), TarGeneEXP.df)
 Anno_Cell.df <- left_join(Anno_Cell.df,TarGeneEXP.df)
 
-matrix.df <- Anno_Cell.df[,TarGene_Sum] %>% t()
+matrix.df <- Anno_Cell.df[,TarGene_Sum.set] %>% t()
 colnames(matrix.df) <- Anno_Cell.df$ID
 
 
@@ -323,7 +317,7 @@ ha_column_T = HeatmapAnnotation(
 
 ## Set row annotation
 ## Color setting
-TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
+TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum.set) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
 Pathway.set <- TarGeneAnno_Temp.df[,"pathway_name"] %>% unique()
 col3 = pal_npg("nrc", alpha = 0.7)(length(Pathway.set))
 colPT <- col3[1:length(Pathway.set)]
