@@ -226,9 +226,10 @@ try({
 rm(TarGene_Temp.df, Anno_Temp.df,SummaryTable_Sub.df)
 
 
-TarGene_Sum.set <- SummaryTable.df$.y. %>% unique()
 
 ## Extract Target gene and combine to the annotation table
+colnames(SummaryTable.df)[2] <- "gene"
+TarGene_Sum.set <- SummaryTable.df$gene %>% unique()
 TarGeneEXP.df <- GeneExp.df[row.names(GeneExp.df) %in% TarGene_Sum.set,] %>% t() %>% as.data.frame()
 
 TarGeneEXP.df <- data.frame(ID = row.names(TarGeneEXP.df), TarGeneEXP.df)
@@ -239,10 +240,8 @@ colnames(matrix.df) <- Anno_Cell.df$ID
 
 
 ##### Export TSV #####
-colnames(SummaryTable.df)[2] <- "gene"
+
 SummaryTable.df <- relocate(SummaryTable.df,pathway_name,.before = gene)
-
-
 write.table( SummaryTable.df ,
              file = paste0(SaveCC.Path,"/",Version,"_LR_Stats.tsv"),
              sep = "\t",
