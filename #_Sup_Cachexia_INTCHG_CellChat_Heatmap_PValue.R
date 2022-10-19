@@ -375,7 +375,7 @@ Heatmap(
 
 P.Heatmap_GenePath %>% print
 
-### Plat Heatmap: LogFC and PValue
+### Plat Heatmap: LogFC and FDR
 
 ## Create dataframe
 for (i in 1:length(CCMarker_SPA.lt)) {
@@ -393,13 +393,13 @@ for (i in 1:length(CCMarker_SPA.lt)) {
 }
 
 
-### PValue df Setting
-statistics_PValue.df <- statistics.df[,1:3] %>% pivot_wider(names_from = celltype, values_from = c("p_val"))
-statistics_PValue.mtx <- left_join(data.frame(gene=row.names(matrix.df)),statistics_PValue.df)
-row.names(statistics_PValue.mtx) <- statistics_PValue.mtx[,1]
-statistics_PValue.mtx <- statistics_PValue.mtx[,-1]
+### FDR df Setting
+statistics_FDR.df <- statistics.df[,c(1,2,7)] %>% pivot_wider(names_from = celltype, values_from = c("p_val_adj"))
+statistics_FDR.mtx <- left_join(data.frame(gene=row.names(matrix.df)),statistics_FDR.df)
+row.names(statistics_FDR.mtx) <- statistics_FDR.mtx[,1]
+statistics_FDR.mtx <- statistics_FDR.mtx[,-1]
 ## Reoder the df
-statistics_PValue.mtx <- statistics_PValue.mtx %>% select(CellType.Order)
+statistics_FDR.mtx <- statistics_FDR.mtx %>% select(CellType.Order)
 
 ### LogFC df Setting
 statistics_LogFC.df <- statistics.df[,c(1,2,4)] %>% pivot_wider(names_from = celltype, values_from = c("avg_log2FC"))
@@ -410,7 +410,7 @@ statistics_LogFC.mtx <- statistics_LogFC.mtx[,-1]
 statistics_LogFC.mtx <- statistics_LogFC.mtx %>% select(CellType.Order)
 
 
-### Plot PValue Heatmap
+### Plot FDR Heatmap
 # Set column annotation
 library(ggsci)
 library(ggplot2)
@@ -420,7 +420,7 @@ colCT <- col3[1:length(CellType.Order)]
 names(colCT) <- CellType.Order
 
 ha_column_ST = HeatmapAnnotation(
-  Celltype = colnames(statistics_PValue.mtx),
+  Celltype = colnames(statistics_FDR.mtx),
   col = list( Celltype = colCT),
   show_legend = F,
   show_annotation_name = F
@@ -436,13 +436,13 @@ col_HMapST <- c("#6e8cc2", "#37558c","#f0f4fc")
 col_HMapST <- c( "#ad8fd9", "#e8d9ff", "#ffffff")
 
 Heatmap(
-  statistics_PValue.mtx,
+  statistics_FDR.mtx,
   cluster_rows = F, # Heatmap with/without clustering by rows
   cluster_columns = F, # Heatmap with/without clustering by columns
   column_order = CellType.Order, ## Reorder Heatmap
   show_column_names = T,
   show_row_names = T,
-  name = "PValue",
+  name = "FDR",
   # set color
   col = colorRamp2(
     # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
@@ -455,9 +455,9 @@ Heatmap(
   # right_annotation = ha_row,
   width = ncol(TarGeneAnno.mtx)*unit(15, "mm"),
   height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
-) -> P.Heatmap_PValue
+) -> P.Heatmap_FDR
 
-P.Heatmap_PValue %>% print
+P.Heatmap_FDR %>% print
 
 ### Plot LogFC Heatmap
 # Set Heatmap color
@@ -487,7 +487,7 @@ Heatmap(
 P.Heatmap_LogFC %>% print
 
 #### Summary Plot ####
-P.Heatmap_GeneExp + P.Heatmap_LogFC + P.Heatmap_PValue + P.Heatmap_GenePath
+P.Heatmap_GeneExp + P.Heatmap_LogFC + P.Heatmap_FDR + P.Heatmap_GenePath
 
 
 ##### Save RData #####
