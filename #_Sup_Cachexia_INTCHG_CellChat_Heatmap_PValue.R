@@ -310,7 +310,7 @@ Heatmap(
   use_raster = F,
   top_annotation = ha_column_T,
   # right_annotation = ha_row
-  width = ncol(TarGeneAnno.mtx)*unit(15, "mm"),
+  width = ncol(TarGeneAnno.mtx)*unit(5, "mm"),
   height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
 ) -> P.Heatmap_GeneExp
 
@@ -453,7 +453,7 @@ Heatmap(
   use_raster = F,
   top_annotation = ha_column_ST,
   # right_annotation = ha_row,
-  width = ncol(TarGeneAnno.mtx)*unit(15, "mm"),
+  width = ncol(TarGeneAnno.mtx)*unit(5, "mm"),
   height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
 ) -> P.Heatmap_FDR
 
@@ -480,7 +480,7 @@ Heatmap(
   use_raster = F,
   top_annotation = ha_column_ST,
   # right_annotation = ha_row,
-  width = ncol(TarGeneAnno.mtx)*unit(15, "mm"),
+  width = ncol(TarGeneAnno.mtx)*unit(5, "mm"),
   height = nrow(TarGeneAnno.mtx)*unit(5, "mm")
 ) -> P.Heatmap_LogFC
 
