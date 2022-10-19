@@ -439,7 +439,7 @@ Heatmap(
   # set color
   col = colorRamp2(
     # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-    c(min(matrix.df), max(matrix.df)*2/3 , max(matrix.df)),
+    c(min(GeneExp.df), max(GeneExp.df)*1/2 , max(GeneExp.df)),
 
     col_HMap
   ),
