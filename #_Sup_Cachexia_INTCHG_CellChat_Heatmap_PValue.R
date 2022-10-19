@@ -155,13 +155,6 @@ try({
 
   LR_Tar.df <- LR.df[LR.df$pathway_name == Pathways_Sig.set[j],]
 
-  # ## Method1
-  # # TarGene <- c("Vwf","Itga2b","Itgb3","Gp9")
-  # TarGene <- c(LR_Tar.df$ligand, LR_Tar.df$receptor) %>% unique()
-  # # TarGene <- c(LR_Tar.df$ligand[1], LR_Tar.df$receptor) %>% unique()
-  # TarGene <-intersect(TarGene,row.names(GeneExp.df))
-
-  ## Method2
   library(stringr)
   library(Hmisc)
   TarGene <- LR_Tar.df$interaction_name %>%
@@ -194,22 +187,7 @@ try({
   # rm(TarGene_Temp.df)
 
 
-  # ## Summary Statistic Table
-  # #(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
-  #
-  # # ## Error (Solved)
-  # # TTT <- compare_means( Anno_Temp.df[,TarGene[1]] ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
-  #
-  # # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
-  # # convert string column name to name/symbol
-  # f <- paste0(TarGene[1]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
-  # SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype"))
-  # rm(f)
-  # SummaryTable.df$celltype <- factor(SummaryTable.df$celltype  ,levels = CellType.Order)
-  # SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
-
   ##### Summary Statistic Table #####
-
   SummaryTable_Sub.df <-  as.data.frame(matrix(nrow=0,ncol=9))
   colnames(SummaryTable_Sub.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.adj", "p.format", "p.signif", "method"  )
   for (i in 1:length(TarGene)) {
@@ -515,25 +493,25 @@ P.Heatmap3 + P.Heatmap3TTT
 
 
 
-## Set row annotation
-## Color setting
-col_exp <-  colorRamp2(
-  c(min(anno_row.df$PValue), mean(anno_row.df$PValue), max(anno_row.df$PValue)),
-  c("#3f705a", "#52bf8e","#b6d4ca")
-
-)
-col_exp2 <-  colorRamp2(
-  c(min(anno_row.df$logFC), mean(anno_row.df$logFC), max(anno_row.df$logFC)),
-  c("#488c67", "#333333","#edd493")
-)
-
-ha_row = rowAnnotation(
-  p.value = anno_row.df$PValue,
-  LogFC = anno_row.df$logFC,
-  col = list(p.value = col_exp, LogFC = col_exp2),
-  show_legend = T
-)
-
+# ## Set row annotation
+# ## Color setting
+# col_exp <-  colorRamp2(
+#   c(min(anno_row.df$PValue), mean(anno_row.df$PValue), max(anno_row.df$PValue)),
+#   c("#3f705a", "#52bf8e","#b6d4ca")
+#
+# )
+# col_exp2 <-  colorRamp2(
+#   c(min(anno_row.df$logFC), mean(anno_row.df$logFC), max(anno_row.df$logFC)),
+#   c("#488c67", "#333333","#edd493")
+# )
+#
+# ha_row = rowAnnotation(
+#   p.value = anno_row.df$PValue,
+#   LogFC = anno_row.df$logFC,
+#   col = list(p.value = col_exp, LogFC = col_exp2),
+#   show_legend = T
+# )
+#
 
 
 
@@ -548,3 +526,19 @@ ha_row = rowAnnotation(
 save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
 
 
+##******************************************************************************##
+##### Record ####
+
+# ## Summary Statistic Table
+# #(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
+#
+# # ## Error (Solved)
+# # TTT <- compare_means( Anno_Temp.df[,TarGene[1]] ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
+#
+# # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
+# # convert string column name to name/symbol
+# f <- paste0(TarGene[1]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+# SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype"))
+# rm(f)
+# SummaryTable.df$celltype <- factor(SummaryTable.df$celltype  ,levels = CellType.Order)
+# SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
