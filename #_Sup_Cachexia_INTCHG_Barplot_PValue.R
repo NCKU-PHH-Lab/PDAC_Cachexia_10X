@@ -6,8 +6,11 @@
 
 
 # ##### Presetting ######
-# rm(list = ls()) # Clean variable
-# memory.limit(150000)
+rm(list = ls()) # Clean variable
+memory.limit(150000)
+
+Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
+
 
 ##### Load Packages #####
 if(!require("tidyverse")) install.packages("tidyverse")
@@ -42,7 +45,7 @@ scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype
                                                          "NK","B","Mast","Ery"))
 
 ##### Current path and new folder setting  #####
-TarGene <- "Chil3"
+TarGene <- "Cd47"
 Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
 SaveSup.Path = paste0(getwd(),"/",Version)
 dir.create(SaveSup.Path)
