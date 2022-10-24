@@ -205,7 +205,7 @@ try({
       # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
       # convert string column name to name/symbol
       f <- paste0(TarGene[i]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
-      SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype"))
+      SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype", method = "wilcox.test"))
       rm(f)
       SummaryTable_Temp.df$celltype <- factor(SummaryTable_Temp.df$celltype  ,levels = CellType.Order)
       SummaryTable_Temp.df <- SummaryTable_Temp.df[order(SummaryTable_Temp.df$celltype), ]
@@ -213,7 +213,8 @@ try({
       ## Filter
       # if(c("****") %in% SummaryTable_Temp.df$p.signif || c("***") %in% SummaryTable_Temp.df$p.signif|| c("**") %in% SummaryTable_Temp.df$p.signif){
       # if(c("****") %in% SummaryTable_Temp.df$p.signif){
-      if(sum(SummaryTable_Temp.df$p.adj < SetFDRThr)>=1){
+      # if(sum(SummaryTable_Temp.df$p.adj < SetFDRThr)>=1){
+      if(sum(SummaryTable_Temp.df$p.adj < 0.05)>=1){
         SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
       }else{
         SummaryTable_Sub.df <- SummaryTable_Sub.df
