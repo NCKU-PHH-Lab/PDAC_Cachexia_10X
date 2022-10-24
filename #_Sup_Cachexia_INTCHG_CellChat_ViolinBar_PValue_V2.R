@@ -280,23 +280,24 @@ if(Save.Path == "PBMC"){
             plt.ManyGroup2 <- ggplot(Anno.df, aes(x = celltype, y = Anno.df[,TarGene[i]] %>% as.numeric(), fill = Cachexia, color= Cachexia)) +
               introdataviz::geom_split_violin(alpha = .4, trim = FALSE) +
               geom_boxplot(width = .2, alpha = .6, fatten = NULL, show.legend = FALSE) +
-
               stat_summary(fun.data = "mean_se", geom = "pointrange", show.legend = T, shape = 8,
-                           position = position_dodge(.175)) +
+                           position = position_dodge(.175), size = 0.5) + # , color = "#4f4f4f"
               # scale_x_discrete(name = "Condition", labels = c("Non-word", "Word")) +
               # scale_y_continuous(name = "Reaction time (ms)",
               #                    breaks = seq(200, 800, 100),
               #                    limits = c(200, 800)) +
-              scale_fill_brewer(palette = "Dark2", name = "Cachexia") +
-              scale_color_brewer(palette = "Dark2", name = "Cachexia") +
-              theme_minimal()+ ylim(0, LabelY*1.2) + ylab(TarGene[i])+
+              scale_fill_manual(values= c("#ef476f","#0077b6")) +
+              scale_color_manual(values= c("#ef476f","#0077b6")) +
+              # scale_fill_brewer(palette = "Dark2", name = "Cachexia") +
+              # scale_color_brewer(palette = "Dark2", name = "Cachexia") +
+              theme_minimal()+ ylim(0, LabelY*1.2) + ylab(TarGene[i]) +
               theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                     panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
             ## Beautify ggPlot
             plt.ManyGroup2 <- plt.ManyGroup2 +
               theme(axis.text.x = element_blank(),
-                    axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
+                    axis.text.y = element_text(face="bold",size =  17, colour = "#3b3b3b"), # Change the size along the y axis
 
                     axis.line = element_line(colour = "black", size = 1, linetype = "solid"),
                     axis.title.x = element_blank(),
@@ -340,13 +341,15 @@ if(Save.Path == "PBMC"){
                 introdataviz::geom_split_violin(alpha = .4, trim = FALSE) +
                 geom_boxplot(width = .2, alpha = .6, fatten = NULL, show.legend = FALSE) +
                 stat_summary(fun.data = "mean_se", geom = "pointrange", show.legend = T, shape = 8,
-                             position = position_dodge(.175)) +
+                             position = position_dodge(.175), size = 0.5) + # , color = "#4f4f4f"
                 # scale_x_discrete(name = "Condition", labels = c("Non-word", "Word")) +
                 # scale_y_continuous(name = "Reaction time (ms)",
                 #                    breaks = seq(200, 800, 100),
                 #                    limits = c(200, 800)) +
-                scale_fill_brewer(palette = "Dark2", name = "Cachexia") +
-                scale_color_brewer(palette = "Dark2", name = "Cachexia") +
+                scale_fill_manual(values= c("#ef476f","#0077b6")) +
+                scale_color_manual(values= c("#ef476f","#0077b6")) +
+                # scale_fill_brewer(palette = "Dark2", name = "Cachexia") +
+                # scale_color_brewer(palette = "Dark2", name = "Cachexia") +
                 theme_minimal()+ ylim(0, LabelY*1.2) + ylab(TarGene[i]) +
                 theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                       panel.background = element_blank(), axis.line = element_line(colour = "black"))
@@ -354,7 +357,7 @@ if(Save.Path == "PBMC"){
               ## Beautify ggPlot
               plt.ManyGroup2 <- plt.ManyGroup2 +
                 theme(axis.text.x = element_text(face="bold",  size = 17,angle = 90, hjust = 1, vjust = .5), # Change the size along the x axis
-                      axis.text.y = element_text(face="bold",size =  17), # Change the size along the y axis
+                      axis.text.y = element_text(face="bold",size =  17, colour = "#3b3b3b"), # Change the size along the y axis
 
                       axis.line = element_line(colour = "black", size = 1, linetype = "solid"),
                       axis.title.x = element_blank(),
