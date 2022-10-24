@@ -527,7 +527,7 @@ Heatmap(
 
     l1 = v1 < SetFDRThr
     grid.points(x[l1], y[l1], pch = 1, size = unit(4, "mm"))
-    l3 = v1 < SetFDRThr & abs(v2) > 0.5
+    l3 = v1 < SetFDRThr & abs(v2) > SetLogFCThr
     grid.points(x[l3], y[l3], pch = 16, size = unit(4, "mm"))
 
   }
@@ -568,10 +568,10 @@ Heatmap(
     v1 = pindex(statistics_FDR.mtx, i, j)
     v2 = pindex(statistics_LogFC.mtx, i, j)
 
-    l2 = abs(v2) > 0.5
+    l2 = abs(v2) > SetLogFCThr
     grid.points(x[l2], y[l2], pch = 1, size = unit(4, "mm"))
 
-    l3 = v1 < SetFDRThr & abs(v2) > 0.5
+    l3 = v1 < SetFDRThr & abs(v2) > SetLogFCThr
     grid.points(x[l3], y[l3], pch = 16, size = unit(4, "mm"))
   }
 ) -> P.Heatmap_LogFC
