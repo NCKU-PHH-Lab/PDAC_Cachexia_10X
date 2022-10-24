@@ -495,6 +495,11 @@ ha_column_ST = HeatmapAnnotation(
 
 
 # Set Heatmap color
+pch1 = 4
+pchSize1 = 4
+pch2 = 1
+pchSize2 = 8
+
 col_HMapST <- c("#db9569","#f5d1ba","#f7ebe4")
 col_HMapST <- c("#edffef","#a4ebab","#70b577")
 col_HMapST <- c("#93db9b", "#b9f0bf","#edffef")
@@ -531,9 +536,9 @@ Heatmap(
     v2 = pindex(statistics_LogFC.mtx, i, j)
 
     l1 = v1 <= SetFDRThr & abs(v2) < SetLogFCThr
-    grid.points(x[l1], y[l1], pch = 4, size = unit(4, "mm"))
+    grid.points(x[l1], y[l1], pch = pch1, size = unit(pchSize1, "mm"))
     l3 = v1 <= SetFDRThr & abs(v2) >= SetLogFCThr
-    grid.points(x[l3], y[l3], pch = 1, size = unit(8, "mm"))
+    grid.points(x[l3], y[l3], pch = pch2, size = unit(pchSize2, "mm"))
 
   }
 
@@ -574,10 +579,10 @@ Heatmap(
     v2 = pindex(statistics_LogFC.mtx, i, j)
 
     l2 = abs(v2) >= SetLogFCThr & v1 > SetFDRThr
-    grid.points(x[l2], y[l2], pch = 4, size = unit(4, "mm"))
+    grid.points(x[l2], y[l2], pch = pch1, size = unit(pchSize1, "mm"))
 
     l3 = v1 <= SetFDRThr & abs(v2) >= SetLogFCThr
-    grid.points(x[l3], y[l3], pch = 1, size = unit(8, "mm"))
+    grid.points(x[l3], y[l3], pch = pch2, size = unit(pchSize2, "mm"))
   }
 ) -> P.Heatmap_LogFC
 
