@@ -1,8 +1,8 @@
 ### ComplexHeatmap
 ### Ref: https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html
 
-### Ref: Add P-values and Significance Levels to ggplots
-### http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
+### Add P-values and Significance Levels to ggplots
+### Ref: http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
 
 ## https://www.middleprofessor.com/files/applied-biostatistics_bookdown/_book/plotting-models.html
 ## https://github.com/kassambara/ggpubr/issues/111
@@ -10,8 +10,6 @@
 ##### Presetting ######
 rm(list = ls()) # Clean variable
 memory.limit(150000)
-
-Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
 
 #### Installation and load the required libraries ####
 #### Basic installation ####
@@ -52,7 +50,10 @@ source("FUN_CellChatOne.R")
 # ## INTCHG: Interchangeable
 # SampleTypeSet = "PBMC"
 
-## CellChat DB Set
+## Set Path
+Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
+
+## Set CellChat DB
 CCDBType = "ECM" # c("ECM","CC","Secret")
 
 ##### Load Data* #####
@@ -97,7 +98,7 @@ cellchat <- mergeCellChat(object.list, add.names = names(object.list))
 rm(object.list, cellchat.EOCX, cellchat.PreCX)
 
 
-##### Current path and new folder setting  #####
+##### Current path and new folder setting*  #####
 Version = paste0(Sys.Date(),"_", SampleType, "_", CCDBType, "_CellChat_Heatmap")
 SaveCC.Path = paste0(Save.Path,"/",Version)
 dir.create(SaveCC.Path)
