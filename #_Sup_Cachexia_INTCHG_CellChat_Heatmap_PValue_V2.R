@@ -105,7 +105,7 @@ rm(object.list, cellchat.EOCX, cellchat.PreCX)
 
 
 ##### Current path and new folder setting*  #####
-Version = paste0(Sys.Date(),"_", SampleType, "_", CCDBType, "_CellChat_Heatmap")
+Version = paste0(Sys.Date(),"_", SampleType, "_", CCDBType, "_CellChat_Heatmap_V2")
 SaveCC.Path = paste0(Save.Path,"/",Version)
 dir.create(SaveCC.Path)
 
@@ -525,22 +525,15 @@ Heatmap(
 
   ## R plot pch symbols : The different point shapes available in R
   ## Ref: http://www.sthda.com/english/wiki/r-plot-pch-symbols-the-different-point-shapes-available-in-r
-  # layer_fun = function(j, i, x, y, width, height, fill)
-  # {
-  #   v1 = pindex(statistics_FDR.mtx, i, j)
-  #   l1 = v1 < SetFDRThr
-  #   grid.points(x[l1], y[l1], pch = 16, size = unit(4, "mm"))
-  # }
-
   layer_fun = function(j, i, x, y, width, height, fill)
   {
     v1 = pindex(statistics_FDR.mtx, i, j)
     v2 = pindex(statistics_LogFC.mtx, i, j)
 
-    l1 = v1 < SetFDRThr
-    grid.points(x[l1], y[l1], pch = 1, size = unit(4, "mm"))
-    l3 = v1 < SetFDRThr & abs(v2) > SetLogFCThr
-    grid.points(x[l3], y[l3], pch = 16, size = unit(4, "mm"))
+    l1 = v1 <= SetFDRThr & abs(v2) < SetLogFCThr
+    grid.points(x[l1], y[l1], pch = 4, size = unit(4, "mm"))
+    l3 = v1 <= SetFDRThr & abs(v2) >= SetLogFCThr
+    grid.points(x[l3], y[l3], pch = 1, size = unit(8, "mm"))
 
   }
 
@@ -580,11 +573,11 @@ Heatmap(
     v1 = pindex(statistics_FDR.mtx, i, j)
     v2 = pindex(statistics_LogFC.mtx, i, j)
 
-    l2 = abs(v2) > SetLogFCThr
-    grid.points(x[l2], y[l2], pch = 1, size = unit(4, "mm"))
+    l2 = abs(v2) >= SetLogFCThr & v1 > SetFDRThr
+    grid.points(x[l2], y[l2], pch = 4, size = unit(4, "mm"))
 
-    l3 = v1 < SetFDRThr & abs(v2) > SetLogFCThr
-    grid.points(x[l3], y[l3], pch = 16, size = unit(4, "mm"))
+    l3 = v1 <= SetFDRThr & abs(v2) >= SetLogFCThr
+    grid.points(x[l3], y[l3], pch = 1, size = unit(8, "mm"))
   }
 ) -> P.Heatmap_LogFC
 
