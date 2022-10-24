@@ -500,6 +500,11 @@ pchSize1 = 4
 pch2 = 1
 pchSize2 = 8
 
+# pch1 = 1
+# pchSize1 = 4
+# pch2 = 16
+# pchSize2 = 4
+
 col_HMapST <- c("#db9569","#f5d1ba","#f7ebe4")
 col_HMapST <- c("#edffef","#a4ebab","#70b577")
 col_HMapST <- c("#93db9b", "#b9f0bf","#edffef")
@@ -603,76 +608,4 @@ dev.off()
 # save.image(paste0(SaveCC.Path,"/",Version,"_LR_Stats_Heatmap.RData"))
 
 
-##******************************************************************************##
-##### Record ####
-
-# ## Summary Statistic Table
-# #(Ori)# SummaryTable.df <- compare_means( Vwf ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
-#
-# # ## Error (Solved)
-# # TTT <- compare_means( Anno_Temp.df[,TarGene[1]] ~ Cachexia, data = Anno_Temp.df, group.by = "celltype"	)
-#
-# # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
-# # convert string column name to name/symbol
-# f <- paste0(TarGene[1]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
-# SummaryTable.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype"))
-# rm(f)
-# SummaryTable.df$celltype <- factor(SummaryTable.df$celltype  ,levels = CellType.Order)
-# SummaryTable.df <- SummaryTable.df[order(SummaryTable.df$celltype), ]
-
-
-#### Plot Heatmap ####
-
-# ## Set row annotation
-# ## Color setting
-# col_exp <-  colorRamp2(
-#   c(min(anno_row.df$PValue), mean(anno_row.df$PValue), max(anno_row.df$PValue)),
-#   c("#3f705a", "#52bf8e","#b6d4ca")
-#
-# )
-# col_exp2 <-  colorRamp2(
-#   c(min(anno_row.df$logFC), mean(anno_row.df$logFC), max(anno_row.df$logFC)),
-#   c("#488c67", "#333333","#edd493")
-# )
-#
-# ha_row = rowAnnotation(
-#   p.value = anno_row.df$PValue,
-#   LogFC = anno_row.df$logFC,
-#   col = list(p.value = col_exp, LogFC = col_exp2),
-#   show_legend = T
-# )
-#
-
-
-# ## Block annotation
-# split = rep(1:le, each = 10)
-#
-# Heatmap(
-#   matrix.df,
-#   cluster_rows = T,
-#   cluster_columns = F,
-#
-#   column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
-#   show_column_names = F,
-#   show_row_names = T,
-#   name = "GeneExp",
-#   # set color
-#   col = colorRamp2(
-#     c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-#     col_HMap
-#   ),
-#   show_heatmap_legend = T,
-#   use_raster = F,
-#   # top_annotation = ha_column_T,
-#   top_annotation = HeatmapAnnotation(foo = anno_block(gp = gpar(fill = 2:4))),
-#   # right_annotation = ha_row
-#   column_split = Anno_Cell.df$celltype,
-#
-# ) -> P.Heatmap4
-#
-# P.Heatmap4 %>% print
-
-# # Test Combine Fig
-# P.Heatmap_GeneExp+P.Heatmap_GeneExp
-# # P.Heatmap_GeneExp+P.Heatmap4
 
