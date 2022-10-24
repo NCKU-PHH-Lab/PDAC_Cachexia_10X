@@ -207,7 +207,9 @@ try({
       SummaryTable_Temp.df <- SummaryTable_Temp.df[order(SummaryTable_Temp.df$celltype), ]
 
       ## Filter
-      if(c("****") %in% SummaryTable_Temp.df$p.signif || c("***") %in% SummaryTable_Temp.df$p.signif|| c("**") %in% SummaryTable_Temp.df$p.signif){
+      # if(c("****") %in% SummaryTable_Temp.df$p.signif || c("***") %in% SummaryTable_Temp.df$p.signif|| c("**") %in% SummaryTable_Temp.df$p.signif){
+      # if(c("****") %in% SummaryTable_Temp.df$p.signif){
+      if(sum(SummaryTable_Temp.df$p.adj < 1.0e-7)>=1){
         SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
       }else{
         SummaryTable_Sub.df <- SummaryTable_Sub.df
@@ -464,12 +466,28 @@ Heatmap(
   # right_annotation = ha_row,
   width = length(CellType.Order)*unit(7, "mm"),
   height = length(CellType.Order)*unit(17, "mm"),
+
+  ## R plot pch symbols : The different point shapes available in R
+  ## Ref: http://www.sthda.com/english/wiki/r-plot-pch-symbols-the-different-point-shapes-available-in-r
+  # layer_fun = function(j, i, x, y, width, height, fill)
+  # {
+  #   v1 = pindex(statistics_FDR.mtx, i, j)
+  #   l1 = v1 < 0.0000001
+  #   grid.points(x[l1], y[l1], pch = 16, size = unit(4, "mm"))
+  # }
+
   layer_fun = function(j, i, x, y, width, height, fill)
   {
-    v = pindex(statistics_FDR.mtx %>% as.matrix(), i, j)
-    l = v < 0.0000001
-    grid.points(x[l], y[l], pch = 16, size = unit(4, "mm"))
+    v1 = pindex(statistics_FDR.mtx, i, j)
+    v2 = pindex(statistics_LogFC.mtx, i, j)
+
+    l1 = v1 < 0.0000001
+    grid.points(x[l1], y[l1], pch = 1, size = unit(4, "mm"))
+    l3 = v1 < 0.0000001 & abs(v2) > 0.5
+    grid.points(x[l3], y[l3], pch = 16, size = unit(4, "mm"))
+
   }
+
 
 ) -> P.Heatmap_FDR
 
@@ -498,11 +516,19 @@ Heatmap(
   # right_annotation = ha_row,
   width = length(CellType.Order)*unit(7, "mm"),
   height = length(CellType.Order)*unit(17, "mm"),
+
+  ## R plot pch symbols : The different point shapes available in R
+  ## Ref: http://www.sthda.com/english/wiki/r-plot-pch-symbols-the-different-point-shapes-available-in-r
   layer_fun = function(j, i, x, y, width, height, fill)
   {
-    v = pindex(statistics_LogFC.mtx %>% as.matrix(), i, j)
-    l = abs(v) > 0.5
-    grid.points(x[l], y[l], pch = 16, size = unit(4, "mm"))
+    v1 = pindex(statistics_FDR.mtx, i, j)
+    v2 = pindex(statistics_LogFC.mtx, i, j)
+
+    l2 = abs(v2) > 0.5
+    grid.points(x[l2], y[l2], pch = 1, size = unit(4, "mm"))
+
+    l3 = v1 < 0.0000001 & abs(v2) > 0.5
+    grid.points(x[l3], y[l3], pch = 16, size = unit(4, "mm"))
   }
 ) -> P.Heatmap_LogFC
 
