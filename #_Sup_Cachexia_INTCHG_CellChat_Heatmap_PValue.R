@@ -56,6 +56,9 @@ Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBM
 ## Set CellChat DB
 CCDBType = "ECM" # c("ECM","CC","Secret")
 
+## Set FDR Thr
+SetFDRThr <- 1.0e-7
+
 ##### Load Data* #####
 ## Load RData
 # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-09-09_Results_1stSubmission/2022-09-09_PBMC_Main/06_Cell_type_annotation.RData")
@@ -87,7 +90,8 @@ if(SampleType == "PBMC"){
 
   # Clean up
   rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path","CCDBType","CellType.Order",
-                          "CCMarker_Female.lt","CCMarker_Male.lt","CCMarker_SPA.lt")))
+                          "CCMarker_Female.lt","CCMarker_Male.lt","CCMarker_SPA.lt",
+                          "SetFDRThr")))
 
 ## Load CellChat rds
 cellchat.EOCX <- readRDS(paste0(Save.Path,"/",SampleType,"_CellCell_Interaction/",CCDBType,"_EOCX_CellChat.rds"))
@@ -209,7 +213,7 @@ try({
       ## Filter
       # if(c("****") %in% SummaryTable_Temp.df$p.signif || c("***") %in% SummaryTable_Temp.df$p.signif|| c("**") %in% SummaryTable_Temp.df$p.signif){
       # if(c("****") %in% SummaryTable_Temp.df$p.signif){
-      if(sum(SummaryTable_Temp.df$p.adj < 1.0e-7)>=1){
+      if(sum(SummaryTable_Temp.df$p.adj < SetFDRThr)>=1){
         SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
       }else{
         SummaryTable_Sub.df <- SummaryTable_Sub.df
@@ -459,7 +463,7 @@ Heatmap(
   # set color
   col = colorRamp2(
     # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-    c(0, 0.0000001 , 1),
+    c(0, SetFDRThr , 1),
     col_HMapST
   ),
   show_heatmap_legend = T,
@@ -474,7 +478,7 @@ Heatmap(
   # layer_fun = function(j, i, x, y, width, height, fill)
   # {
   #   v1 = pindex(statistics_FDR.mtx, i, j)
-  #   l1 = v1 < 0.0000001
+  #   l1 = v1 < SetFDRThr
   #   grid.points(x[l1], y[l1], pch = 16, size = unit(4, "mm"))
   # }
 
@@ -483,9 +487,9 @@ Heatmap(
     v1 = pindex(statistics_FDR.mtx, i, j)
     v2 = pindex(statistics_LogFC.mtx, i, j)
 
-    l1 = v1 < 0.0000001
+    l1 = v1 < SetFDRThr
     grid.points(x[l1], y[l1], pch = 1, size = unit(4, "mm"))
-    l3 = v1 < 0.0000001 & abs(v2) > 0.5
+    l3 = v1 < SetFDRThr & abs(v2) > 0.5
     grid.points(x[l3], y[l3], pch = 16, size = unit(4, "mm"))
 
   }
@@ -529,7 +533,7 @@ Heatmap(
     l2 = abs(v2) > 0.5
     grid.points(x[l2], y[l2], pch = 1, size = unit(4, "mm"))
 
-    l3 = v1 < 0.0000001 & abs(v2) > 0.5
+    l3 = v1 < SetFDRThr & abs(v2) > 0.5
     grid.points(x[l3], y[l3], pch = 16, size = unit(4, "mm"))
   }
 ) -> P.Heatmap_LogFC
