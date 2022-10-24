@@ -339,7 +339,9 @@ Heatmap(
   top_annotation = ha_column_T,
   # right_annotation = ha_row
   width = length(CellType.Order)*unit(7, "mm"),
-  height = length(CellType.Order)*unit(17, "mm")
+  height = length(CellType.Order)*unit(17, "mm"),
+  column_title = paste0(SampleType,"_",CCDBType),
+  column_title_gp = gpar(fontsize = 20, fontface = "bold")
 ) -> P.Heatmap_GeneExp
 
 P.Heatmap_GeneExp %>% print
