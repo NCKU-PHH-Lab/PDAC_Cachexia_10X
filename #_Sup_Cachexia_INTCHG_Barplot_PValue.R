@@ -45,7 +45,7 @@ scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype
                                                          "NK","B","Mast","Ery"))
 
 ##### Current path and new folder setting  #####
-TarGene <- "Cd47"
+TarGene <- "Chil3"
 Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
 SaveSup.Path = paste0(getwd(),"/",Version)
 dir.create(SaveSup.Path)
