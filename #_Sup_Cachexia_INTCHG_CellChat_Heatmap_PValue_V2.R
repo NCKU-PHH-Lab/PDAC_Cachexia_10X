@@ -495,15 +495,15 @@ ha_column_ST = HeatmapAnnotation(
 
 
 # Set Heatmap color
-pch1 = 4
-pchSize1 = 4
-pch2 = 1
-pchSize2 = 8
-
-# pch1 = 1
+# pch1 = 4
 # pchSize1 = 4
-# pch2 = 16
-# pchSize2 = 4
+# pch2 = 1
+# pchSize2 = 8
+
+pch1 = 1
+pchSize1 = 4
+pch2 = 16
+pchSize2 = 4
 
 col_HMapST <- c("#db9569","#f5d1ba","#f7ebe4")
 col_HMapST <- c("#edffef","#a4ebab","#70b577")

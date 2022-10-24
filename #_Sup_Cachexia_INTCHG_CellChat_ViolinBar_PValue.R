@@ -7,8 +7,11 @@
 ## https://davidbaranger.com/2018/03/05/showing-your-data-scatter-box-violin-plots/
 
 # ##### Presetting ######
-# rm(list = ls()) # Clean variable
-# memory.limit(150000)
+rm(list = ls()) # Clean variable
+memory.limit(150000)
+
+## Set Path
+Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
 
 
 #### Installation and load the required libraries ####
@@ -60,7 +63,7 @@ load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
 
 ## INTCHG: Interchangeable
 ## SubType Setting
-if(Save.Path == "PBMC"){
+if(SampleType == "PBMC"){
   ## For PBMC
   scRNA.SeuObj <- PBMC.combined
 
@@ -70,7 +73,7 @@ if(Save.Path == "PBMC"){
                                                  levels = CellType.Order)
 
 
-}else if(Save.Path == "SC"){
+}else if(SampleType == "SC"){
   ## For SC
   scRNA.SeuObj <- SC.combined
 
