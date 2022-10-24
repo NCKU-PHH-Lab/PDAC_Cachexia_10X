@@ -249,9 +249,11 @@ colnames(matrix.df) <- Anno_Cell.df$ID
 ## TarGene with PathAnno Matrix
 TarGeneAnno_Temp.df <- data.frame(gene=TarGene_Sum.set) %>% left_join(SummaryTable.df[,c("gene","pathway_name")]) %>% unique()
 Pathway.set <- TarGeneAnno_Temp.df[,"pathway_name"] %>% unique()
-col3 = pal_npg("nrc", alpha = 0.7)(length(Pathway.set))
-colPT <- col3[1:length(Pathway.set)]
-names(colPT) <- Pathway.set
+
+# library(ggsci)
+# col3 = pal_npg("nrc", alpha = 0.7)(length(Pathway.set))
+# colPT <- col3[1:length(Pathway.set)]
+# names(colPT) <- Pathway.set
 
 TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% count(pathway_name)
 TarGeneAnno_Cell.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
@@ -406,7 +408,7 @@ statistics_FDR.mtx <- left_join(data.frame(gene=row.names(matrix.df)),statistics
 row.names(statistics_FDR.mtx) <- statistics_FDR.mtx[,1]
 statistics_FDR.mtx <- statistics_FDR.mtx[,-1]
 ## Reoder the df
-statistics_FDR.mtx <- statistics_FDR.mtx %>% select(CellType.Order)
+statistics_FDR.mtx <- statistics_FDR.mtx %>% select(CellType.Order) %>% as.matrix()
 
 ### LogFC df Setting
 statistics_LogFC.df <- statistics.df[,c(1,2,4)] %>% pivot_wider(names_from = celltype, values_from = c("avg_log2FC"))
@@ -414,7 +416,7 @@ statistics_LogFC.mtx <- left_join(data.frame(gene=row.names(matrix.df)),statisti
 row.names(statistics_LogFC.mtx) <- statistics_LogFC.mtx[,1]
 statistics_LogFC.mtx <- statistics_LogFC.mtx[,-1]
 ## Reoder the df
-statistics_LogFC.mtx <- statistics_LogFC.mtx %>% select(CellType.Order)
+statistics_LogFC.mtx <- statistics_LogFC.mtx %>% select(CellType.Order) %>% as.matrix()
 
 
 ### Plot FDR Heatmap
@@ -461,7 +463,14 @@ Heatmap(
   top_annotation = ha_column_ST,
   # right_annotation = ha_row,
   width = length(CellType.Order)*unit(7, "mm"),
-  height = length(CellType.Order)*unit(17, "mm")
+  height = length(CellType.Order)*unit(17, "mm"),
+  layer_fun = function(j, i, x, y, width, height, fill)
+  {
+    v = pindex(statistics_FDR.mtx %>% as.matrix(), i, j)
+    l = v < 0.0000001
+    grid.points(x[l], y[l], pch = 16, size = unit(4, "mm"))
+  }
+
 ) -> P.Heatmap_FDR
 
 P.Heatmap_FDR %>% print
@@ -488,7 +497,13 @@ Heatmap(
   top_annotation = ha_column_ST,
   # right_annotation = ha_row,
   width = length(CellType.Order)*unit(7, "mm"),
-  height = length(CellType.Order)*unit(17, "mm")
+  height = length(CellType.Order)*unit(17, "mm"),
+  layer_fun = function(j, i, x, y, width, height, fill)
+  {
+    v = pindex(statistics_LogFC.mtx %>% as.matrix(), i, j)
+    l = abs(v) > 0.5
+    grid.points(x[l], y[l], pch = 16, size = unit(4, "mm"))
+  }
 ) -> P.Heatmap_LogFC
 
 P.Heatmap_LogFC %>% print
