@@ -351,7 +351,19 @@ write.table( SummaryTable.df ,
              row.names = F
 )
 
+write.table( statistics_LogFC.mtx  ,
+             file = paste0(SaveCC.Path,"/",Version,"_LR_Stats_Seurat_LogFC.tsv"),
+             sep = "\t",
+             quote = F,
+             row.names = F
+)
 
+write.table( statistics_FDR.mtx  ,
+             file = paste0(SaveCC.Path,"/",Version,"_LR_Stats_Seurat_FDR.tsv"),
+             sep = "\t",
+             quote = F,
+             row.names = F
+)
 
 ## ********************************************************************************************************************************* ##
 ##### ComplexHeatmap #####
