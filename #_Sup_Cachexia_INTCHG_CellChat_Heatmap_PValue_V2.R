@@ -7,6 +7,11 @@
 ## https://www.middleprofessor.com/files/applied-biostatistics_bookdown/_book/plotting-models.html
 ## https://github.com/kassambara/ggpubr/issues/111
 
+##### To-Do List ######
+# -[ ] Debug the Database: Combine the LR to the Complex (For example: Gp complex include Gp1ba, Gp1bb, Gp5, Gp9)
+# -[ ] Clean up the code and Obj
+
+
 ##### Presetting ######
 rm(list = ls()) # Clean variable
 memory.limit(150000)
