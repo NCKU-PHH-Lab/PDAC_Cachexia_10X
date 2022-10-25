@@ -1,7 +1,12 @@
+## Tutorial:Gene Set Enrichment Analysis (fgsea)
+## Ref: https://www.biostars.org/p/467197/
 
-# ##### Presetting ######
-#   rm(list = ls()) # Clean variable
-#   memory.limit(150000)
+##### Presetting ######
+  rm(list = ls()) # Clean variable
+  memory.limit(150000)
+
+  Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
+  SampleType = "PBMC"
 
 ##### Load Packages #####
   # if(!require("tidyverse")) install.packages("tidyverse")
