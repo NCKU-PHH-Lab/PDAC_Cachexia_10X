@@ -51,7 +51,7 @@ source("FUN_CellChatOne.R")
 # SampleTypeSet = "PBMC"
 
 ## CellChat DB Set
-CCDBType = "ECM" # c("ECM","CC","Secret")
+CCDBType = "Secret" # c("ECM","CC","Secret")
 
 # ##### Load Data* #####
 # ## Load RData
@@ -120,7 +120,7 @@ library(ggplot2)
 pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Duc.pdf"),width = 30, height = 10 )
 netVisual_bubble(cellchat, sources.use = c(1,2,3,4,5,6) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
   #scale_size(range = sizeRange, name="P-Value")+
-  ggtitle(paste0(SampleType,"_Duc : ",CCDBType))+
+  ggtitle(paste0("Allograft_Duc : ",CCDBType))+
   theme(plot.title = element_text(color="black", size=14, face="bold.italic"))+
   theme(axis.text.y = element_text(face="bold", color="black",size=12, angle=0))
 
@@ -130,7 +130,7 @@ dev.off()
 pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Mac.pdf"),width = 20, height = 8 )
 netVisual_bubble(cellchat, sources.use = c(7,8,9,10,11) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
   #scale_size(range = sizeRange, name="P-Value")+
-  ggtitle(paste0(SampleType,"_Mac : ",CCDBType))+
+  ggtitle(paste0("Allograft_Mac : ",CCDBType))+
   theme(plot.title = element_text(color="black", size=14, face="bold.italic"))+
   theme(axis.text.y = element_text(face="bold", color="black",size=12, angle=0))
 
@@ -140,7 +140,7 @@ dev.off()
 pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Fib.pdf"),width = 20, height = 8 )
 netVisual_bubble(cellchat, sources.use = c(12,13,14) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
   #scale_size(range = sizeRange, name="P-Value")+
-  ggtitle(paste0(SampleType,"_Fib : ",CCDBType))+
+  ggtitle(paste0("Allograft_Fib : ",CCDBType))+
   theme(plot.title = element_text(color="black", size=14, face="bold.italic"))+
   theme(axis.text.y = element_text(face="bold", color="black",size=12, angle=0))
 
@@ -152,7 +152,7 @@ if(CCDBType == "ECM")
   pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig.pdf"),width = 25, height = 20 )
   netVisual_bubble(cellchat, sources.use = c(1,2,3,4,7,8,9,12) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
-    ggtitle(paste0(SampleType," : ",CCDBType))+
+    ggtitle(paste0("Allograft : ",CCDBType))+
     theme(plot.title = element_text(color="black", size=17, face="bold.italic"))+
     theme(axis.text.y = element_text(face="bold", color="black",size=12, angle=0)) -> p
   p %>% print()
@@ -163,7 +163,7 @@ if(CCDBType == "ECM")
   pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig_Duc.pdf"),width = 20, height = 15 )
   netVisual_bubble(cellchat, sources.use = c(1,2,3,4) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
-    ggtitle(paste0(SampleType,"_Duc : ",CCDBType))+
+    ggtitle(paste0("Allograft_Duc : ",CCDBType))+
     theme(plot.title = element_text(color="black", size=17, face="bold.italic"))+
     theme(axis.text.y = element_text(face="bold", color="black",size=12, angle=0))-> p
   p %>% print()
@@ -174,7 +174,7 @@ if(CCDBType == "ECM")
   pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig_Mac.pdf"),width = 20, height = 10 )
   netVisual_bubble(cellchat, sources.use = c(7,8,9) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
-    ggtitle(paste0(SampleType,"_Mac : ",CCDBType))+
+    ggtitle(paste0("Allograft_Mac : ",CCDBType))+
     theme(plot.title = element_text(color="black", size=17, face="bold.italic"))+
     theme(axis.text.y = element_text(face="bold", color="black",size=10, angle=0)) -> p
   p %>% print()
@@ -185,7 +185,7 @@ if(CCDBType == "ECM")
   pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig_Fib.pdf"),width = 10, height = 13 )
   netVisual_bubble(cellchat, sources.use = c(12) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
-    ggtitle(paste0(SampleType,"_Fib : ",CCDBType))+
+    ggtitle(paste0("Allograft_Fib : ",CCDBType))+
     theme(plot.title = element_text(color="black", size=17, face="bold.italic"))+
     theme(axis.text.y = element_text(face="bold", color="black",size=10, angle=0)) -> p
   p %>% print()
@@ -196,7 +196,7 @@ if(CCDBType == "ECM")
   pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig_Mac_Fib.pdf"),width = 20, height = 15 )
   netVisual_bubble(cellchat, sources.use = c(7,8,9,12) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
-    ggtitle(paste0(SampleType,"_Mac_Fib : ",CCDBType))+
+    ggtitle(paste0("Allograft_Mac_Fib : ",CCDBType))+
     theme(plot.title = element_text(color="black", size=17, face="bold.italic"))+
     theme(axis.text.y = element_text(face="bold", color="black",size=10, angle=0)) -> p
   p %>% print()
@@ -210,7 +210,7 @@ if(CCDBType == "CC")
   pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig.pdf"),width = 20, height = 4 )
   netVisual_bubble(cellchat, sources.use = c(1,2,3,4,7) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
-    ggtitle(paste0(SampleType," : ",CCDBType))+
+    ggtitle(paste0("Allograft : ",CCDBType))+
     theme(plot.title = element_text(color="black", size=17, face="bold.italic"))+
     theme(axis.text.y = element_text(face="bold", color="black",size=12, angle=0)) -> p
   p %>% print()
@@ -224,7 +224,7 @@ if(CCDBType == "Secret")
   pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig.pdf"),width = 20, height = 4 )
   netVisual_bubble(cellchat, sources.use = c(1,2,3,4,5,7,8,9,12) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
-    ggtitle(paste0(SampleType," : ",CCDBType))+
+    ggtitle(paste0("Allograft : ",CCDBType))+
     theme(plot.title = element_text(color="black", size=17, face="bold.italic"))+
     theme(axis.text.y = element_text(face="bold", color="black",size=12, angle=0)) -> p
   p %>% print()
@@ -236,7 +236,7 @@ if(CCDBType == "Secret")
 pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot.pdf"),width = 15, height = 6 )
 netVisual_bubble(cellchat, comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
   #scale_size(range = sizeRange, name="P-Value")+
-  ggtitle(paste0(SampleType,": ",CCDBType))+
+  ggtitle(paste0("Allograft : ",CCDBType))+
   theme(plot.title = element_text(color="black", size=14, face="bold.italic"))+
   theme(axis.text.y = element_text(face="bold", color="black",size=9, angle=0))
 
