@@ -51,7 +51,7 @@ source("FUN_CellChatOne.R")
 # SampleTypeSet = "PBMC"
 
 ## CellChat DB Set
-CCDBType = "Secret" # c("ECM","CC","Secret")
+CCDBType = "ECM" # c("ECM","CC","Secret")
 
 # ##### Load Data* #####
 # ## Load RData
