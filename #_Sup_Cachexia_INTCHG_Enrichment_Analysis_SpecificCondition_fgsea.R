@@ -49,9 +49,12 @@
 
   # Sys.setlocale(category = "LC_ALL", locale = "UTF-8")
 
+##### Function setting #####
+  ## Call function
+  source("FUN_Beautify_ggplot.R")
 
 ##### Load RData* #####
-  load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
+  load(paste0(Save.Path,"/09_1_GSEA_Analysis_(SPA).RData"))
 
   ## INTCHG: Interchangeable
   ## SubType Setting
@@ -67,7 +70,8 @@
 
 
   #### Clean up Object ####
-  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path")))
+  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path",str_subset(objects(), pattern = "GSEA"))))
+  # rm(list=setdiff(ls(), str_subset(objects(), pattern = "Venn")))
 
   ## Save Ori
   scRNA_Ori.SeuObj <- scRNA.SeuObj
@@ -76,6 +80,46 @@
   scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"]] )]
 
   ## Clean up data (Delete other type)
+
+#####***************************************************************************#####
+#####*  Plot by previous results *#####
+##### Set condition #####
+  SubType = "Neu"
+  Set_FDR <- 0.05
+  Set_NES <- 1
+
+##### Extract df #####
+
+  GSEA_Sub.df <- GSEA_Large.df.TOP[GSEA_Large.df.TOP$PhenoType %in% SubType,]
+  # PBMC.combined$celltype <- factor(PBMC.combined$celltype,levels = unique(PBMC.combined$celltype))
+  # GSEA_Sub.df$NES <- factor(GSEA_Sub.df$NES)
+
+  ## Filter by FDR & NES
+  GSEA_Sub.df <- GSEA_Sub.df[GSEA_Sub.df$padj <= Set_FDR & abs(GSEA_Sub.df$NES) > 1,]
+
+##### Plot #####
+  NumGenesetsPlt=15
+  Barplot <- ggplot(GSEA_Sub.df, aes(NES, fct_reorder(pathway, NES), fill = padj), showCategory=(NumGenesetsPlt*2)) +
+    geom_barh(stat='identity') +
+    scale_fill_continuous(low = "#d45772", high = "#3b74bf", guide = guide_colorbar(reverse=TRUE)) +
+    theme_minimal() + ylab(NULL)
+
+  Barplot <- Barplot %>% BeautifyggPlot(LegPos = c(0.9, 0.15), AxisTitleSize=1.7, YtextSize=11,OL_Thick = 1.5)
+  Barplot
+
+#####***************************************************************************#####
+#####*  Rerun GSEA *#####
+##### Load Package #####
+  library(DESeq2)
+  library(org.Hs.eg.db)
+  library(tibble)
+  library(dplyr)
+  library(tidyr)
+  library(fgsea)
+  library(ggplot2)
+  library(reshape2)
+  library(ComplexHeatmap)
+  library(circlize)
 
 ##### Function setting #####
   ## Call function
@@ -92,7 +136,6 @@
   # InputGSEA <- "m5_go_bp_v0_3_symbols.gmt"  # InputGSEA <- "m2.all.v0.3.symbols.gmt"
 
   InputGSEA <- "m2.all.v0.3.symbols.gmt"
-
   InFOLName_GSEA <- "Input_Genesets"
   Pathway.all <- read.delim2(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA),
                              col.names = 1:max(count.fields(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA))),
@@ -101,6 +144,8 @@
 ##### Conditions setting* #####
   Group_Mode <- "GoupByPheno"   # c("GoupByPheno","GoupByGeneExp")
   TarGene_name <- "Chil3"
+  PhenoGrp_name1 <- "Cachexia"
+  PhenoGrp_name2 <- c("EOCX","PreCX")
 
   GeneExpSet.lt <- list(GeneExpMode = "Mean", # c("Mean","Mean1SD","Mean2SD","Mean3SD","Median","Quartile","Customize"))
                         UpCutoff = 1, LowerCutoff = 1)
@@ -110,7 +155,7 @@
     AnnoSet.lt <- list(GroupType = TarGene_name, GroupCompare = c("High","Low") )   ## DEG by GeneExp group
   }else{
     ## Group by Pheno
-    AnnoSet.lt <- list(GroupType = "Cachexia", GroupCompare = c("EOCX","PreCX") )
+    AnnoSet.lt <- list(GroupType = PhenoGrp_name1, GroupCompare = PhenoGrp_name2 )
   }
 
   Thr.lt <- list(LogFC = c("logFC",1), pVal = c("PValue",0.05) )
@@ -119,12 +164,11 @@
   ProjectName = "CC10X"
   # SampleType = "PBMC"
 
-  ExportAnno2 = "EOPre_Neu"
   if(Group_Mode == "GoupByGeneExp"){
-    ExportAnno = paste0(TarGene_name,"_",GeneExpSet.lt$GeneExpMode,"_",ExportAnno2)
+    ExportAnno = paste0(TarGene_name,"_",GeneExpSet.lt$GeneExpMode,"_",SubType)
 
   }else{
-    ExportAnno = paste0(Group_Mode,"_",ExportAnno2)
+    ExportAnno = paste0(Group_Mode,"_",paste0(PhenoGrp_name2[1],PhenoGrp_name2[2],"_",SubType))
 
   }
 
@@ -178,7 +222,7 @@
   # rm(PhenoRowKeep.set)
 
   ## Select Pheno row2
-  PhenoRowKeep.set <- list(col="celltype" ,row=c("Neu"))
+  PhenoRowKeep.set <- list(col="celltype" ,row=c(SubType))
   Anno.df <- Anno.df[Anno.df[,PhenoRowKeep.set[["col"]]] %in% PhenoRowKeep.set[["row"]], ]
 
   GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df[,1] ]
@@ -231,14 +275,196 @@
   DE_Extract.df <- DEG_ANAL.lt[["DE_Extract.df"]]
 
 
-  #### Run GSEA ####
-  source("FUN_GSEA_ANAL.R")
+  #### Old version ####
+  # #### Run GSEA ####
+  # source("FUN_GSEA_ANAL.R")
+  #
+  # GSEA_Result.lt <- FUN_GSEA_ANAL(DE_Extract.df, CMGeneSet = Pathway.all,
+  #                                 NumGenesetsPlt=15,
+  #                                 TarGeneName = TarGene_name,
+  #                                 ThrSet = Thr.lt, Species = "Homo sapiens", # Speices type can check by msigdbr_species()
+  #                                 Save.Path = SaveSub.Path, ExportName = ExportName, AnnoName = "Path")
 
-  GSEA_Result.lt <- FUN_GSEA_ANAL(DE_Extract.df, CMGeneSet = Pathway.all,
-                                  NumGenesetsPlt=15,
-                                  TarGeneName = TarGene_name,
-                                  ThrSet = Thr.lt, Species = "Homo sapiens", # Speices type can check by msigdbr_species()
-                                  Save.Path = SaveSub.Path, ExportName = ExportName, AnnoName = "Path")
+
+  Pathway.all.list <- list()
+  for (i in c(1:length(Pathway.all[,1]))) {
+    try({
+      Pathway.all.list.ori <- as.data.frame(t(Pathway.all[i,3:length(Pathway.all[i,])]))
+      colnames(Pathway.all.list.ori)[[1]] <- c("Gene")
+
+      ## tryCatch(
+      ##   {
+      Pathway.all.list.ori <- na.omit(Pathway.all.list.ori)
+      ###Pathway.all.list.ori <- HSsymbol2MMsymbol(Pathway.all.list.ori,"Gene")
+
+      # Delete NA(or 0)
+      Pathway.all.list.ori <- Pathway.all.list.ori[Pathway.all.list.ori!=0,]
+
+      Pathway.all.list.ori <- unique(Pathway.all.list.ori)
+      ###Pathway.all.list.ori <- unique(Pathway.all.list.ori$MM.symbol)
+      Pathway.all.list[[i]] <- as.character(Pathway.all.list.ori)
+      # Pathway.all.list[[i]] <- as.character(Pathway.all[i,3:length(Pathway.all[i,])])
+
+
+      names(Pathway.all.list)[[i]] <- Pathway.all[i,1]
+      rm(Pathway.all.list.ori)
+      ##  },
+      ## error=function(e) {
+      ## Pathway.all.list <- Pathway.all.list
+      ## })
+    })
+  }
+
+  # load(paste0(PathName,"/Full_annotation.RData"))
+  pathwaysH <- Pathway.all.list
+
+  ranks <- DE_Extract.df$logFC
+  names(ranks) <- DE_Extract.df$Gene
+
+  fgseaRes <- fgsea(pathwaysH, ranks, minSize=15, maxSize = 500)
+
+  # Tidy the results:
+  fgseaResTidy <- fgseaRes %>%
+    as_tibble() %>%
+    arrange(desc(NES)) # order by normalized enrichment score (NES)
+
+  # To see what genes are in each of these pathways:
+  gene.in.pathway <- pathwaysH %>%
+    enframe("pathway", "SYMBOL") %>%
+    unnest(cols = c(SYMBOL)) # %>%
+    # inner_join(res, by="SYMBOL")
+
+  #______________________VISUALIZATION______________________________#
+
+  #__________bar plot _______________#
+  # Plot the normalized enrichment scores.
+  #Color the bar indicating whether or not the pathway was significant:
+  fgseaResTidy$adjPvalue <- ifelse(fgseaResTidy$padj <= 0.05, "significant", "non-significant")
+  cols <- c("non-significant" = "grey", "significant" = "red")
+  ggplot(fgseaResTidy, aes(reorder(pathway, NES), NES, fill = adjPvalue)) +
+    geom_col() +
+    scale_fill_manual(values = cols) +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    coord_flip() +
+    labs(x="Pathway", y="Normalized Enrichment Score",
+         title="Hallmark pathways Enrichment Score from GSEA")
+
+
+  #__________Enrichment  Plot_______#
+  # Enrichment plot for E2F target gene set
+  plotEnrichment(pathway = pathwaysH[["JARDIM_PERASSI_TRIPLE_NEGATIVE_BREAST_CANCER_MOUSE_XENOGRAFT_MELATONIN_UP"]], ranks)
+
+
+  plotGseaTable(pathwaysH[fgseaRes$pathway[fgseaRes$padj < 0.05]], ranks, fgseaRes,
+                gseaParam=0.5)
+
+
+  #________ Heatmap Plot_____________#
+  # pathways with significant enrichment score
+  sig.path <- fgseaResTidy$pathway[fgseaResTidy$adjPvalue == "significant"]
+  sig.gen <- unique(na.omit(gene.in.pathway$SYMBOL[gene.in.pathway$pathway %in% sig.path]))
+
+  ### create a new data-frame that has '1' for when a gene is part of a term, and '0' when not
+  h.dat <- dcast(gene.in.pathway[, c(1,2)], SYMBOL~pathway)
+  rownames(h.dat) <- h.dat$SYMBOL
+  h.dat <- h.dat[, -1]
+
+  h.dat <- h.dat[rownames(h.dat) %in% sig.gen, ]
+  h.dat <- h.dat[, colnames(h.dat) %in% sig.path]
+
+  # keep those genes with 3  or more occurnes
+  table(data.frame(rowSums(h.dat)))
+
+  h.dat <- h.dat[data.frame(rowSums(h.dat)) >= 3, ]
+
+  #
+  topTable <- res[res$SYMBOL %in% rownames(h.dat), ]
+  rownames(topTable) <- topTable$SYMBOL
+  # match the order of rownames in toptable with that of h.dat
+  topTableAligned <- topTable[which(rownames(topTable) %in% rownames(h.dat)),]
+  topTableAligned <- topTableAligned[match(rownames(h.dat), rownames(topTableAligned)),]
+  all(rownames(topTableAligned) == rownames(h.dat))
+
+  # colour bar for -log10(adjusted p-value) for sig.genes
+  dfMinusLog10FDRGenes <- data.frame(-log10(
+    topTableAligned[which(rownames(topTableAligned) %in% rownames(h.dat)), 'padj']))
+  dfMinusLog10FDRGenes[dfMinusLog10FDRGenes == 'Inf'] <- 0
+
+  # colour bar for fold changes for sigGenes
+  dfFoldChangeGenes <- data.frame(
+    topTableAligned[which(rownames(topTableAligned) %in% rownames(h.dat)), 'log2FoldChange'])
+
+  # merge both
+  dfGeneAnno <- data.frame(dfMinusLog10FDRGenes, dfFoldChangeGenes)
+  colnames(dfGeneAnno) <- c('Gene score', 'Log2FC')
+  dfGeneAnno[,2] <- ifelse(dfGeneAnno$Log2FC > 0, 'Up-regulated',
+                           ifelse(dfGeneAnno$Log2FC < 0, 'Down-regulated', 'Unchanged'))
+  colours <- list(
+    'Log2FC' = c('Up-regulated' = 'royalblue', 'Down-regulated' = 'yellow'))
+  haGenes <- rowAnnotation(
+    df = dfGeneAnno,
+    col = colours,
+    width = unit(1,'cm'),
+    annotation_name_side = 'top')
+
+  # Now a separate color bar for the GSEA enrichment padj. This will
+  # also contain the enriched term names via annot_text()
+
+  # colour bar for enrichment score from fgsea results
+  dfEnrichment <- fgseaRes[, c("pathway", "NES")]
+  dfEnrichment <- dfEnrichment[dfEnrichment$pathway %in% colnames(h.dat)]
+  dd <- dfEnrichment$pathway
+  dfEnrichment <- dfEnrichment[, -1]
+  rownames(dfEnrichment) <- dd
+  colnames(dfEnrichment) <- 'Normalized\n Enrichment score'
+  haTerms <- HeatmapAnnotation(
+    df = dfEnrichment,
+    Term = anno_text(
+      colnames(h.dat),
+      rot = 45,
+      just = 'right',
+      gp = gpar(fontsize = 12)),
+    annotation_height = unit.c(unit(1, 'cm'), unit(8, 'cm')),
+    annotation_name_side = 'left')
+  # now generate the heatmap
+  hmapGSEA <- Heatmap(h.dat,
+                      name = 'GSEA hallmark pathways enrichment',
+                      split = dfGeneAnno[,2],
+                      col = c('0' = 'white', '1' = 'forestgreen'),
+                      rect_gp = gpar(col = 'grey85'),
+                      cluster_rows = TRUE,
+                      show_row_dend = TRUE,
+                      row_title = 'Top Genes',
+                      row_title_side = 'left',
+                      row_title_gp = gpar(fontsize = 11, fontface = 'bold'),
+                      row_title_rot = 90,
+                      show_row_names = TRUE,
+                      row_names_gp = gpar(fontsize = 11, fontface = 'bold'),
+                      row_names_side = 'left',
+                      row_dend_width = unit(35, 'mm'),
+                      cluster_columns = TRUE,
+                      show_column_dend = TRUE,
+                      column_title = 'Enriched terms',
+                      column_title_side = 'top',
+                      column_title_gp = gpar(fontsize = 12, fontface = 'bold'),
+                      column_title_rot = 0,
+                      show_column_names = FALSE,
+                      show_heatmap_legend = FALSE,
+                      clustering_distance_columns = 'euclidean',
+                      clustering_method_columns = 'ward.D2',
+                      clustering_distance_rows = 'euclidean',
+                      clustering_method_rows = 'ward.D2',
+                      bottom_annotation = haTerms)
+
+  tiff("GSEA_enrichment_2.tiff", units="in", width=13, height=22, res=400)
+  draw(hmapGSEA + haGenes,
+       heatmap_legend_side = 'right',
+       annotation_legend_side = 'right')
+  dev.off()
+
+
+
+
 
   #### Run ORA ####
   ## FUN ORA
