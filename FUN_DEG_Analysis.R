@@ -13,7 +13,7 @@ FUN_DEG_Analysis = function(GeneExp.df, Anno.df,
   source("FUN_Package_InstLoad.R")
   Basic.set <- c("tidyverse","ggplot2")
   BiocManager.set <- c("edgeR","baySeq")
-  Package_InstLoad(Basic.set = Basic.set, BiocManager.set = BiocManager.set)
+  FUN_Package_InstLoad(Basic.set = Basic.set, BiocManager.set = BiocManager.set)
 
   #************************************************************************************************************************#
 
