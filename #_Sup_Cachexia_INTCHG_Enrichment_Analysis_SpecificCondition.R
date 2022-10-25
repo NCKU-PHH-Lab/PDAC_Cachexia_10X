@@ -1,5 +1,8 @@
-## Gene Set Enrichment Analysis with ClusterProfiler
-## Ref: https://learn.gencore.bio.nyu.edu/rna-seq-analysis/gene-set-enrichment-analysis/
+## Tutorial:Gene Set Enrichment Analysis (fgsea)
+## Ref: https://www.biostars.org/p/467197/
+## RNA-seq analysis in R
+## Ref: https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
+
 
 ##### Presetting ######
   rm(list = ls()) # Clean variable
@@ -46,9 +49,12 @@
 
   # Sys.setlocale(category = "LC_ALL", locale = "UTF-8")
 
+##### Function setting #####
+  ## Call function
+  source("FUN_Beautify_ggplot.R")
 
 ##### Load RData* #####
-  load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
+  load(paste0(Save.Path,"/09_1_GSEA_Analysis_(SPA).RData"))
 
   ## INTCHG: Interchangeable
   ## SubType Setting
@@ -64,7 +70,8 @@
 
 
   #### Clean up Object ####
-  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path")))
+  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path",str_subset(objects(), pattern = "GSEA"))))
+  # rm(list=setdiff(ls(), str_subset(objects(), pattern = "Venn")))
 
   ## Save Ori
   scRNA_Ori.SeuObj <- scRNA.SeuObj
@@ -73,6 +80,46 @@
   scRNA.SeuObj <- scRNA.SeuObj[,!grepl("Other", scRNA.SeuObj@meta.data[["celltype"]] )]
 
   ## Clean up data (Delete other type)
+
+#####***************************************************************************#####
+#####*  Plot by previous results *#####
+##### Set condition #####
+  SubType = "Neu"
+  Set_FDR <- 0.05
+  Set_NES <- 1
+
+##### Extract df #####
+
+  GSEA_Sub.df <- GSEA_Large.df.TOP[GSEA_Large.df.TOP$PhenoType %in% SubType,]
+  # PBMC.combined$celltype <- factor(PBMC.combined$celltype,levels = unique(PBMC.combined$celltype))
+  # GSEA_Sub.df$NES <- factor(GSEA_Sub.df$NES)
+
+  ## Filter by FDR & NES
+  GSEA_Sub.df <- GSEA_Sub.df[GSEA_Sub.df$padj <= Set_FDR & abs(GSEA_Sub.df$NES) > 1,]
+
+##### Plot #####
+  NumGenesetsPlt=15
+  Barplot <- ggplot(GSEA_Sub.df, aes(NES, fct_reorder(pathway, NES), fill = padj), showCategory=(NumGenesetsPlt*2)) +
+    geom_barh(stat='identity') +
+    scale_fill_continuous(low = "#d45772", high = "#3b74bf", guide = guide_colorbar(reverse=TRUE)) +
+    theme_minimal() + ylab(NULL)
+
+  Barplot <- Barplot %>% BeautifyggPlot(LegPos = c(0.9, 0.15), AxisTitleSize=1.7, YtextSize=11,OL_Thick = 1.5)
+  Barplot
+
+#####***************************************************************************#####
+#####*  Rerun GSEA *#####
+##### Load Package #####
+  library(DESeq2)
+  library(org.Hs.eg.db)
+  library(tibble)
+  library(dplyr)
+  library(tidyr)
+  library(fgsea)
+  library(ggplot2)
+  library(reshape2)
+  library(ComplexHeatmap)
+  library(circlize)
 
 ##### Function setting #####
   ## Call function
@@ -89,7 +136,6 @@
   # InputGSEA <- "m5_go_bp_v0_3_symbols.gmt"  # InputGSEA <- "m2.all.v0.3.symbols.gmt"
 
   InputGSEA <- "m2.all.v0.3.symbols.gmt"
-
   InFOLName_GSEA <- "Input_Genesets"
   Pathway.all <- read.delim2(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA),
                              col.names = 1:max(count.fields(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA))),
@@ -98,6 +144,8 @@
 ##### Conditions setting* #####
   Group_Mode <- "GoupByPheno"   # c("GoupByPheno","GoupByGeneExp")
   TarGene_name <- "Chil3"
+  PhenoGrp_name1 <- "Cachexia"
+  PhenoGrp_name2 <- c("EOCX","PreCX")
 
   GeneExpSet.lt <- list(GeneExpMode = "Mean", # c("Mean","Mean1SD","Mean2SD","Mean3SD","Median","Quartile","Customize"))
                         UpCutoff = 1, LowerCutoff = 1)
@@ -107,7 +155,7 @@
     AnnoSet.lt <- list(GroupType = TarGene_name, GroupCompare = c("High","Low") )   ## DEG by GeneExp group
   }else{
     ## Group by Pheno
-    AnnoSet.lt <- list(GroupType = "Cachexia", GroupCompare = c("EOCX","PreCX") )
+    AnnoSet.lt <- list(GroupType = PhenoGrp_name1, GroupCompare = PhenoGrp_name2 )
   }
 
   Thr.lt <- list(LogFC = c("logFC",1), pVal = c("PValue",0.05) )
@@ -116,12 +164,11 @@
   ProjectName = "CC10X"
   # SampleType = "PBMC"
 
-  ExportAnno2 = "EOPre_Neu"
   if(Group_Mode == "GoupByGeneExp"){
-    ExportAnno = paste0(TarGene_name,"_",GeneExpSet.lt$GeneExpMode,"_",ExportAnno2)
+    ExportAnno = paste0(TarGene_name,"_",GeneExpSet.lt$GeneExpMode,"_",SubType)
 
   }else{
-    ExportAnno = paste0(Group_Mode,"_",ExportAnno2)
+    ExportAnno = paste0(Group_Mode,"_",paste0(PhenoGrp_name2[1],PhenoGrp_name2[2],"_",SubType))
 
   }
 
@@ -175,7 +222,7 @@
   # rm(PhenoRowKeep.set)
 
   ## Select Pheno row2
-  PhenoRowKeep.set <- list(col="celltype" ,row=c("Neu"))
+  PhenoRowKeep.set <- list(col="celltype" ,row=c(SubType))
   Anno.df <- Anno.df[Anno.df[,PhenoRowKeep.set[["col"]]] %in% PhenoRowKeep.set[["row"]], ]
 
   GeneExp.df <- GeneExp.df[,colnames(GeneExp.df) %in% Anno.df[,1] ]
@@ -236,6 +283,10 @@
                                   TarGeneName = TarGene_name,
                                   ThrSet = Thr.lt, Species = "Homo sapiens", # Speices type can check by msigdbr_species()
                                   Save.Path = SaveSub.Path, ExportName = ExportName, AnnoName = "Path")
+
+
+
+
 
   #### Run ORA ####
   ## FUN ORA
