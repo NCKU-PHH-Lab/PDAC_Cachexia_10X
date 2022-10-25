@@ -1,5 +1,5 @@
-## Tutorial:Gene Set Enrichment Analysis (fgsea)
-## Ref: https://www.biostars.org/p/467197/
+## Gene Set Enrichment Analysis with ClusterProfiler
+## Ref: https://learn.gencore.bio.nyu.edu/rna-seq-analysis/gene-set-enrichment-analysis/
 
 ##### Presetting ######
   rm(list = ls()) # Clean variable

@@ -1,5 +1,8 @@
 ## Tutorial:Gene Set Enrichment Analysis (fgsea)
 ## Ref: https://www.biostars.org/p/467197/
+## RNA-seq analysis in R
+## Ref: https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
+
 
 ##### Presetting ######
   rm(list = ls()) # Clean variable
