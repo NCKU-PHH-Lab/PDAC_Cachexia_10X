@@ -221,7 +221,7 @@ if(CCDBType == "CC")
 if(CCDBType == "Secret")
 {
   ## Significant For Secret
-  pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig.pdf"),width = 20, height = 4 )
+  pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig.pdf"),width = 35, height = 15 )
   netVisual_bubble(cellchat, sources.use = c(1,2,3,4,5,7,8,9,12) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
     ggtitle(paste0("Allograft : ",CCDBType))+
@@ -230,10 +230,33 @@ if(CCDBType == "Secret")
   p %>% print()
 
   dev.off()
+
+  ## Significant For Secret Duc
+  pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig_Duc.pdf"),width = 30, height = 10 )
+  netVisual_bubble(cellchat, sources.use = c(1,2,3,4,5) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
+    #scale_size(range = sizeRange, name="P-Value")+
+    ggtitle(paste0("Allograft_Duc : ",CCDBType))+
+    theme(plot.title = element_text(color="black", size=17, face="bold.italic"))+
+    theme(axis.text.y = element_text(face="bold", color="black",size=12, angle=0)) -> p
+  p %>% print()
+
+  dev.off()
+
+  ## Significant For ECM Mac Fib
+  pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig_Mac_Fib.pdf"),width = 20, height = 10 )
+  netVisual_bubble(cellchat, sources.use = c(7,8,9,12) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
+    #scale_size(range = sizeRange, name="P-Value")+
+    ggtitle(paste0("Allograft_Mac_Fib : ",CCDBType))+
+    theme(plot.title = element_text(color="black", size=17, face="bold.italic"))+
+    theme(axis.text.y = element_text(face="bold", color="black",size=10, angle=0)) -> p
+  p %>% print()
+
+  dev.off()
 }
 
+rm(p)
 
-pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot.pdf"),width = 15, height = 6 )
+pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot.pdf"),width = 40, height = 25 )
 netVisual_bubble(cellchat, comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
   #scale_size(range = sizeRange, name="P-Value")+
   ggtitle(paste0("Allograft : ",CCDBType))+
