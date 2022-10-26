@@ -150,7 +150,7 @@
   Group_Mode <- "GoupByPheno"   # c("GoupByPheno","GoupByGeneExp")
   TarGene_name <- "Chil3"
   PhenoGrp_name1 <- "Cachexia"
-  PhenoGrp_name2 <- c("EOCX","PreCX")
+  PhenoGrp_name2 <- c("PreCX","EOCX")
 
   GeneExpSet.lt <- list(GeneExpMode = "Mean", # c("Mean","Mean1SD","Mean2SD","Mean3SD","Median","Quartile","Customize"))
                         UpCutoff = 1, LowerCutoff = 1)
@@ -419,7 +419,7 @@
   dfGeneAnno[,2] <- ifelse(dfGeneAnno$Log2FC > 0, 'Up-regulated',
                            ifelse(dfGeneAnno$Log2FC < 0, 'Down-regulated', 'Unchanged'))
   colours <- list(
-    'Log2FC' = c('Up-regulated' = 'royalblue', 'Down-regulated' = 'yellow', 'Unchanged' ='black'))
+    'Log2FC' = c('Up-regulated' = '#ef476f', 'Down-regulated' = '#0077b6', 'Unchanged' ='#666565'))
   haGenes <- rowAnnotation(
     df = dfGeneAnno,
     col = colours,
@@ -449,7 +449,7 @@
   hmapGSEA <- Heatmap(h.dat,
                       name = 'GSEA hallmark pathways enrichment',
                       split = dfGeneAnno[,2],
-                      col = c('0' = 'white', '1' = 'forestgreen'),
+                      col = c('0' = 'white', '1' = '#8653a6'),
                       rect_gp = gpar(col = 'grey85'),
                       cluster_rows = TRUE,
                       show_row_dend = TRUE,
@@ -469,6 +469,8 @@
                       column_title_rot = 0,
                       show_column_names = FALSE,
                       show_heatmap_legend = FALSE,
+                      # cluster_rows = F,
+                      # cluster_columns = F,
                       clustering_distance_columns = 'euclidean',
                       clustering_method_columns = 'ward.D2',
                       clustering_distance_rows = 'euclidean',
