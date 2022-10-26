@@ -328,6 +328,17 @@
     labs(x="Pathway", y="Normalized Enrichment Score",
          title="Hallmark pathways Enrichment Score from GSEA")
 
+  ##### Plot #####
+  NumGenesetsPlt=15
+  fgseaResTidyS <- fgseaResTidy[fgseaResTidy$padj <= Set_FDR & abs(fgseaResTidy$NES) >  Set_NES,]
+  Barplot <- ggplot(fgseaResTidyS, aes(NES, fct_reorder(pathway, NES), fill = padj), showCategory=(NumGenesetsPlt*2)) +
+    geom_barh(stat='identity') +
+    scale_fill_continuous(low = "#d45772", high = "#3b74bf", guide = guide_colorbar(reverse=TRUE)) +
+    theme_minimal() + ylab(NULL)
+
+  Barplot <- Barplot %>% BeautifyggPlot(LegPos = c(0.9, 0.15), AxisTitleSize=1.7, YtextSize=11,OL_Thick = 1.5)
+  Barplot
+
 
   #__________Enrichment  Plot_______#
   # Enrichment plot for E2F target gene set
