@@ -9,7 +9,7 @@
   memory.limit(150000)
 
   Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
-  SampleType = "PBMC"
+  # SampleType = "PBMC"
 
 ##### Load Packages #####
   # if(!require("tidyverse")) install.packages("tidyverse")
@@ -72,9 +72,8 @@
 
 
   #### Clean up Object ####
-  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path",str_subset(objects(), pattern = "GSEA"))))
-  # rm(list=setdiff(ls(), str_subset(objects(), pattern = "Venn")))
-
+  rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path",
+                          str_subset(objects(), pattern = "GSEA"))))
   ## Save Ori
   scRNA_Ori.SeuObj <- scRNA.SeuObj
 
@@ -87,20 +86,23 @@
 #####*  Plot by previous results *#####
 ##### Set condition #####
   SubType = "Mac3"
-  Set_FDR <- 0.05
-  Set_NES <- 1
+  Set_GSEA_FDR <- 0.01
+  Set_GSEA_NES <- 1
+
+  Set_GE_FDR <- 0.01
+  Set_GE_LogFC <- 1
+
+  ## Barplot setting
+  NumGenesetsPlt=15
 
 ##### Extract df #####
-
+  ## Extract by SubType
   GSEA_Sub.df <- GSEA_Large.df.TOP[GSEA_Large.df.TOP$PhenoType %in% SubType,]
-  # PBMC.combined$celltype <- factor(PBMC.combined$celltype,levels = unique(PBMC.combined$celltype))
-  # GSEA_Sub.df$NES <- factor(GSEA_Sub.df$NES)
 
   ## Filter by FDR & NES
-  GSEA_Sub.df <- GSEA_Sub.df[GSEA_Sub.df$padj <= Set_FDR & abs(GSEA_Sub.df$NES) > 1,]
+  GSEA_Sub.df <- GSEA_Sub.df[GSEA_Sub.df$padj <= Set_GSEA_FDR & abs(GSEA_Sub.df$NES) > 1,]
 
 ##### Plot #####
-  NumGenesetsPlt=15
   Barplot <- ggplot(GSEA_Sub.df, aes(NES, fct_reorder(pathway, NES), fill = padj), showCategory=(NumGenesetsPlt*2)) +
     geom_barh(stat='identity') +
     scale_fill_continuous(low = "#d45772", high = "#3b74bf", guide = guide_colorbar(reverse=TRUE)) +
@@ -165,21 +167,18 @@
 
 ##### Current path and new folder setting* #####
   ProjectName = "CC10X"
-  # SampleType = "PBMC"
 
-  if(Group_Mode == "GoupByGeneExp"){
+  if(Group_Mode == "GoupByGeneExp")
+  {
+    # ExportAnno = "Chil3Mean_PathM2"
     ExportAnno = paste0(TarGene_name,"_",GeneExpSet.lt$GeneExpMode,"_",SubType)
-
-  }else{
+  }else
+  {
+    # ExportAnno = "Recur2Prim"
     ExportAnno = paste0(Group_Mode,"_",paste0(PhenoGrp_name2[1],PhenoGrp_name2[2],"_",SubType))
-
   }
 
-  # ExportAnno = "Chil3Mean_PathM2"
-  # ExportAnno = "Recur2Prim"
-
   ExportName = paste0(ProjectName,"_",SampleType,"_",ExportAnno)
-
 
   Version = paste0(Sys.Date(),"_",ProjectName,"_",SampleType,"_", ExportAnno)
   SaveSub.Path = paste0(getwd(),"/",Version)
@@ -251,17 +250,22 @@
 
 #************************************************************************************************************************#
 ##### Grouping #####
-  source("FUN_Group_GE.R")
-  ##### Group by gene expression 1: CutOff by total  #####
-  GeneExp_group.set <- FUN_Group_GE(GeneExp.df, Anno.df,
-                                    TarGeneName = TarGene_name, GroupSet = GeneExpSet.lt,
-                                    Save.Path = SaveSub.Path, ExportName = ExportName)
-  Anno.df <- GeneExp_group.set[["AnnoNew.df"]]
-  GeneExp_high.set <- GeneExp_group.set[["GeneExp_high.set"]]
-  GeneExp_low.set <- GeneExp_group.set[["GeneExp_low.set"]]
+  if(Group_Mode == "GoupByGeneExp")
+  {
+    source("FUN_Group_GE.R")
+    ##### Group by gene expression 1: CutOff by total  #####
+    GeneExp_group.set <- FUN_Group_GE(GeneExp.df, Anno.df,
+                                      TarGeneName = TarGene_name, GroupSet = GeneExpSet.lt,
+                                      Save.Path = SaveSub.Path, ExportName = ExportName)
+    Anno.df <- GeneExp_group.set[["AnnoNew.df"]]
+    GeneExp_high.set <- GeneExp_group.set[["GeneExp_high.set"]]
+    GeneExp_low.set <- GeneExp_group.set[["GeneExp_low.set"]]
 
-  ##### Group by gene expression 2: CutOff by Comparison #####
-  ## FUN Comparison (Visualization and value)
+    ##### Group by gene expression 2: CutOff by Comparison #####
+    ## FUN Comparison (Visualization and value)
+
+
+  }
 
   ##### Group by phenotype #####
 
@@ -330,8 +334,8 @@
          title="Hallmark pathways Enrichment Score from GSEA")
 
   ##### Plot #####
-  NumGenesetsPlt=15
-  fgseaResTidyS <- fgseaResTidy[fgseaResTidy$padj <= Set_FDR & abs(fgseaResTidy$NES) >  Set_NES,]
+  NumGenesetsPlt=10
+  fgseaResTidyS <- fgseaResTidy[fgseaResTidy$padj <= Set_GSEA_FDR & abs(fgseaResTidy$NES) >  Set_GSEA_NES,]
   Barplot <- ggplot(fgseaResTidyS, aes(NES, fct_reorder(pathway, NES), fill = padj), showCategory=(NumGenesetsPlt*2)) +
     geom_barh(stat='identity') +
     scale_fill_continuous(low = "#d45772", high = "#3b74bf", guide = guide_colorbar(reverse=TRUE)) +
@@ -344,10 +348,11 @@
   #__________Enrichment  Plot_______#
   # Enrichment plot for E2F target gene set
   plotEnrichment(pathway = Pathway.all[["JARDIM_PERASSI_TRIPLE_NEGATIVE_BREAST_CANCER_MOUSE_XENOGRAFT_MELATONIN_UP"]], ranks)
-
+  graphics.off()
 
   plotGseaTable(Pathway.all[fgseaRes$pathway[fgseaRes$padj < 0.05]], ranks, fgseaRes,
                 gseaParam=0.5)
+  graphics.off()
 
 
   #________ Heatmap Plot_____________#
@@ -363,18 +368,17 @@
   h.dat <- h.dat[rownames(h.dat) %in% sig.gen, ]
   h.dat <- h.dat[, colnames(h.dat) %in% sig.path]
 
-  TTT <- h.dat
-  for (i in 1:nrow(TTT)) {
-    for (j in 1:ncol(TTT)) {
-      if(is.na(TTT[i,j])){
-        TTT[i,j] = 0
+  h.dat_ori <- h.dat
+  for (i in 1:nrow( h.dat)) {
+    for (j in 1:ncol( h.dat)) {
+      if(is.na( h.dat[i,j])){
+         h.dat[i,j] = 0
       }else{
-        TTT[i,j] = 1
+         h.dat[i,j] = 1
       }
     }
-
   }
-  h.dat <- TTT
+
   h.dat_rownames <- rownames(h.dat)
   h.dat <- data.frame(apply(h.dat, 2, function(x) as.numeric(as.character(x))))
   rownames(h.dat) <- h.dat_rownames
