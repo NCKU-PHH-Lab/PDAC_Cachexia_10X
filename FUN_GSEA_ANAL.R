@@ -228,7 +228,7 @@ FUN_GSEA_ANAL = function(DE_Extract.df, CMGeneSet = Pathway.all,
   ##### Export Result #####
     pdf(
       file = paste0(Save.Path,"/GSEAResult","_",ExportName,"_",AnnoName,".pdf"),
-      width = 15,  height = 10
+      width = 30,  height = 30
     )
 
       print(Barplot)
@@ -245,7 +245,7 @@ FUN_GSEA_ANAL = function(DE_Extract.df, CMGeneSet = Pathway.all,
 
     pdf(
       file = paste0(Save.Path,"/GSEAResult","_",ExportName,"_Gseaplot_",AnnoName,".pdf"),
-      width = 20,  height = 20
+      width = 40,  height = 40
     )
 
       print(gseaplot2_UpA)
