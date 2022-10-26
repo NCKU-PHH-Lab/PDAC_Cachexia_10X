@@ -65,7 +65,7 @@ source("FUN_CellChatOne.R")
 Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
 
 ## Set CellChat DB
-CCDBType = "ECM" # c("ECM","CC","Secret")
+CCDBType = "Secret" # c("ECM","CC","Secret")
 
 ## Set FDR Thr
 SetFDRThr <- 1.0e-7
@@ -324,12 +324,12 @@ colnames(matrix.df) <- Anno_Cell.df$ID
 
 ## Reoder FDR.mtx
 statistics_FDR.mtx <- left_join(data.frame(gene=row.names(matrix.df)),statistics_FDR.df)
-statistics_FDR.mtx <- statistics_FDR.mtx %>% select(CellType.Order) %>% as.matrix()
+statistics_FDR.mtx <- statistics_FDR.mtx %>% dplyr::select(CellType.Order) %>% as.matrix()
 
 
 ## Reoder LogFC.mtx
 statistics_LogFC.mtx <- left_join(data.frame(gene=row.names(matrix.df)),statistics_LogFC.df)
-statistics_LogFC.mtx <- statistics_LogFC.mtx %>% select(CellType.Order) %>% as.matrix()
+statistics_LogFC.mtx <- statistics_LogFC.mtx %>% dplyr::select(CellType.Order) %>% as.matrix()
 
 
 ## TarGene with PathAnno Matrix
@@ -341,7 +341,7 @@ Pathway.set <- TarGeneAnno_Temp.df[,"pathway_name"] %>% unique()
 # colPT <- col3[1:length(Pathway.set)]
 # names(colPT) <- Pathway.set
 
-TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% count(pathway_name)
+TarGeneAnno_Temp2.df <- TarGeneAnno_Temp.df %>% group_by(gene) %>% dplyr::count(pathway_name)
 TarGeneAnno_Cell.df <- TarGeneAnno_Temp2.df %>% pivot_wider(names_from ="pathway_name" ,values_from = "n", values_fill =0) %>% t()
 colnames(TarGeneAnno_Cell.df) <- TarGeneAnno_Cell.df[1,]
 TarGeneAnno_Cell.df <- TarGeneAnno_Cell.df[-1,]
@@ -409,9 +409,9 @@ ha_column_T = HeatmapAnnotation(
 
 #### Plot Heatmap ####
 # Set Heatmap color
-col_HMap <- c("#f0f4fc", "#6e8cc2", "#37558c")
+# col_HMap <- c("#f0f4fc", "#6e8cc2", "#37558c")
 col_HMap <- c( "#ffffff","#e697b3", "#c45e82")
-
+col_HMap <- c( "#ffffff","#d44c5f", "#520e17")
 
 ### Plat GeneExpression Heatmap
 ## Reorder Heatmap
@@ -427,7 +427,7 @@ Heatmap(
   # set color
   col = colorRamp2(
     # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-    c(min(GeneExp.df), max(GeneExp.df)*2/3 , max(GeneExp.df)),
+    c(min(GeneExp.df), max(GeneExp.df)*1/3 , max(GeneExp.df)),
 
     col_HMap
   ),
@@ -479,7 +479,9 @@ Heatmap(
   use_raster = F,
   # top_annotation = ha_column_T,
   right_annotation = ha_row,
-  width = ncol(TarGeneAnno.mtx)*unit(8, "mm"),
+  # width = ncol(TarGeneAnno.mtx)*unit(8, "mm"),
+  # height = length(CellType.Order)*unit(17, "mm") #nrow(TarGeneAnno.mtx)*unit(10, "mm")
+  width = ncol(TarGeneAnno.mtx)*unit(7, "mm"),
   height = length(CellType.Order)*unit(17, "mm") #nrow(TarGeneAnno.mtx)*unit(10, "mm")
 ) -> P.Heatmap_GenePath
 
@@ -566,6 +568,9 @@ P.Heatmap_FDR %>% print
 ### Plot LogFC Heatmap
 # Set Heatmap color
 col_HMapLog <- c("#4a5aa8","#ffffff","#c270b0")
+# col_HMapLog <- c("#2c3b82","#ffffff","#b5489d")
+col_HMapLog <- c("#2c3b82","#4a5aa8","#ffffff","#c270b0","#b5489d")
+
 Heatmap(
   statistics_LogFC.mtx,
   cluster_rows = F, # Heatmap with/without clustering by rows
@@ -576,8 +581,8 @@ Heatmap(
   name = "LogFC",
   # set color
   col = colorRamp2(
-    # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-    c(min(statistics_LogFC.mtx), 0.01 , max(statistics_LogFC.mtx)),
+    # c(min(statistics_LogFC.mtx), 0.01 , max(statistics_LogFC.mtx)),
+    c(-4,-2, 0 ,2, 4),
     col_HMapLog
   ),
   show_heatmap_legend = T,
