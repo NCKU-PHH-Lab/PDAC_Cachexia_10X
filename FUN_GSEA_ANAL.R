@@ -159,6 +159,27 @@ FUN_GSEA_ANAL = function(DE_Extract.df, CMGeneSet = Pathway.all,
     gseaplot2_UpA <- ggpubr::ggarrange(plotlist = gseaplot2_Up.lt, ncol = ceiling(sqrt(NumGenesetsPlt)),
                                        nrow = ceiling(sqrt(NumGenesetsPlt)), labels = LETTERS[1:NumGenesetsPlt])
 
+    # ## Neu
+    # PathTest = c("SWEET_LUNG_CANCER_KRAS_UP")
+    # PathTest = c("GOLDRATH_ANTIGEN_RESPONSE")
+    # PathTest = c("HESS_TARGETS_OF_HOXA9_AND_MEIS1_DN")
+    #
+    # gseaplot2_Test1 <- gseaplot2(y2, geneSetID = PathTest , title = PathTest ,color = "#547d99") +
+    #                    scale_color_gradient(low = "#d45772", high = "#3b74bf")
+    # gseaplot2_Test1
+
+    # ## Mac3
+    # PathTest = c("HESS_TARGETS_OF_HOXA9_AND_MEIS1_DN")
+    # PathTest = c("SWEET_LUNG_CANCER_KRAS_UP")
+    # PathTest = c("BOYLAN_MULTIPLE_MYELOMA_C_D_DN")
+    # PathTest = c("BOYLAN_MULTIPLE_MYELOMA_PCA1_UP")
+    # PathTest = c("COATES_MACROPHAGE_M1_VS_M2_DN")
+    # PathTest = c("LIANG_HEMATOPOIESIS_STEM_CELL_NUMBER_SMALL_VS_HUGE_UP")
+    #
+    # gseaplot2_Test1 <- gseaplot2(y2, geneSetID = PathTest , title = PathTest ,color = "#547d99") +
+    #                    scale_color_gradient(low = "#d45772", high = "#3b74bf")
+    # gseaplot2_Test1
+
 
     ## gseaplot2_Down.lt
     gseaplot2_Down.lt <- list()
