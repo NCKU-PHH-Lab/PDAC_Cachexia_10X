@@ -542,13 +542,54 @@
        annotation_legend_side = 'right')
 
 
-  tiff("GSEA_enrichment_2.tiff", units="in", width=15, height=22, res=400)
+  tiff("GSEA_enrichment_1.tiff", units="in", width=15, height=22, res=400)
   draw(hmapGSEA + haGenes,
        heatmap_legend_side = 'right',
        annotation_legend_side = 'right')
   dev.off()
 
 
+  ## Heatmap without Clustering by gene
+  hmapGSEA2 <- Heatmap(h.dat,
+                      name = 'GSEA hallmark pathways enrichment',
+                      split = dfGeneAnno[,2],
+                      col = c('0' = 'white', '1' = '#8653a6'),
+                      rect_gp = gpar(col = 'grey85'),
+                      cluster_rows = F,
+                      show_row_dend = TRUE,
+                      row_title = 'Top Genes',
+                      row_title_side = 'left',
+                      row_title_gp = gpar(fontsize = 11, fontface = 'bold'),
+                      row_title_rot = 90,
+                      show_row_names = TRUE,
+                      row_names_gp = gpar(fontsize = 11, fontface = 'bold'),
+                      row_names_side = 'left',
+                      row_dend_width = unit(35, 'mm'),
+                      cluster_columns = TRUE,
+                      show_column_dend = TRUE,
+                      column_title = 'Enriched terms',
+                      column_title_side = 'top',
+                      column_title_gp = gpar(fontsize = 12, fontface = 'bold'),
+                      column_title_rot = 0,
+                      show_column_names = FALSE,
+                      show_heatmap_legend = FALSE,
+                      clustering_distance_columns = 'euclidean',
+                      clustering_method_columns = 'ward.D2',
+                      # clustering_distance_rows = 'euclidean',
+                      # clustering_method_rows = 'ward.D2',
+                      bottom_annotation = haTerms)
+
+
+  draw(hmapGSEA2 + haGenes,
+       heatmap_legend_side = 'right',
+       annotation_legend_side = 'right')
+
+
+  tiff("GSEA_enrichment_2.tiff", units="in", width=15, height=22, res=400)
+  draw(hmapGSEA + haGenes,
+       heatmap_legend_side = 'right',
+       annotation_legend_side = 'right')
+  dev.off()
 
 
 
