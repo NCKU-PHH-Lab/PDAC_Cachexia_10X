@@ -125,7 +125,6 @@
   ## Extract specific cell type
   SeubTerm <- c("Duc5","Duc6")
   SPCellTypeID.set <- Meta.data[Meta.data$celltype %in% SeubTerm,]$ID
-  SPCellTypeID.set <- Meta.data[grepl("Fib", Meta.data$celltype ),]$ID
 
 ##### Run DiffusionMap #####
   ## Filtering out low-abundance genes and low-quality cells
@@ -162,4 +161,64 @@
     theme_classic()
 
 
+#### Try Fib #####
+  SPCellTypeID.set <- Meta.data[grepl("Fib", Meta.data$celltype ),]$ID
+  GeneExp_Sub.mtx <- GeneExp.mtx[,colnames(GeneExp.mtx) %in% SPCellTypeID.set]
+  dm <- DiffusionMap(t(GeneExp_Sub.mtx))
 
+  Meta_Sub.df <- Meta.data[Meta.data$ID %in% SPCellTypeID.set,]
+
+  # Plot diffusion component 1 vs diffusion component 2 (DC1 vs DC2).
+  tmp <- data.frame(DC1 = eigenvectors(dm)[, 1],
+                    DC2 = eigenvectors(dm)[, 2],
+                    Timepoint = Meta_Sub.df$Cachexia)
+
+  library("ggthemes")
+  ggplot(tmp, aes(x = DC1, y = DC2, colour = Timepoint)) +
+    geom_point() + scale_color_tableau() +
+    xlab("Diffusion component 1") +
+    ylab("Diffusion component 2") +
+    theme_classic()
+
+  # Plot diffusion component 1 vs diffusion component 2 (DC1 vs DC2).
+  tmp <- data.frame(DC1 = eigenvectors(dm)[, 1],
+                    DC2 = eigenvectors(dm)[, 2],
+                    Timepoint = Meta_Sub.df$celltype)
+
+  library("ggthemes")
+  ggplot(tmp, aes(x = DC1, y = DC2, colour = Timepoint)) +
+    geom_point() + scale_color_tableau() +
+    xlab("Diffusion component 1") +
+    ylab("Diffusion component 2") +
+    theme_classic()
+
+#### Try Duc #####
+  SPCellTypeID.set <- Meta.data[grepl("Duc", Meta.data$celltype ),]$ID
+  GeneExp_Sub.mtx <- GeneExp.mtx[,colnames(GeneExp.mtx) %in% SPCellTypeID.set]
+  dm <- DiffusionMap(t(GeneExp_Sub.mtx))
+
+  Meta_Sub.df <- Meta.data[Meta.data$ID %in% SPCellTypeID.set,]
+
+  # Plot diffusion component 1 vs diffusion component 2 (DC1 vs DC2).
+  tmp <- data.frame(DC1 = eigenvectors(dm)[, 1],
+                    DC2 = eigenvectors(dm)[, 2],
+                    Timepoint = Meta_Sub.df$Cachexia)
+
+  library("ggthemes")
+  ggplot(tmp, aes(x = DC1, y = DC2, colour = Timepoint)) +
+    geom_point() + scale_color_tableau() +
+    xlab("Diffusion component 1") +
+    ylab("Diffusion component 2") +
+    theme_classic()
+
+  # Plot diffusion component 1 vs diffusion component 2 (DC1 vs DC2).
+  tmp <- data.frame(DC1 = eigenvectors(dm)[, 1],
+                    DC2 = eigenvectors(dm)[, 2],
+                    Timepoint = Meta_Sub.df$celltype)
+
+  library("ggthemes")
+  ggplot(tmp, aes(x = DC1, y = DC2, colour = Timepoint)) +
+    geom_point() + scale_color_tableau() +
+    xlab("Diffusion component 1") +
+    ylab("Diffusion component 2") +
+    theme_classic()
