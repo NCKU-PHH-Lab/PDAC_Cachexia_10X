@@ -72,9 +72,12 @@ if(SampleType == "PBMC"){
 ##### 09_0 GSEA Analysis (Geneset Prepare) #####
   #### Load Geneset ####
   ## Geneset from GSEA
-  # Pathway.all <- read.delim(paste0(getwd(),"/Pathway.all.v7.4.symbols.gmt"),header = F)
-  Pathway.all.MM <- read.delim2(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"),
-                                col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"))),
+  # # Pathway.all <- read.delim(paste0(getwd(),"/Pathway.all.v7.4.symbols.gmt"),header = F)
+  # Pathway.all.MM <- read.delim2(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"),
+  #                               col.names = 1:max(count.fields(paste0(getwd(),"/GSEA_Geneset/Customized_GSEAGenesets_Pathway3D_Mm_ComB.gmt"))),
+  #                               header = F,sep = "\t")
+  Pathway.all.MM <- read.delim2(paste0(getwd(),"/Input_Genesets/m2.all.v0.3.symbols.gmt"),
+                                col.names = 1:max(count.fields(paste0(getwd(),"/Input_Genesets/m2.all.v0.3.symbols.gmt"))),
                                 header = F,sep = "\t")
 
   #### Genename convert ####
