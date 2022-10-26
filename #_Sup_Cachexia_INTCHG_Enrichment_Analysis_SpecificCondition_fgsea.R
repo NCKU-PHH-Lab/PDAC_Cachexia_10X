@@ -1,4 +1,5 @@
 ## Tutorial:Gene Set Enrichment Analysis (fgsea)
+## Ref: https://github.com/hamidghaedi/Enrichment-Analysis
 ## Ref: https://www.biostars.org/p/467197/
 ## RNA-seq analysis in R
 ## Ref: https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
@@ -137,9 +138,10 @@
 
   InputGSEA <- "m2.all.v0.3.symbols.gmt"
   InFOLName_GSEA <- "Input_Genesets"
-  Pathway.all <- read.delim2(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA),
-                             col.names = 1:max(count.fields(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA))),
-                             header = F,sep = "\t")
+  # Pathway.all <- read.delim2(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA),
+  #                            col.names = 1:max(count.fields(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA))),
+  #                            header = F,sep = "\t")
+  Pathway.all <- gmtPathways(paste0(getwd(),"/",InFOLName_GSEA,"/",InputGSEA))
 
 ##### Conditions setting* #####
   Group_Mode <- "GoupByPheno"   # c("GoupByPheno","GoupByGeneExp")
@@ -286,42 +288,19 @@
   #                                 Save.Path = SaveSub.Path, ExportName = ExportName, AnnoName = "Path")
 
 
-  Pathway.all.list <- list()
-  for (i in c(1:length(Pathway.all[,1]))) {
-    try({
-      Pathway.all.list.ori <- as.data.frame(t(Pathway.all[i,3:length(Pathway.all[i,])]))
-      colnames(Pathway.all.list.ori)[[1]] <- c("Gene")
+  #************************************************************************************************************************#
 
-      ## tryCatch(
-      ##   {
-      Pathway.all.list.ori <- na.omit(Pathway.all.list.ori)
-      ###Pathway.all.list.ori <- HSsymbol2MMsymbol(Pathway.all.list.ori,"Gene")
-
-      # Delete NA(or 0)
-      Pathway.all.list.ori <- Pathway.all.list.ori[Pathway.all.list.ori!=0,]
-
-      Pathway.all.list.ori <- unique(Pathway.all.list.ori)
-      ###Pathway.all.list.ori <- unique(Pathway.all.list.ori$MM.symbol)
-      Pathway.all.list[[i]] <- as.character(Pathway.all.list.ori)
-      # Pathway.all.list[[i]] <- as.character(Pathway.all[i,3:length(Pathway.all[i,])])
-
-
-      names(Pathway.all.list)[[i]] <- Pathway.all[i,1]
-      rm(Pathway.all.list.ori)
-      ##  },
-      ## error=function(e) {
-      ## Pathway.all.list <- Pathway.all.list
-      ## })
-    })
-  }
-
-  # load(paste0(PathName,"/Full_annotation.RData"))
-  pathwaysH <- Pathway.all.list
+  ## Tutorial:Gene Set Enrichment Analysis (fgsea)
+  ## Ref: https://github.com/hamidghaedi/Enrichment-Analysis
+  ## Ref: https://www.biostars.org/p/467197/
+  summary(DE_Extract.df)
+  res <- DE_Extract.df
+  res$SYMBOL <- res$Gene
 
   ranks <- DE_Extract.df$logFC
   names(ranks) <- DE_Extract.df$Gene
 
-  fgseaRes <- fgsea(pathwaysH, ranks, minSize=15, maxSize = 500)
+  fgseaRes <- fgsea(Pathway.all, ranks, minSize=15, maxSize = 500)
 
   # Tidy the results:
   fgseaResTidy <- fgseaRes %>%
@@ -329,10 +308,10 @@
     arrange(desc(NES)) # order by normalized enrichment score (NES)
 
   # To see what genes are in each of these pathways:
-  gene.in.pathway <- pathwaysH %>%
+  gene.in.pathway <- Pathway.all %>%
     enframe("pathway", "SYMBOL") %>%
-    unnest(cols = c(SYMBOL)) # %>%
-    # inner_join(res, by="SYMBOL")
+    unnest(cols = c(SYMBOL)) %>%
+    inner_join(res, by="SYMBOL")
 
   #______________________VISUALIZATION______________________________#
 
@@ -352,10 +331,10 @@
 
   #__________Enrichment  Plot_______#
   # Enrichment plot for E2F target gene set
-  plotEnrichment(pathway = pathwaysH[["JARDIM_PERASSI_TRIPLE_NEGATIVE_BREAST_CANCER_MOUSE_XENOGRAFT_MELATONIN_UP"]], ranks)
+  plotEnrichment(pathway = Pathway.all[["JARDIM_PERASSI_TRIPLE_NEGATIVE_BREAST_CANCER_MOUSE_XENOGRAFT_MELATONIN_UP"]], ranks)
 
 
-  plotGseaTable(pathwaysH[fgseaRes$pathway[fgseaRes$padj < 0.05]], ranks, fgseaRes,
+  plotGseaTable(Pathway.all[fgseaRes$pathway[fgseaRes$padj < 0.05]], ranks, fgseaRes,
                 gseaParam=0.5)
 
 
@@ -372,10 +351,26 @@
   h.dat <- h.dat[rownames(h.dat) %in% sig.gen, ]
   h.dat <- h.dat[, colnames(h.dat) %in% sig.path]
 
+  TTT <- h.dat
+  for (i in 1:nrow(TTT)) {
+    for (j in 1:ncol(TTT)) {
+      if(is.na(TTT[i,j])){
+        TTT[i,j] = 0
+      }else{
+        TTT[i,j] = 1
+      }
+    }
+
+  }
+  h.dat <- TTT
+  h.dat_rownames <- rownames(h.dat)
+  h.dat <- data.frame(apply(h.dat, 2, function(x) as.numeric(as.character(x))))
+  rownames(h.dat) <- h.dat_rownames
+
   # keep those genes with 3  or more occurnes
   table(data.frame(rowSums(h.dat)))
 
-  h.dat <- h.dat[data.frame(rowSums(h.dat)) >= 3, ]
+  h.dat <- h.dat[data.frame(rowSums(h.dat)) >= 5, ]
 
   #
   topTable <- res[res$SYMBOL %in% rownames(h.dat), ]
@@ -387,12 +382,12 @@
 
   # colour bar for -log10(adjusted p-value) for sig.genes
   dfMinusLog10FDRGenes <- data.frame(-log10(
-    topTableAligned[which(rownames(topTableAligned) %in% rownames(h.dat)), 'padj']))
+    topTableAligned[which(rownames(topTableAligned) %in% rownames(h.dat)), 'FDR']))
   dfMinusLog10FDRGenes[dfMinusLog10FDRGenes == 'Inf'] <- 0
 
   # colour bar for fold changes for sigGenes
   dfFoldChangeGenes <- data.frame(
-    topTableAligned[which(rownames(topTableAligned) %in% rownames(h.dat)), 'log2FoldChange'])
+    topTableAligned[which(rownames(topTableAligned) %in% rownames(h.dat)), 'logFC'])
 
   # merge both
   dfGeneAnno <- data.frame(dfMinusLog10FDRGenes, dfFoldChangeGenes)
@@ -400,7 +395,7 @@
   dfGeneAnno[,2] <- ifelse(dfGeneAnno$Log2FC > 0, 'Up-regulated',
                            ifelse(dfGeneAnno$Log2FC < 0, 'Down-regulated', 'Unchanged'))
   colours <- list(
-    'Log2FC' = c('Up-regulated' = 'royalblue', 'Down-regulated' = 'yellow'))
+    'Log2FC' = c('Up-regulated' = 'royalblue', 'Down-regulated' = 'yellow', 'Unchanged' ='black'))
   haGenes <- rowAnnotation(
     df = dfGeneAnno,
     col = colours,
