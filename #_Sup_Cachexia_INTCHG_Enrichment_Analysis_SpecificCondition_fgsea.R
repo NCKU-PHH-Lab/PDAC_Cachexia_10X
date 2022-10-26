@@ -335,8 +335,12 @@
 
   ##### Plot #####
   NumGenesetsPlt=10
-  fgseaResTidyS <- fgseaResTidy[fgseaResTidy$padj <= Set_GSEA_FDR & abs(fgseaResTidy$NES) >  Set_GSEA_NES,]
-  Barplot <- ggplot(fgseaResTidyS, aes(NES, fct_reorder(pathway, NES), fill = padj), showCategory=(NumGenesetsPlt*2)) +
+  fgseaResTidy_Ori <- fgseaResTidy
+  fgseaResTidy <- fgseaResTidy[fgseaResTidy$padj <= Set_GSEA_FDR & abs(fgseaResTidy$NES) >  Set_GSEA_NES,]
+
+
+
+  Barplot <- ggplot(fgseaResTidy, aes(NES, fct_reorder(pathway, NES), fill = padj), showCategory=(NumGenesetsPlt*2)) +
     geom_barh(stat='identity') +
     scale_fill_continuous(low = "#d45772", high = "#3b74bf", guide = guide_colorbar(reverse=TRUE)) +
     theme_minimal() + ylab(NULL)
@@ -386,7 +390,7 @@
   # keep those genes with 3  or more occurnes
   table(data.frame(rowSums(h.dat)))
 
-  h.dat <- h.dat[data.frame(rowSums(h.dat)) >= 5, ]
+  h.dat <- h.dat[data.frame(rowSums(h.dat)) >= 3, ]
 
   #
   topTable <- res[res$SYMBOL %in% rownames(h.dat), ]
@@ -395,6 +399,10 @@
   topTableAligned <- topTable[which(rownames(topTable) %in% rownames(h.dat)),]
   topTableAligned <- topTableAligned[match(rownames(h.dat), rownames(topTableAligned)),]
   all(rownames(topTableAligned) == rownames(h.dat))
+
+  topTableAligned <- topTableAligned[topTableAligned$FDR <= Set_GE_FDR &
+                                       abs(topTableAligned$logFC) >= Set_GE_LogFC,]
+  h.dat <- h.dat[rownames(h.dat) %in% topTableAligned$Gene,]
 
   # colour bar for -log10(adjusted p-value) for sig.genes
   dfMinusLog10FDRGenes <- data.frame(-log10(
@@ -473,11 +481,11 @@
        annotation_legend_side = 'right')
 
 
-  # tiff("GSEA_enrichment_2.tiff", units="in", width=13, height=22, res=400)
-  # draw(hmapGSEA + haGenes,
-  #      heatmap_legend_side = 'right',
-  #      annotation_legend_side = 'right')
-  # dev.off()
+  tiff("GSEA_enrichment_2.tiff", units="in", width=15, height=22, res=400)
+  draw(hmapGSEA + haGenes,
+       heatmap_legend_side = 'right',
+       annotation_legend_side = 'right')
+  dev.off()
 
 
 
