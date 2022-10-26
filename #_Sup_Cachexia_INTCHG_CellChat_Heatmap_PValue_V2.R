@@ -411,7 +411,7 @@ ha_column_T = HeatmapAnnotation(
 # Set Heatmap color
 # col_HMap <- c("#f0f4fc", "#6e8cc2", "#37558c")
 col_HMap <- c( "#ffffff","#e697b3", "#c45e82")
-col_HMap <- c( "#ffffff","#d44c5f", "#520e17")
+# col_HMap <- c( "#ffffff","#d44c5f", "#520e17")
 
 ### Plat GeneExpression Heatmap
 ## Reorder Heatmap
