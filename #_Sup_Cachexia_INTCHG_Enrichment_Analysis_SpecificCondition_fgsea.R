@@ -390,7 +390,7 @@
   # keep those genes with 3  or more occurnes
   table(data.frame(rowSums(h.dat)))
 
-  h.dat <- h.dat[data.frame(rowSums(h.dat)) >= 3, ]
+  h.dat <- h.dat[data.frame(rowSums(h.dat)) >= 1, ]
 
   #
   topTable <- res[res$SYMBOL %in% rownames(h.dat), ]
@@ -403,6 +403,7 @@
   topTableAligned <- topTableAligned[topTableAligned$FDR <= Set_GE_FDR &
                                        abs(topTableAligned$logFC) >= Set_GE_LogFC,]
   h.dat <- h.dat[rownames(h.dat) %in% topTableAligned$Gene,]
+  h.dat <- h.dat[, data.frame(colSums(h.dat)) >= 1]
 
   # colour bar for -log10(adjusted p-value) for sig.genes
   dfMinusLog10FDRGenes <- data.frame(-log10(
@@ -414,15 +415,37 @@
     topTableAligned[which(rownames(topTableAligned) %in% rownames(h.dat)), 'logFC'])
 
   # merge both
-  dfGeneAnno <- data.frame(dfMinusLog10FDRGenes, dfFoldChangeGenes)
-  colnames(dfGeneAnno) <- c('Gene score', 'Log2FC')
-  dfGeneAnno[,2] <- ifelse(dfGeneAnno$Log2FC > 0, 'Up-regulated',
-                           ifelse(dfGeneAnno$Log2FC < 0, 'Down-regulated', 'Unchanged'))
-  colours <- list(
-    'Log2FC' = c('Up-regulated' = '#ef476f', 'Down-regulated' = '#0077b6', 'Unchanged' ='#666565'))
+  # dfGeneAnno <- data.frame(dfMinusLog10FDRGenes, dfFoldChangeGenes)
+  # colnames(dfGeneAnno) <- c('Gene score', 'Log2FC')
+  # dfGeneAnno[,2] <- ifelse(dfGeneAnno$Log2FC > 0, 'Up-regulated',
+  #                          ifelse(dfGeneAnno$Log2FC < 0, 'Down-regulated', 'Unchanged'))
+  # colours <- list(
+  #   'Log2FC' = c('Up-regulated' = '#ef476f', 'Down-regulated' = '#0077b6', 'Unchanged' ='#666565'))
+  #
+  #   haGenes <- rowAnnotation(
+  #     df = dfGeneAnno,
+  #     col = colours,
+  #     annotation_name_gp= gpar(fontsize = 12, fontface = 'bold'),
+  #     width = unit(1,'cm'),
+  #     annotation_name_side = 'top')
+
+  dfGeneAnno <- topTableAligned[,c("Gene","logFC","FDR")]
+  dfGeneAnno$State <- ifelse(dfGeneAnno$logFC > 0, 'Up-regulated',
+                           ifelse(dfGeneAnno$logFC < 0, 'Down-regulated', 'Unchanged'))
+  colours1 <- colorRamp2(c(-max(abs(dfGeneAnno$logFC)), 0 ,max(abs(dfGeneAnno$logFC))),
+                         c("#0077b6","#ffffff","#ef476f"))
+  colours2 <- colorRamp2(c(0, 0.001 , 1), c( "#b5624a","#de907a", "#ffffff"))
+  # colours3 <- colorRamp2(c('Up-regulated','Down-regulated' ,'Unchanged'), c("#ef476f","#0077b6", "#666565"))
+
+
   haGenes <- rowAnnotation(
-    df = dfGeneAnno,
-    col = colours,
+    LogFC = dfGeneAnno$logFC,
+    # State = dfGeneAnno$State,
+    FDR = dfGeneAnno$FDR,
+    col = list(LogFC=colours1,
+               # State = colours3,
+               FDR = colours2 ),
+    annotation_name_gp= gpar(fontsize = 12, fontface = 'bold'),
     width = unit(1,'cm'),
     annotation_name_side = 'top')
 
@@ -430,21 +453,57 @@
   # also contain the enriched term names via annot_text()
 
   # colour bar for enrichment score from fgsea results
-  dfEnrichment <- fgseaRes[, c("pathway", "NES")]
+  dfEnrichment <- fgseaRes[, c("pathway", "NES","padj")]
   dfEnrichment <- dfEnrichment[dfEnrichment$pathway %in% colnames(h.dat)]
   dd <- dfEnrichment$pathway
-  dfEnrichment <- dfEnrichment[, -1]
+  dfEnrichment <- dfEnrichment[, -1] %>% as.data.frame()
   rownames(dfEnrichment) <- dd
-  colnames(dfEnrichment) <- 'Normalized\n Enrichment score'
+  colnames(dfEnrichment) <- c('NES',"FDR")
+
+  col_HMap_dfEnrich <- colorRamp2(c(-max(abs(dfEnrichment$NES)), 0 ,max(abs(dfEnrichment$NES))),
+                                  c("#4a5aa8","#ffffff","#c270b0"))
+  col_HMap_FDR <- colorRamp2(c(0, 0.001 , 1), c( "#06949e","#5ac0c7", "#ffffff"))
+
+ #  dfEnrichment %>% class()
+ #  ha = HeatmapAnnotation(foo = dfEnrichment$`Normalized
+ # Enrichment score`, col = list(foo = col_HMap_dfEnrich))
+ #
+ #
+ #  library(circlize)
+ #  col_fun = colorRamp2(c(0, 5, 10), c("blue", "white", "red"))
+ #  ha = HeatmapAnnotation(foo = 1:10, col = list(foo = col_fun))
+ #  draw(ha)
+
   haTerms <- HeatmapAnnotation(
-    df = dfEnrichment,
+    NES = dfEnrichment$NES,
+    FDR = dfEnrichment$FDR,
     Term = anno_text(
       colnames(h.dat),
-      rot = 45,
+      rot = 90,
       just = 'right',
-      gp = gpar(fontsize = 12)),
-    annotation_height = unit.c(unit(1, 'cm'), unit(8, 'cm')),
-    annotation_name_side = 'left')
+      gp = gpar(fontsize = 9, fontface = 'bold')),
+
+    col = list(NES = col_HMap_dfEnrich, FDR = col_HMap_FDR),
+    annotation_name_gp= gpar(fontsize = 12, fontface = 'bold'),
+    annotation_height = unit.c(unit(0.8, 'cm'),unit(0.8, 'cm'), unit(8, 'cm')),
+    annotation_name_side = 'right')
+
+
+  # colPT <- c("#646b6b","#b6baba")
+  # names(colPT) <- c("T","F")
+  #
+  # ha_row = rowAnnotation(
+  #   Ligand = Anno_TarGene.df$Ligand,
+  #   Receptor = Anno_TarGene.df$Receptor,
+  #   col = list(Ligand = colPT,
+  #              Receptor=colPT
+  #   ),
+  #   show_legend = T,
+  #   show_annotation_name = T
+  # )
+  #
+
+
   # now generate the heatmap
   hmapGSEA <- Heatmap(h.dat,
                       name = 'GSEA hallmark pathways enrichment',
