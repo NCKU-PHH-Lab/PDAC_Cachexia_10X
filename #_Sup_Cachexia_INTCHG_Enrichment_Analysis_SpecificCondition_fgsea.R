@@ -4,7 +4,6 @@
 ## RNA-seq analysis in R
 ## Ref: https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
 
-
 ##### Presetting ######
   rm(list = ls()) # Clean variable
   memory.limit(150000)
@@ -46,9 +45,11 @@
   lapply(Package.set, library, character.only = TRUE)
   rm(Package.set,i)
 
-  # options(stringsAsFactors = FALSE)
-
-  # Sys.setlocale(category = "LC_ALL", locale = "UTF-8")
+  #### GitHub installation ####
+  if (!require("devtools", quietly = TRUE))
+    install.packages("devtools")
+  devtools::install_github("lionel-/ggstance")
+  library(ggstance)
 
 ##### Function setting #####
   ## Call function
@@ -85,7 +86,7 @@
 #####***************************************************************************#####
 #####*  Plot by previous results *#####
 ##### Set condition #####
-  SubType = "Neu"
+  SubType = "Mac3"
   Set_FDR <- 0.05
   Set_NES <- 1
 
@@ -462,11 +463,17 @@
                       clustering_method_rows = 'ward.D2',
                       bottom_annotation = haTerms)
 
-  tiff("GSEA_enrichment_2.tiff", units="in", width=13, height=22, res=400)
+
   draw(hmapGSEA + haGenes,
        heatmap_legend_side = 'right',
        annotation_legend_side = 'right')
-  dev.off()
+
+
+  # tiff("GSEA_enrichment_2.tiff", units="in", width=13, height=22, res=400)
+  # draw(hmapGSEA + haGenes,
+  #      heatmap_legend_side = 'right',
+  #      annotation_legend_side = 'right')
+  # dev.off()
 
 
 
@@ -476,21 +483,21 @@
   ## FUN ORA
 
 #************************************************************************************************************************#
-##### Build files for GSEA official input #####
-  source("FUN_GSEA_ForOFFL.R")
-
-  FUN_GSEA_ForOFFL(GeneExp.df, Group1 = GeneExp_high.set, Group2 = GeneExp_low.set,
-                   GroupMode = Group_Mode,
-                   TarGeneName = TarGene_name, GeneExpSet = GeneExpSet.lt,
-                   Save.Path = SaveSub.Path, ExportName = ExportName,
-                   AnnoName="Recur2Prim")
-
-##### Build files for Metascape official input #####
-
-
-
-#### Save RData ####
-  save.image(paste0(Save.Path,"/GseaGo_",ExportName,".RData"))
+# ##### Build files for GSEA official input #####
+#   source("FUN_GSEA_ForOFFL.R")
+#
+#   FUN_GSEA_ForOFFL(GeneExp.df, Group1 = GeneExp_high.set, Group2 = GeneExp_low.set,
+#                    GroupMode = Group_Mode,
+#                    TarGeneName = TarGene_name, GeneExpSet = GeneExpSet.lt,
+#                    Save.Path = SaveSub.Path, ExportName = ExportName,
+#                    AnnoName="Recur2Prim")
+#
+# ##### Build files for Metascape official input #####
+#
+#
+#
+# #### Save RData ####
+#   save.image(paste0(Save.Path,"/GseaGo_",ExportName,".RData"))
 
 
 
