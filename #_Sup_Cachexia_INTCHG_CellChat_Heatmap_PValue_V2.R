@@ -47,6 +47,12 @@ for (i in 1:length(Package.set)) {
 lapply(Package.set, library, character.only = TRUE)
 rm(Package.set,i)
 
+#### GitHub installation ####
+if (!require("devtools", quietly = TRUE))
+  install.packages("devtools")
+devtools::install_github("lionel-/ggstance")
+library(ggstance)
+
 ##### Function setting  #####
 ## Call function
 source("FUN_CellChatOne.R")
