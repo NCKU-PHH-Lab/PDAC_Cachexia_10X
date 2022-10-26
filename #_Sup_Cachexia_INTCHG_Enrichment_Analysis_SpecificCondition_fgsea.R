@@ -85,7 +85,7 @@
 #####***************************************************************************#####
 #####*  Plot by previous results *#####
 ##### Set condition #####
-  SubType = "Neu"
+  SubType = "Mac3"
   Set_GSEA_FDR <- 0.05
   Set_GSEA_NES <- 1
 

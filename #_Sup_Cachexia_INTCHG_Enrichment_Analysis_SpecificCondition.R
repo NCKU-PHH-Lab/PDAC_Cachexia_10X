@@ -145,7 +145,7 @@
   Group_Mode <- "GoupByPheno"   # c("GoupByPheno","GoupByGeneExp")
   TarGene_name <- "Chil3"
   PhenoGrp_name1 <- "Cachexia"
-  PhenoGrp_name2 <- c("EOCX","PreCX")
+  PhenoGrp_name2 <- c("PreCX","EOCX")
 
   GeneExpSet.lt <- list(GeneExpMode = "Mean", # c("Mean","Mean1SD","Mean2SD","Mean3SD","Median","Quartile","Customize"))
                         UpCutoff = 1, LowerCutoff = 1)
@@ -305,8 +305,8 @@
 
 
 
-#### Save RData ####
-  save.image(paste0(Save.Path,"/GseaGo_",ExportName,".RData"))
+# #### Save RData ####
+#   save.image(paste0(Save.Path,"/GseaGo_",ExportName,".RData"))
 
 
 
