@@ -85,11 +85,11 @@
 #####***************************************************************************#####
 #####*  Plot by previous results *#####
 ##### Set condition #####
-  SubType = "Mac3"
-  Set_GSEA_FDR <- 0.01
+  SubType = "Neu"
+  Set_GSEA_FDR <- 0.05
   Set_GSEA_NES <- 1
 
-  Set_GE_FDR <- 0.01
+  Set_GE_FDR <- 0.05
   Set_GE_LogFC <- 1
 
   ## Barplot setting
@@ -390,7 +390,7 @@
   # keep those genes with 3  or more occurnes
   table(data.frame(rowSums(h.dat)))
 
-  h.dat <- h.dat[data.frame(rowSums(h.dat)) >= 1, ]
+  h.dat <- h.dat[data.frame(rowSums(h.dat)) >= 3, ]
 
   #
   topTable <- res[res$SYMBOL %in% rownames(h.dat), ]
@@ -481,11 +481,11 @@
       colnames(h.dat),
       rot = 90,
       just = 'right',
-      gp = gpar(fontsize = 9, fontface = 'bold')),
+      gp = gpar(fontsize = 8, fontface = 'bold')),
 
     col = list(NES = col_HMap_dfEnrich, FDR = col_HMap_FDR),
     annotation_name_gp= gpar(fontsize = 12, fontface = 'bold'),
-    annotation_height = unit.c(unit(0.8, 'cm'),unit(0.8, 'cm'), unit(8, 'cm')),
+    annotation_height = unit.c(unit(0.8, 'cm'),unit(0.8, 'cm'), unit(6, 'cm')),
     annotation_name_side = 'right')
 
 
@@ -514,7 +514,7 @@
                       show_row_dend = TRUE,
                       row_title = 'Top Genes',
                       row_title_side = 'left',
-                      row_title_gp = gpar(fontsize = 11, fontface = 'bold'),
+                      row_title_gp = gpar(fontsize = 16, fontface = 'bold'),
                       row_title_rot = 90,
                       show_row_names = TRUE,
                       row_names_gp = gpar(fontsize = 11, fontface = 'bold'),
@@ -524,7 +524,7 @@
                       show_column_dend = TRUE,
                       column_title = 'Enriched terms',
                       column_title_side = 'top',
-                      column_title_gp = gpar(fontsize = 12, fontface = 'bold'),
+                      column_title_gp = gpar(fontsize = 16, fontface = 'bold'),
                       column_title_rot = 0,
                       show_column_names = FALSE,
                       show_heatmap_legend = FALSE,
@@ -534,6 +534,8 @@
                       clustering_method_columns = 'ward.D2',
                       clustering_distance_rows = 'euclidean',
                       clustering_method_rows = 'ward.D2',
+                      width = nrow(h.dat)*unit(5, "mm"),
+                      height = ncol(h.dat)*unit(3, "mm"),
                       bottom_annotation = haTerms)
 
 
@@ -559,7 +561,7 @@
                       show_row_dend = TRUE,
                       row_title = 'Top Genes',
                       row_title_side = 'left',
-                      row_title_gp = gpar(fontsize = 11, fontface = 'bold'),
+                      row_title_gp = gpar(fontsize = 16, fontface = 'bold'),
                       row_title_rot = 90,
                       show_row_names = TRUE,
                       row_names_gp = gpar(fontsize = 11, fontface = 'bold'),
@@ -569,7 +571,7 @@
                       show_column_dend = TRUE,
                       column_title = 'Enriched terms',
                       column_title_side = 'top',
-                      column_title_gp = gpar(fontsize = 12, fontface = 'bold'),
+                      column_title_gp = gpar(fontsize = 16, fontface = 'bold'),
                       column_title_rot = 0,
                       show_column_names = FALSE,
                       show_heatmap_legend = FALSE,
@@ -577,6 +579,8 @@
                       clustering_method_columns = 'ward.D2',
                       # clustering_distance_rows = 'euclidean',
                       # clustering_method_rows = 'ward.D2',
+                      width = nrow(h.dat)*unit(5, "mm"),
+                      height = ncol(h.dat)*unit(3, "mm"),
                       bottom_annotation = haTerms)
 
 
@@ -589,6 +593,18 @@
   draw(hmapGSEA + haGenes,
        heatmap_legend_side = 'right',
        annotation_legend_side = 'right')
+  dev.off()
+
+
+  ##### Export PDF #####
+  pdf(file = paste0(SaveSub.Path,"/",Version,"_GSEAHeatmap.pdf"),width = 14, height = 16 )
+  draw(hmapGSEA + haGenes,
+       heatmap_legend_side = 'right',
+       annotation_legend_side = 'right')
+  draw(hmapGSEA2 + haGenes,
+       heatmap_legend_side = 'right',
+       annotation_legend_side = 'right')
+
   dev.off()
 
 
