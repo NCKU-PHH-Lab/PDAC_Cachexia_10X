@@ -10,6 +10,7 @@
 
   }
 
+  library(ggpubr)
 ##### 07 Count Cell number  #####
   Pheno.df <- data.frame(sample = scRNA.SeuObj@meta.data[["sample"]],celltype = scRNA.SeuObj@meta.data[["celltype"]],
                          Cachexia = scRNA.SeuObj@meta.data[["Cachexia"]],Sex = scRNA.SeuObj@meta.data[["Sex"]])
@@ -262,7 +263,7 @@
   BarPlot3_2
 
 #### New Barplot(2022/10/27) ####
-
+  library(ggpubr)
   Freq_All2.df <- data.frame(Freq_All.df,str_split(Freq_All.df$Pheno_Type, pattern = "\\.",
                                                    n = Inf, simplify = TRUE))
   colnames(Freq_All2.df)[c((ncol(Freq_All2.df)-1),ncol(Freq_All2.df))] <- c("CCstate","Sex")
@@ -271,7 +272,7 @@
   plt.ManyGroup <- ggboxplot(Freq_All2.df, x = "Cell_Type", y = "Number",
                              color = "CCstate",
                              fill = "CCstate",
-                             lwd=1,
+                             lwd=0.8,
                              # palette = "jco",
                             add = "jitter", # short.panel.labs = T
   ) #+ ylim(0, LabelY*1.2)
@@ -287,7 +288,7 @@
   plt.ManyGroup2 <- ggboxplot(Freq_All2.df, x = "Cell_Type", y = "Percent",
                              color = "CCstate",
                              fill = "CCstate",
-                             lwd=1,
+                             lwd=0.8,
                              # palette = "jco",
                              add = "jitter", # short.panel.labs = T
   ) #+ ylim(0, LabelY*1.2)
