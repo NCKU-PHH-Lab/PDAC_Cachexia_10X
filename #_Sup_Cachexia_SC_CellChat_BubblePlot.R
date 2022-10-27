@@ -149,7 +149,7 @@ dev.off()
 if(CCDBType == "ECM")
 {
   ## Significant For ECM
-  pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig.pdf"),width = 25, height = 20 )
+  pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig.pdf"),width = 50, height = 20 )
   netVisual_bubble(cellchat, sources.use = c(1,2,3,4,7,8,9,12) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
     ggtitle(paste0("Allograft : ",CCDBType))+
@@ -221,7 +221,7 @@ if(CCDBType == "CC")
 if(CCDBType == "Secret")
 {
   ## Significant For Secret
-  pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig.pdf"),width = 35, height = 15 )
+  pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_BubblePlot_Sig.pdf"),width = 65, height = 15 )
   netVisual_bubble(cellchat, sources.use = c(1,2,3,4,5,7,8,9,12) , comparison = c(1, 2), angle.x = 45, thresh = 0.01)+
     #scale_size(range = sizeRange, name="P-Value")+
     ggtitle(paste0("Allograft : ",CCDBType))+
