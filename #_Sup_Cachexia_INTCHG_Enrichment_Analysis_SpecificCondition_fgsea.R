@@ -90,7 +90,7 @@
   Set_GSEA_NES <- 1
 
   Set_GE_FDR <- 0.05
-  Set_GE_LogFC <- 1
+  Set_GE_LogFC <- 0.9
 
   ## Barplot setting
   NumGenesetsPlt=15
@@ -597,7 +597,7 @@
 
 
   ##### Export PDF #####
-  pdf(file = paste0(SaveSub.Path,"/",Version,"_GSEAHeatmap.pdf"),width = 14, height = 16 )
+  pdf(file = paste0(SaveSub.Path,"/",Version,"_GSEAHeatmap.pdf"),width = 25, height = 25)
   draw(hmapGSEA + haGenes,
        heatmap_legend_side = 'right',
        annotation_legend_side = 'right')
