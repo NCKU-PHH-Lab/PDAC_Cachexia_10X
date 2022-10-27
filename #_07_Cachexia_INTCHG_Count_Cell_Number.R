@@ -261,10 +261,52 @@
 
   BarPlot3_2
 
+#### New Barplot(2022/10/27) ####
+
+  Freq_All2.df <- data.frame(Freq_All.df,str_split(Freq_All.df$Pheno_Type, pattern = "\\.",
+                                                   n = Inf, simplify = TRUE))
+  colnames(Freq_All2.df)[c((ncol(Freq_All2.df)-1),ncol(Freq_All2.df))] <- c("CCstate","Sex")
+
+  ## Plot Number
+  plt.ManyGroup <- ggboxplot(Freq_All2.df, x = "Cell_Type", y = "Number",
+                             color = "CCstate",
+                             fill = "CCstate",
+                             lwd=1,
+                             # palette = "jco",
+                            add = "jitter", # short.panel.labs = T
+  ) #+ ylim(0, LabelY*1.2)
+  plt.ManyGroup %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.86, 0.85),AxisTitleSize=1.7,
+                                   XtextSize=18,  YtextSize=,18, xangle = 90,
+                                   LegTextSize = 15)  +
+    theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid"))+
+    scale_color_manual(values = c('#ba0449','#3d3c99'))+
+    scale_fill_manual(values =alpha( c('#ba0449','#3d3c99'),0.5)) -> plt.ManyGroup
+  plt.ManyGroup
+
+  ## Plot Percent
+  plt.ManyGroup2 <- ggboxplot(Freq_All2.df, x = "Cell_Type", y = "Percent",
+                             color = "CCstate",
+                             fill = "CCstate",
+                             lwd=1,
+                             # palette = "jco",
+                             add = "jitter", # short.panel.labs = T
+  ) #+ ylim(0, LabelY*1.2)
+  plt.ManyGroup2 %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.86, 0.85),AxisTitleSize=1.7,
+                                   XtextSize=18,  YtextSize=,18, xangle = 90,
+                                   LegTextSize = 15)  +
+    theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid"))+
+    scale_color_manual(values = c('#ba0449','#3d3c99'))+
+    scale_fill_manual(values =alpha( c('#ba0449','#3d3c99'),0.5)) -> plt.ManyGroup2
+  plt.ManyGroup2
+
+
+
 
 ##### Export PDF file #####
   pdf(file = paste0(Save.Path,"/",SampleType,"_CellCount_LinePlot.pdf"),
       width = 7, height = 7 )
+    plt.ManyGroup2 %>% print()
+    plt.ManyGroup %>% print()
     CellNum_P4 %>% print()
     CellNum_P3 %>% print()
     CellNum_P1 %>% print()
