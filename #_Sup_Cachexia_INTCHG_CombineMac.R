@@ -12,7 +12,7 @@ load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main/06_
 # Clean up
 rm(list=setdiff(ls(), c("PBMC.combined")))
 load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_SC_Main/06_Cell_type_annotation.RData")
-rm(list=setdiff(ls(), c("PBMC.combined","SC.combined")))
+rm(list=setdiff(ls(), c("PBMC.combined","SC.combined","Save.Path")))
 
 
 
@@ -134,3 +134,18 @@ FeaturePlot(scRNA.SeuObj, features = c("Top2a", "Ptk2"), min.cutoff = "q9")
 
 ##### Count Metadata #####
 Metadata.df <- scRNA.SeuObj@meta.data
+
+BarPlot1_1 <- ggplot(Metadata.df, aes(seurat_clusters, fill=celltype)) +
+  geom_bar(position="fill")+theme_bw()+
+  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+BarPlot1_1 %>% BeautifyggPlot(.,AspRat=1,LegPos = c(1.1, 0.5),AxisTitleSize=1.7,
+                              XtextSize=18,  YtextSize=,18, xangle = 90,
+                              LegTextSize = 14)  +
+  theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid"))+
+  scale_fill_manual(values =pal_lancet("lanonc", alpha = 0.7)(10)) -> BarPlot1_1
+
+BarPlot1_1
+
+#### Save RData ####
+save.image(paste0(Save.Path,"/Sup_CombineMac.RData"))
+
