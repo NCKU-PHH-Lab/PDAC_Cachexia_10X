@@ -296,7 +296,7 @@
                                    XtextSize=18,  YtextSize=,18, xangle = 90,
                                    LegTextSize = 15)  +
     theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid"))+
-    scale_color_manual(values = c('#ba0449','#3d3c99'))+
+    scale_color_manual(values = c('#ba0449','#3d3c99'))+ ylim(0, 1)+
     scale_fill_manual(values =alpha( c('#ba0449','#3d3c99'),0.5)) -> plt.ManyGroup2
   plt.ManyGroup2
 
