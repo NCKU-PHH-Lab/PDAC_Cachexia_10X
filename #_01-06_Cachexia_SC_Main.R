@@ -650,6 +650,10 @@
   FeaturePlot(SC.combined, features = c("Stat6"), min.cutoff = "q9",ncol = 3)
   FeaturePlot(SC.combined, features = c("Il1b"), min.cutoff = "q9",ncol = 3)
 
+  ## Mac marker
+  FeaturePlot(SC.combined, features = c("Itgam","Cd86","Mrc1"), min.cutoff = "q9",ncol = 3)
+  # CD11b: Itgam https://www.ncbi.nlm.nih.gov/gene/16409
+  # CD206: Mrc1 https://www.ncbi.nlm.nih.gov/gene?term=(cd206[gene])%20AND%20(Mus%20musculus[orgn])%20AND%20alive[prop]%20NOT%20newentry[gene]&sort=weight
 
   pdf(
     file = paste0(Save.Path,"/SC_UMAP_SubCTMarkers.pdf"),
