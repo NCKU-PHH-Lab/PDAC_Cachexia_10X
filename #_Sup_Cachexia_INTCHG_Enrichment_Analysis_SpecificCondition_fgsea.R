@@ -103,6 +103,7 @@
   GSEA_Sub.df <- GSEA_Sub.df[GSEA_Sub.df$padj <= Set_GSEA_FDR & abs(GSEA_Sub.df$NES) > 1,]
 
 ##### Plot #####
+  source("FUN_Beautify_ggplot.R")
   Barplot <- ggplot(GSEA_Sub.df, aes(NES, fct_reorder(pathway, NES), fill = padj), showCategory=(NumGenesetsPlt*2)) +
     geom_barh(stat='identity') +
     scale_fill_continuous(low = "#d45772", high = "#3b74bf", guide = guide_colorbar(reverse=TRUE)) +
@@ -157,7 +158,7 @@
 
   if(Group_Mode == "GoupByGeneExp"){
     ## Group by GeneExp
-    AnnoSet.lt <- list(GroupType = TarGene_name, GroupCompare = c("High","Low") )   ## DEG by GeneExp group
+    AnnoSet.lt <- list(GroupType = TarGene_name, GroupCompare = c("Low","High") )   ## DEG by GeneExp group
   }else{
     ## Group by Pheno
     AnnoSet.lt <- list(GroupType = PhenoGrp_name1, GroupCompare = PhenoGrp_name2 )
