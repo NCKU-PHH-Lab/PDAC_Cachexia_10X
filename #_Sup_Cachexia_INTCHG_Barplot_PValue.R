@@ -25,28 +25,39 @@ library(ggpubr)
 load(paste0(Save.Path,"/06_Cell_type_annotation.RData"))
 
 ## INTCHG: Interchangeable
+### SubType Setting
+### Order the cell type
+## INTCHG: Interchangeable
 ## SubType Setting
-  if(SampleType == "PBMC"){
-    # For PBMC
-    scRNA.SeuObj <- PBMC.combined
+if(SampleType == "PBMC"){
+  ## For PBMC
+  scRNA.SeuObj <- PBMC.combined
 
-  }else if(SampleType == "SC"){
-    # For SC
-    scRNA.SeuObj <- SC.combined
+  # Order the cell type
+  CellType.Order = c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery")
+  scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
+                                                 levels = CellType.Order)
 
-  }
+
+}else if(SampleType == "SC"){
+  ## For SC
+  scRNA.SeuObj <- SC.combined
+
+  # Order the cell type
+  CellType.Order = c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
+                     "Fib1", "Fib2", "Fib3")
+  scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
+                                                 levels = CellType.Order)
+
+}
 
 # Clean up
-rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path")))
+rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path", "CellType.Order")))
 
-# Order the cell type
-scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
-                                               levels =c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
-                                                         "NK","B","Mast","Ery"))
 
 ##### Current path and new folder setting  #####
 TarGene <- "Chil3"
-Version = paste0(Sys.Date(),"_","PBMC_Barplot_PVal_",TarGene)
+Version = paste0(Sys.Date(),"_",SampleType,"_Barplot_PVal_",TarGene)
 SaveSup.Path = paste0(getwd(),"/",Version)
 dir.create(SaveSup.Path)
 
@@ -157,8 +168,7 @@ plt.ManyGroup2 <- plt.ManyGroup2 + stat_compare_means(label =  "p.signif",label.
 
     Anno_Sum.df$sample <- factor(Anno_Sum.df$sample ,levels =c("EOCX.M","EOCX.F", "PreCX.M","PreCX.F"))
     Anno_Sum.df$celltype <- factor(Anno_Sum.df$celltype ,
-                                   levels =c("Total","Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T",
-                                             "NK","B","Mast","Ery"))
+                                   levels =c("Total",CellType.Order))
 
     # Box plot facetted by "celltype"
     plt.ManyGroup2_Sum <- ggboxplot(Anno_Sum.df, x = "Cachexia", y = TarGene,
