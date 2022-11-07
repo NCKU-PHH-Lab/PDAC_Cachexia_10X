@@ -94,6 +94,8 @@ memory.limit(300000)
   Anno.df$EMT_Type %>% unique()
 
 
+
+
 ##### Visualization #####
   ## https://www.aj2duncan.com/blog/missing-data-ggplot2-barplots/
   source("FUN_Beautify_ggplot.R")
@@ -108,10 +110,31 @@ memory.limit(300000)
   EMTCCBar_P1
 
 
+  ## Seperate by Celltype
+  Celltype.set <- Anno.df$celltype %>% unique()
+  for (i in 1:length(Celltype.set)) {
 
+      Anno_Temp.df <- Anno.df[Anno.df$celltype == Celltype.set[i], ]
+      EMTCCBar_PS <-ggplot(Anno_Temp.df, aes(x = Cachexia, fill = EMT_Type)) +
+        geom_bar(position = "dodge")
+      EMTCCBar_PS+ theme_set(theme_bw()) %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.25, 0.8),AxisTitleSize=1.7,
+                                                            XtextSize=18,  YtextSize=18, xangle = 90,
+                                                            LegTextSize = 15) +
+        theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid")) -> EMTCCBar_PS
+      EMTCCBar_PS + labs(title= paste0(Celltype.set[i]),
+                         x ="Cachexia)", y = "Number") +
+        theme(plot.title = element_text(hjust = 0.5, vjust = 0.1)) +
+        ylim(c(0, nrow(Anno.df))/6) -> EMTCCBar_PS
+    if(i==1){
+      EMTCCBar_PS_Sum <- EMTCCBar_PS
+    }else{
+      EMTCCBar_PS_Sum <- EMTCCBar_PS_Sum + EMTCCBar_PS
+    }
 
+  }
 
-
+  rm(i, EMTCCBar_PS, Anno_Temp.df)
+  EMTCCBar_PS_Sum
 
 
 
