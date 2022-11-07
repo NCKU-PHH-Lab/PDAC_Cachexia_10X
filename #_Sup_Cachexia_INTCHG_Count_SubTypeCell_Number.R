@@ -38,7 +38,9 @@ memory.limit(300000)
   Anno_Ori.df <- Anno.df
   colnames(Anno.df)
 
-  Anno.df <- Anno.df[grep("Duc",Anno.df$celltype),]
+  ## Extract CellSubType
+  CellSubType <- "Duc"
+  Anno.df <- Anno.df[grep(CellSubType,Anno.df$celltype),]
 
 ##### Add gene expression status to Anno.df #####
   Targene.set <- c("Vim","Krt19")
@@ -97,12 +99,13 @@ memory.limit(300000)
   source("FUN_Beautify_ggplot.R")
   EMTCCBar_P1 <-ggplot(Anno.df, aes(x = Cachexia, fill = EMT_Type)) +
     geom_bar(position = "dodge")
-  EMTCCBar_P1+ theme_set(theme_bw()) %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.2, 0.85),AxisTitleSize=1.7,
+  EMTCCBar_P1+ theme_set(theme_bw()) %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.15, 0.8),AxisTitleSize=1.7,
                                                    XtextSize=18,  YtextSize=18, xangle = 90,
                                                    LegTextSize = 15) +
     theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid")) -> EMTCCBar_P1
+  EMTCCBar_P1 + labs(title= paste0(CellSubType),
+                   x ="Cachexia)", y = "Number") -> EMTCCBar_P1
   EMTCCBar_P1
-
 
 
 
