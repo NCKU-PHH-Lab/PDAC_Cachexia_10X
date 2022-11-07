@@ -101,7 +101,7 @@ memory.limit(300000)
   source("FUN_Beautify_ggplot.R")
   EMTCCBar_P1 <-ggplot(Anno.df, aes(x = Cachexia, fill = EMT_Type)) +
     geom_bar(position = "dodge")
-  EMTCCBar_P1+ theme_set(theme_bw()) %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.15, 0.8),AxisTitleSize=1.7,
+  EMTCCBar_P1+ theme_set(theme_bw()) %>% BeautifyggPlot(.,AspRat=1,LegPos = c(0.1, 0.85),AxisTitleSize=1.7,
                                                    XtextSize=18,  YtextSize=18, xangle = 90,
                                                    LegTextSize = 15) +
     theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid")) -> EMTCCBar_P1
@@ -122,7 +122,7 @@ memory.limit(300000)
                                                             LegTextSize = 15) +
         theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid")) -> EMTCCBar_PS
       EMTCCBar_PS + labs(title= paste0(Celltype.set[i]),
-                         x ="Cachexia)", y = "Number") +
+                         x ="Cachexia", y = "Number") +
         theme(plot.title = element_text(hjust = 0.5, vjust = 0.1)) +
         ylim(c(0, nrow(Anno.df))/6) -> EMTCCBar_PS
     if(i==1){
@@ -137,6 +137,90 @@ memory.limit(300000)
   EMTCCBar_PS_Sum
 
 
+#### Count table ####
+
+  Table_CC.df <-table(Anno.df$Cachexia) %>% as.data.frame()
+
+  Anno.df$Cachexia_Celltype <- paste0(Anno.df$Cachexia,"_",Anno.df$celltype)
+  Table_CC_CT.df <- table(Anno.df$Cachexia_Celltype) %>% as.data.frame()
+
+  Anno.df$Cachexia_Celltype_EMT <- paste0(Anno.df$Cachexia,"_",Anno.df$celltype,"_",Anno.df$EMT_Type)
+  Table_CC_CT_EMT.df <- table(Anno.df$Cachexia_Celltype_EMT) %>% as.data.frame()
+  Table_CC_CT_EMT.df <- data.frame(Table_CC_CT_EMT.df,
+                                   str_split_fixed(Table_CC_CT_EMT.df$Var1, "_", 3) %>% as.data.frame())
+  colnames(Table_CC_CT_EMT.df) <- c("CC_CT_EMT", "Num","CC","CT","EMT")
+
+  Table_CC_CT_EMT.df$CT_EMT <- paste0(Table_CC_CT_EMT.df$CT,"_",Table_CC_CT_EMT.df$EMT)
+  Table_CC_CT_EMT.df$CC_CT <- paste0(Table_CC_CT_EMT.df$CC,"_",Table_CC_CT_EMT.df$CT)
+  Table_CC_CT_EMT.df$CC_CT <- factor(Table_CC_CT_EMT.df$CC_CT, level = Table_CC_CT_EMT.df$CC_CT %>% unique())
+
+  ## Percent
+  Table_CC_CT_EMT.df$Percent <- ""
+  Table_CC_CT_EMT.df[Table_CC_CT_EMT.df$CC %in% "EOCX",]$Percent <- Table_CC_CT_EMT.df[Table_CC_CT_EMT.df$CC %in% "EOCX",]$Num/Table_CC.df[Table_CC.df$Var1 %in% "EOCX", 2]*100
+  Table_CC_CT_EMT.df[Table_CC_CT_EMT.df$CC %in% "PreCX",]$Percent <- Table_CC_CT_EMT.df[Table_CC_CT_EMT.df$CC %in% "PreCX",]$Num/Table_CC.df[Table_CC.df$Var1 %in% "PreCX", 2]*100
+
+  Table_CC_CT_EMT.df <- relocate(Table_CC_CT_EMT.df,Percent, .after = Num)
+  Table_CC_CT_EMT.df$Percent <- Table_CC_CT_EMT.df$Percent %>% as.numeric()%>% round(., 4)
+
+
+  ##### Visualization #####
+  ggplot(data=Table_CC_CT_EMT.df, aes(x=CC, y=Num, fill=EMT)) +
+    geom_bar(stat="identity", position=position_dodge())
+
+  ggplot(data=Table_CC_CT_EMT.df, aes(x=CC, y=Num, fill=CT_EMT)) +
+    geom_bar(stat="identity", position=position_dodge())
+
+  ggplot(data=Table_CC_CT_EMT.df, aes(x=EMT, y=Num, fill=CT)) +
+    geom_bar(stat="identity", position=position_dodge())
+
+  ggplot(data=Table_CC_CT_EMT.df, aes(x=EMT, y=Num, fill=CC_CT)) +
+    geom_bar(stat="identity", position=position_dodge())
+
+
+  ## Count
+  P.EMTCCBar_All_Count <- ggplot(data=Table_CC_CT_EMT.df, aes(x=EMT, y=Num, fill=CC_CT)) +
+    geom_bar(stat="identity", position=position_dodge()) +
+    scale_fill_manual(values=c("#9e2b69","#b3367a","#c4498b","#db69a7","#eb88be","#e8a2c8",
+                               "#235e91","#3679b3","#488cc7","#5e9ed6","#7ab3e6","#9cccf7"))
+  P.EMTCCBar_All_Count %>% BeautifyggPlot(.,AspRat=1,LegPos = c(1.2, 0.5),AxisTitleSize=1.7,
+                                          XtextSize=18,  YtextSize=18, xangle = 90,
+                                          LegTextSize = 15) +
+    theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid")) -> P.EMTCCBar_All_Count
+  P.EMTCCBar_All_Count + labs(title= paste0(CellSubType),
+                     x ="EMT Type", y = "Number") -> P.EMTCCBar_All_Count
+  P.EMTCCBar_All_Count
+
+  ## Percent
+  P.EMTCCBar_All_Percent <- ggplot(data=Table_CC_CT_EMT.df, aes(x=EMT, y=Percent, fill=CC_CT)) +
+    geom_bar(stat="identity", position=position_dodge()) +
+    scale_fill_manual(values=c("#9e2b69","#b3367a","#c4498b","#db69a7","#eb88be","#e8a2c8",
+                               "#235e91","#3679b3","#488cc7","#5e9ed6","#7ab3e6","#9cccf7"))
+  P.EMTCCBar_All_Percent %>% BeautifyggPlot(.,AspRat=1,LegPos = c(1.2, 0.5),AxisTitleSize=1.7,
+                                            XtextSize=18,  YtextSize=18, xangle = 90,
+                                            LegTextSize = 15) +
+    theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid")) ->  P.EMTCCBar_All_Percent
+  P.EMTCCBar_All_Percent + labs(title= paste0(CellSubType),
+                                x ="EMT Type", y = "Percent (%)") -> P.EMTCCBar_All_Percent
+
+  P.EMTCCBar_All_Percent
+
+
+  ##### Export data ####
+
+    ## TSV
+    write.table( Table_CC_CT_EMT.df ,
+                 file = paste0(Save.Path,"/",SampleType,"_",CellSubType,"_EMTCount.tsv"),
+                 sep = "\t",
+                 quote = F,
+                 row.names = F
+    )
+
+    ## PDF
+    pdf(file = paste0(Save.Path,"/",SampleType,"_",CellSubType,"_EMTCount.pdf"),
+        width = 10, height = 7 )
+    P.EMTCCBar_All_Count %>% print()
+    P.EMTCCBar_All_Percent %>% print()
+    dev.off() # graphics.off()
 
 
 # ##### 07 Count Cell number  #####
