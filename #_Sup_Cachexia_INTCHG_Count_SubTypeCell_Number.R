@@ -45,17 +45,21 @@ memory.limit(300000)
 ##### Add gene expression status to Anno.df #####
   Targene.set <- c("Vim","Krt19")
 
+
+
   TarGeneExp.df <- data.frame(ID=colnames(GeneExp.df),
                               GeneExp.df[row.names(GeneExp.df) %in% c("Vim","Krt19"), ] %>% t %>% as.data.frame())
   Anno.df <- left_join(Anno.df, TarGeneExp.df)
 
   Temp.Vim <- summary(Anno.df$Vim %>% as.numeric())
   Temp.Krt19 <- summary(Anno.df$Krt19 %>% as.numeric())
+  Thr_Vim <- Temp.Vim[4]
+  Thr_Krt19 <- Temp.Krt19[4]
 
   ## Vim
   Anno.df$Vim_Type <- ""
   for (i in 1:nrow(Anno.df)) {
-    if(Anno.df$Vim[i] >= Temp.Vim[4] ){
+    if(Anno.df$Vim[i] >= Thr_Vim ){
       Anno.df$Vim_Type[i] <- "High"
     }else{
       Anno.df$Vim_Type[i] <- "Low"
@@ -66,7 +70,7 @@ memory.limit(300000)
   ## Krt19
   Anno.df$Krt19_Type <- ""
   for (i in 1:nrow(Anno.df)) {
-    if(Anno.df$Krt19[i] >= Temp.Krt19[4] ){
+    if(Anno.df$Krt19[i] >= Thr_Krt19 ){
       Anno.df$Krt19_Type[i] <- "High"
     }else{
       Anno.df$Krt19_Type[i] <- "Low"
