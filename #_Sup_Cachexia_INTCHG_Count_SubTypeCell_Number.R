@@ -99,8 +99,10 @@ memory.limit(300000)
 
   Anno.df$EMT_Type %>% unique()
 
-
-
+  ## Remove Other
+  Anno.df <- Anno.df[!Anno.df$EMT_Type == "Other",]
+  SaveName_EX <- "Q10_RemoveOther"
+  # SaveName_EX <- "Q10"
 
 ##### Visualization #####
   ## https://www.aj2duncan.com/blog/missing-data-ggplot2-barplots/
@@ -215,14 +217,14 @@ memory.limit(300000)
 
     ## TSV
     write.table( Table_CC_CT_EMT.df ,
-                 file = paste0(Save.Path,"/",Sys.Date(),"_",SampleType,"_",CellSubType,"_EMTCount.tsv"),
+                 file = paste0(Save.Path,"/",Sys.Date(),"_",SampleType,"_",CellSubType,"_EMTCount_",SaveName_EX,".tsv"),
                  sep = "\t",
                  quote = F,
                  row.names = F
     )
 
     ## PDF
-    pdf(file = paste0(Save.Path,"/",Sys.Date(),"_",SampleType,"_",CellSubType,"_EMTCount.pdf"),
+    pdf(file = paste0(Save.Path,"/",Sys.Date(),"_",SampleType,"_",CellSubType,"_EMTCount_",SaveName_EX,".pdf"),
         width = 10, height = 7 )
     P.EMTCCBar_All_Count %>% print()
     P.EMTCCBar_All_Percent %>% print()
