@@ -53,8 +53,10 @@ memory.limit(300000)
 
   Temp.Vim <- summary(Anno.df$Vim %>% as.numeric())
   Temp.Krt19 <- summary(Anno.df$Krt19 %>% as.numeric())
-  Thr_Vim <- Temp.Vim[4]
-  Thr_Krt19 <- Temp.Krt19[4]
+  # Thr_Vim <- Temp.Vim[4]
+  # Thr_Krt19 <- Temp.Krt19[4]
+  Thr_Vim <- stats::quantile(Anno.df$Vim %>% as.numeric(),0.1) + 1e-10
+  Thr_Krt19 <- stats::quantile(Anno.df$Krt19 %>% as.numeric(),0.1) + 1e-10
 
   ## Vim
   Anno.df$Vim_Type <- ""
@@ -128,7 +130,7 @@ memory.limit(300000)
       EMTCCBar_PS + labs(title= paste0(Celltype.set[i]),
                          x ="Cachexia", y = "Number") +
         theme(plot.title = element_text(hjust = 0.5, vjust = 0.1)) +
-        ylim(c(0, nrow(Anno.df))/6) -> EMTCCBar_PS
+        ylim(c(0, nrow(Anno.df))/5) -> EMTCCBar_PS
     if(i==1){
       EMTCCBar_PS_Sum <- EMTCCBar_PS
     }else{
@@ -213,14 +215,14 @@ memory.limit(300000)
 
     ## TSV
     write.table( Table_CC_CT_EMT.df ,
-                 file = paste0(Save.Path,"/",SampleType,"_",CellSubType,"_EMTCount.tsv"),
+                 file = paste0(Save.Path,"/",Sys.Date(),"_",SampleType,"_",CellSubType,"_EMTCount.tsv"),
                  sep = "\t",
                  quote = F,
                  row.names = F
     )
 
     ## PDF
-    pdf(file = paste0(Save.Path,"/",SampleType,"_",CellSubType,"_EMTCount.pdf"),
+    pdf(file = paste0(Save.Path,"/",Sys.Date(),"_",SampleType,"_",CellSubType,"_EMTCount.pdf"),
         width = 10, height = 7 )
     P.EMTCCBar_All_Count %>% print()
     P.EMTCCBar_All_Percent %>% print()
