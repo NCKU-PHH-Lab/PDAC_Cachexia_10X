@@ -650,6 +650,10 @@
   FeaturePlot(SC.combined, features = c("Stat6"), min.cutoff = "q9",ncol = 3)
   FeaturePlot(SC.combined, features = c("Il1b"), min.cutoff = "q9",ncol = 3)
 
+  # GREM1 paper: E/Hybrid/M type Mac
+  FeaturePlot(SC.combined, features = c("Krt19"), min.cutoff = "q9",pt.size =1)
+  FeaturePlot(SC.combined, features = c("Vim"), min.cutoff = "q9",pt.size =1)
+
   ## Mac marker
   FeaturePlot(SC.combined, features = c("Itgam","Cd86","Mrc1"), min.cutoff = "q9",ncol = 3)
   # CD11b: Itgam https://www.ncbi.nlm.nih.gov/gene/16409
