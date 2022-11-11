@@ -438,8 +438,8 @@ Heatmap(
   use_raster = F,
   top_annotation = ha_column_T,
   # right_annotation = ha_row
-  width = length(CellType.Order)*unit(7, "mm"),
-  height = length(CellType.Order)*unit(15, "mm"),
+  width =  length(CellType.Order)*unit(7, "mm"),
+  height = nrow( TarGeneAnno.mtx)*unit(7, "mm"), # length(CellType.Order)*unit(15, "mm"),
   column_title = paste0(SampleType,"_",CCDBType),
   column_title_gp = gpar(fontsize = 20, fontface = "bold")
 ) -> P.Heatmap_GeneExp
@@ -484,8 +484,8 @@ Heatmap(
   right_annotation = ha_row,
   # width = ncol(TarGeneAnno.mtx)*unit(8, "mm"),
   # height = length(CellType.Order)*unit(17, "mm") #nrow(TarGeneAnno.mtx)*unit(10, "mm")
-  width = length(CellType.Order)*unit(6, "mm"),
-  height = length(CellType.Order)*unit(15, "mm") #nrow(TarGeneAnno.mtx)*unit(10, "mm")
+  width = ncol( TarGeneAnno.mtx)*unit(5, "mm"), # length(CellType.Order)*unit(6, "mm")
+  height = nrow( TarGeneAnno.mtx)*unit(5, "mm") # length(CellType.Order)*unit(15, "mm"),
 ) -> P.Heatmap_GenePath
 
 P.Heatmap_GenePath %>% print
@@ -521,12 +521,12 @@ pch_LogFC3 = 16
 pchSize_LogFC3 = 4
 
 pch_FDR1 = 0
-pchSize_FDR1 = 7
+pchSize_FDR1 = 8
 pchLwd_FDR1 =1
 
 pch_FDR2 = 0
-pchSize_FDR2 = 7
-pchLwd_FDR2 =3
+pchSize_FDR2 = 8
+pchLwd_FDR2 =2.5
 
 ### Plot LogFC Heatmap
 # Set Heatmap color
@@ -534,7 +534,9 @@ col_HMapLog <- c("#4a5aa8","#ffffff","#c270b0")
 # col_HMapLog <- c("#2c3b82","#ffffff","#b5489d")
 col_HMapLog <- c("#2c3b82","#4a5aa8","#ffffff","#c270b0","#b5489d")
 
+
 Heatmap(
+  # row_km = nrow(statistics_LogFC.mtx)-1, column_km = c(ncol(statistics_LogFC.mtx)-1),
   statistics_LogFC.mtx,
   cluster_rows = F, # Heatmap with/without clustering by rows
   cluster_columns = F, # Heatmap with/without clustering by columns
@@ -552,11 +554,13 @@ Heatmap(
   use_raster = F,
   top_annotation = ha_column_ST,
   # right_annotation = ha_row,
-  width = length(CellType.Order)*unit(7, "mm"),
-  height = length(CellType.Order)*unit(15, "mm"),
+  width =  unit( ncol( statistics_LogFC.mtx)*7,"mm"), # length(CellType.Order)*unit(6.8, "mm"), # SC: 6.8
+  height = unit( nrow( statistics_LogFC.mtx)*7,"mm"), # nrow( TarGeneAnno.mtx)*unit(5, "mm"), # length(CellType.Order)*unit(15, "mm"),
 
   ## R plot pch symbols : The different point shapes available in R
   ## Ref: http://www.sthda.com/english/wiki/r-plot-pch-symbols-the-different-point-shapes-available-in-r
+  ## Ref: https://r-coder.com/plot-r/
+
   layer_fun = function(j, i, x, y, width, height, fill)
   {
     v1 = pindex(statistics_FDR.mtx, i, j)
@@ -585,6 +589,11 @@ Heatmap(
     try({
       FDR2 = v1 <= SetFDRThr2
       grid.points(x[FDR2], y[FDR2], pch = pch_FDR2, size = unit(pchSize_FDR2, "mm"), gp=gpar( lwd = pchLwd_FDR2))
+      # # grid.rect(x[FDR2], y[FDR2],gp = gpar(lwd = 2, fill = "transparent"))
+      # if(v1 <= SetFDRThr2) {
+      #   grid.rect(x[FDR2], y[FDR2],gp = gpar(lwd = 2, fill = "transparent"))
+      # }
+
     })
 
   }
@@ -597,7 +606,7 @@ P.Heatmap_GeneExp + P.Heatmap_LogFC + P.Heatmap_GenePath
 
 
 ##### Export PDF #####
-pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_ForPP.pdf"),width = 22, height = 12 )
+pdf(file = paste0(SaveCC.Path,"/",Version,"_LR_ForPP.pdf"),width = 25, height = 15 )
 P.Heatmap_GeneExp + P.Heatmap_LogFC + P.Heatmap_GenePath
 
 dev.off()
