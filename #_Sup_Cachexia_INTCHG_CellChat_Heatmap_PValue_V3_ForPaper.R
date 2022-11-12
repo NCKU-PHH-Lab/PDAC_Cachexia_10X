@@ -62,10 +62,10 @@ source("FUN_CellChatOne.R")
 # SampleTypeSet = "PBMC"
 
 ## Set Path
-Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_SC_Main")
+Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
 
 ## Set CellChat DB
-CCDBType = "Secret" # c("ECM","CC","Secret")
+CCDBType = "ECM" # c("ECM","CC","Secret")
 
 ## Set FDR Thr
 SetFDRThr1 <- 1.0e-2
@@ -229,7 +229,7 @@ try({
       # ## Filter
       # # if(c("****") %in% SummaryTable_Temp.df$p.signif || c("***") %in% SummaryTable_Temp.df$p.signif|| c("**") %in% SummaryTable_Temp.df$p.signif){
       # # if(c("****") %in% SummaryTable_Temp.df$p.signif){
-      # # if(sum(SummaryTable_Temp.df$p.adj < SetFDRThr2)>=1){
+      # # if(sum(SummaryTable_Temp.df$p.adj < SetFDRThr1)>=1){
       # if(sum(SummaryTable_Temp.df$p.adj < 0.05)>=1){
       #   SummaryTable_Sub.df <- rbind(SummaryTable_Sub.df,SummaryTable_Temp.df)
       # }else{
