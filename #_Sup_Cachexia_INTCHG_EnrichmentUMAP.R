@@ -277,10 +277,13 @@ source("FUN_HSsymbol2MMsymbol.R")
 
 
 ##### Function (tsv)(New version of GSEA) #####
+
+  ## Load geneset
   GeneSet_Ori.set <- read.delim(paste0(getwd(),"/GSEA_Geneset/GOBP_EPITHELIAL_TO_MESENCHYMAL_TRANSITION.v2022.1.Mm.tsv"),header=T, stringsAsFactors = FALSE)
+
+  ## Clean up geneset
   GeneSet.df <- GeneSet_Ori.set[nrow(GeneSet_Ori.set),]
   GeneSetName <- colnames(GeneSet.df)[2]
-
   GeneSet.set <- GeneSet.df[,2]
 
   library(tidyr)
@@ -306,40 +309,48 @@ source("FUN_HSsymbol2MMsymbol.R")
   # DefaultAssay(scRNA.SeuObj) <- "integrated"
   DefaultAssay(scRNA.SeuObj) <- "RNA"
   scRNA.SeuObj <- AddModuleScore(object = scRNA.SeuObj, features = as.data.frame(GeneSet.df_Mouse),
-                                 ctrl = 5, name = GeneSetName)
+                                 ctrl = 100, name = GeneSetName)
+
+  colnames(scRNA.SeuObj@meta.data)[ncol(scRNA.SeuObj@meta.data)] <- GeneSetName
 
 
   ## Plot UMAP
-  FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), pt.size =1)+
-              scale_colour_gradient2(low ="#0077b6", mid = "white", high = "#ef476f",
-                                     limits = c(-0.2, 0.2), # max(scRNA.SeuObj@meta.data[,paste0(GeneSetName,"1")])
-                                     guide = "colourbar",midpoint = 0, labs(fill ="Exp"))
+  plot.UMAP <- FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName), pt.size =1)+
+                 scale_colour_gradient2(low ="#0077b6", mid = "white", high = "#ef476f",
+                                        limits = c(-max(abs(scRNA.SeuObj@meta.data[,paste0(GeneSetName)])), max(abs(scRNA.SeuObj@meta.data[,paste0(GeneSetName)]))), # max(abs(scRNA.SeuObj@meta.data[,paste0(GeneSetName,"1")]))
+                                        # limits = c(-0.2, 0.2), # max(scRNA.SeuObj@meta.data[,paste0(GeneSetName)])
+                                        guide = "colourbar",midpoint = 0, labs(fill ="Score"))
+  source("FUN_Beautify_UMAP.R")
+  plot.UMAP %>% Beautify_UMAP(TitleSize = 15, LegTitleSize = 15, LegTextSize = 13) -> plot.UMAP
+  plot.UMAP
 
-  # FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "sample",
+  # FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName), split.by = "sample",
   #             cols = c("#0077b6", "grey",  "#ef476f"), pt.size =1)
   #
-  # FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "Cachexia",
+  # FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName), split.by = "Cachexia",
   #             cols = c("#0077b6", "grey",  "#ef476f"), pt.size =1)
-  # FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "Cachexia")+
+  # FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName), split.by = "Cachexia")+
   #   scale_colour_gradient2(low ="#0077b6", mid = "white", high = "#ef476f",
   #                          guide = "colourbar",midpoint = 0, labs(fill ="Exp"))
 
 
   ## Plot Violin
-  plots8 <- VlnPlot(scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "sample", group.by = "celltype",
-                    pt.size = 0, combine = FALSE,cols = c("#ef476f", "#e87993",  "#0077b6",  "#3c9ccf"))
-  wrap_plots(plots8 = plots8, ncol = 1)
 
-  plots8 <- VlnPlot(scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "Cachexia", group.by = "celltype",
-                    pt.size = 0, combine = FALSE,cols = c("#ef476f",  "#0077b6"))
-  plots8
-
-  p8 <- wrap_plots(plots8 = plots8, ncol = 1) %>%  BeautifyggPlot(.,AspRat=1,LegPos = c(-0.12, -0.07),AxisTitleSize=1.7,
-                                                                  XtextSize=18,  YtextSize=,18, xangle = 90,
-                                                                  LegTextSize = 15)  +
+  plot.Violin <- VlnPlot(scRNA.SeuObj, features = paste0(GeneSetName), split.by = "Cachexia", group.by = "celltype",
+                         pt.size = 0, combine = FALSE,cols = c("#ef476f",  "#0077b6"))
+  plot.Violin <- wrap_plots(plot.Violin = plot.Violin, ncol = 1) %>%  BeautifyggPlot(.,AspRat=1,LegPos = c(-0.12, -0.07),AxisTitleSize=1.7,
+                                                                                     XtextSize=18,  YtextSize=,18, xangle = 90,
+                                                                                     LegTextSize = 15)  +
     theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid"))
 
-  p8
+  plot.Violin
+
+  # plot.Violin1 <- VlnPlot(scRNA.SeuObj, features = paste0(GeneSetName), split.by = "sample", group.by = "celltype",
+  #                   pt.size = 0, combine = FALSE,cols = c("#ef476f", "#e87993",  "#0077b6",  "#3c9ccf"))
+  # wrap_plots(plot.Violin1 = plot.Violin1, ncol = 1)
+
+
+
 
 
 
