@@ -14,6 +14,9 @@ library(Seurat)
 
 source("FUN_HSsymbol2MMsymbol.R")
 
+##### Load Data #####
+load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_SC_Main/06_Cell_type_annotation.RData")
+
 
 ##### Function (tsv)(New version of GSEA) #####
 FUN_GeneSetAnno <- function(scRNA.SeuObj,
