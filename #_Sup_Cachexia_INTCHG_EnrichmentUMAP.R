@@ -10,6 +10,8 @@
   #
   # }
 
+library(Seurat)
+
 source("FUN_HSsymbol2MMsymbol.R")
 
 ##### HALLMARK_TNFA_SIGNALING_VIA_NFKB #####
@@ -265,6 +267,50 @@ source("FUN_HSsymbol2MMsymbol.R")
   wrap_plots(plots8 = plots8, ncol = 1)
 
   plots8 <- VlnPlot(scRNA.SeuObj, features = c("REACTOME_DEGRADATION_OF_THE_EXTRACELLULAR_MATRIX1"), split.by = "Cachexia", group.by = "celltype",
+                    pt.size = 0, combine = FALSE,cols = c("#ef476f",  "#0077b6"))
+  p8 <- wrap_plots(plots8 = plots8, ncol = 1) %>%  BeautifyggPlot(.,AspRat=1,LegPos = c(-0.08, -0.08),AxisTitleSize=1.7,
+                                                                  XtextSize=18,  YtextSize=,18, xangle = 90,
+                                                                  LegTextSize = 15)  +
+    theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid"))
+
+  p8
+
+
+##### Function (tsv)(New version of GSEA) #####
+  GeneSet_Ori.set <- read.delim(paste0(getwd(),"/GSEA_Geneset/GOBP_EPITHELIAL_TO_MESENCHYMAL_TRANSITION.v2022.1.Mm.tsv"),header=T, stringsAsFactors = FALSE)
+  GeneSet.df <- GeneSet_Ori.set[nrow(GeneSet_Ori.set),]
+  GeneSetName <- colnames(GeneSet.df)[2]
+
+  GeneSet.set <- GeneSet.df[,2]
+
+  library(tidyr)
+  GeneSet.df <- data.frame(strsplit(as.character(GeneSet.set), ","))
+  colnames(GeneSet.df) <- GeneSetName
+
+
+  GeneSet.df_Mouse <- HSsymbol2MMsymbol(GeneSet.df,GeneSetName)
+  GeneSet.df_Mouse <- unique(GeneSet.df_Mouse[,2])
+  # FeaturePlot(scRNA.SeuObj, features = GeneSet.df_Mouse[1:24], min.cutoff = "q9")
+  # FeaturePlot(scRNA.SeuObj, features = GeneSet.df_Mouse[25:50], min.cutoff = "q9")
+  # FeaturePlot(scRNA.SeuObj, features =c("Crip1","Arg1","Mt2","Tspo"), min.cutoff = "q9")
+
+  DefaultAssay(scRNA.SeuObj) <- "integrated"
+  scRNA.SeuObj <- AddModuleScore(object = scRNA.SeuObj, features = as.data.frame(GeneSet.df_Mouse),
+                                 ctrl = 5, name = GeneSetName)
+
+
+  FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "Cachexia")+
+                       scale_colour_gradient2(low ="#0077b6", mid = "white", high = "#ef476f",
+                                              guide = "colourbar",midpoint = 0, labs(fill ="Exp"))
+
+
+  FeaturePlot(object = scRNA.SeuObj, features = 'GeneSet.df1', split.by = "sample",
+              cols = c("#0077b6", "white",  "#ef476f"))
+  plots8 <- VlnPlot(scRNA.SeuObj, features = c("GeneSet.df1"), split.by = "sample", group.by = "celltype",
+                    pt.size = 0, combine = FALSE,cols = c("#ef476f", "#e87993",  "#0077b6",  "#3c9ccf"))
+  wrap_plots(plots8 = plots8, ncol = 1)
+
+  plots8 <- VlnPlot(scRNA.SeuObj, features = c("GeneSet.df1"), split.by = "Cachexia", group.by = "celltype",
                     pt.size = 0, combine = FALSE,cols = c("#ef476f",  "#0077b6"))
   p8 <- wrap_plots(plots8 = plots8, ncol = 1) %>%  BeautifyggPlot(.,AspRat=1,LegPos = c(-0.08, -0.08),AxisTitleSize=1.7,
                                                                   XtextSize=18,  YtextSize=,18, xangle = 90,
