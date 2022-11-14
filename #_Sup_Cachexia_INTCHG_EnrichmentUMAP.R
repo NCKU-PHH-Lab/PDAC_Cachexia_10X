@@ -42,6 +42,13 @@ source("FUN_Beautify_ggplot.R")
 source("FUN_Beautify_UMAP.R")
 
 
+##### Current path and new folder setting*  #####
+Version = paste0(Sys.Date(),"_", SampleType, "_GSEA_Heatmap")
+SaveCC.Path = paste0(Save.Path,"/",Version)
+dir.create(SaveCC.Path)
+
+
+
 ##### Function (tsv)(New version of GSEA) #####
 FUN_GeneSetAnno <- function(scRNA.SeuObj,
                             Set_GeneSet = "GOBP_EPITHELIAL_TO_MESENCHYMAL_TRANSITION.v2022.1.Mm.tsv",
@@ -49,11 +56,16 @@ FUN_GeneSetAnno <- function(scRNA.SeuObj,
                             Set_GeneSet_Species = "Mouse")
 {
   ## Load geneset
-  GeneSet_Ori.set <- read.delim(paste0(Set_Path,Set_GeneSet),header=T, stringsAsFactors = FALSE)
+  GeneSet_Ori.set <- read.delim(paste0(Set_Path,Set_GeneSet),header=F, stringsAsFactors = FALSE)
+
+  ## Geneset Anno
+  Geneset_Anno.df <- data.frame(
+    STANDARD_NAME = GeneSet_Ori.set[GeneSet_Ori.set$V1 ==  "STANDARD_NAME",2],
+    SYSTEMATIC_NAME = GeneSet_Ori.set[GeneSet_Ori.set$V1 == "SYSTEMATIC_NAME",2])
 
   ## Clean up geneset
   GeneSet.df <- GeneSet_Ori.set[nrow(GeneSet_Ori.set),]
-  GeneSetName <- colnames(GeneSet.df)[2]
+  GeneSetName <- GeneSet_Ori.set[GeneSet_Ori.set$V1 ==  "STANDARD_NAME",2]
   GeneSet.set <- GeneSet.df[,2]
 
   library(tidyr)
@@ -121,8 +133,10 @@ FUN_GeneSetAnno <- function(scRNA.SeuObj,
 
   ## Output setting
   Output.lt <- list(scRNA.SeuObj = scRNA.SeuObj,
+                    Geneset_Anno.df = Geneset_Anno.df,
                     UMAP = plot.UMAP,
-                    Violin = plot.Violin)
+                    Violin = plot.Violin
+                    )
 
   return(Output.lt)
 
@@ -161,10 +175,19 @@ for(i in 1:Nfiles)
                                   Set_GeneSet = list.files[i],
                                   Set_Path = InputFolder)
   scRNA.SeuObj <- AnnoResult.lt$scRNA.SeuObj
+
+
+  Geneset_Anno_Temp.df <- AnnoResult.lt$Geneset_Anno.df
+  if(i==1){
+   Geneset_Anno.df <- Geneset_Anno_Temp.df
+  }else{
+   Geneset_Anno.df <- rbind(Geneset_Anno.df,Geneset_Anno_Temp.df)
+  }
+
 }
 
 
-rm(AnnoResult.lt,i)
+rm(AnnoResult.lt,i,Geneset_Anno_Temp.df)
 
 MetaData <- scRNA.SeuObj@meta.data
 EMT.df <- MetaData[,(ncol(MetaData)-Nfiles+1):ncol(MetaData)]
@@ -187,10 +210,13 @@ EMT.df <- data.frame(CellID = rownames(EMT.df), EMT.df)
 Duc_EMT.df <- left_join(data.frame(CellID = Duc_Anno.df[,1]),EMT.df)
 
 
-
 rownames(Duc_EMT.df) <- Duc_EMT.df[,1]
 Duc_EMT.df <- Duc_EMT.df[,-1]
 
+## Reoder Geneset_Anno.df
+Geneset_Anno.df <- left_join(data.frame(STANDARD_NAME=colnames(Duc_EMT.df)),Geneset_Anno.df)
+
+colnames(Duc_EMT.df) <- Geneset_Anno.df$SYSTEMATIC_NAME
 
 # ## Try Basic Heatmap
 # Heatmap(Duc_EMT.df %>% t())
@@ -226,8 +252,9 @@ ha_column_T = HeatmapAnnotation(
 #### Plot Heatmap ####
 # Set Heatmap color
 # col_HMap <- c("#f0f4fc", "#6e8cc2", "#37558c")
-col_HMap <- c( "#ffffff","#e697b3", "#c45e82")
-col_HMap <- c( "#ffffff","#d44c5f", "#520e17")
+
+col_HMap <- c("#103561","#1c5aa3", "#ffffff","#940f44", "#cf155f")
+col_HMap <- c("#1d520e","#308518", "#ffffff", "#c45a14","#eb7b31")
 
 ### Plat GeneExpression Heatmap
 ## Reorder Heatmap
@@ -240,26 +267,41 @@ Heatmap(
   show_column_names = F,
   show_row_names = T,
   name = "Score",
-  # # set color
-  # col = colorRamp2(
-  #   # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-  #   c(min(GeneExp.df), max(GeneExp.df)*1/3 , max(GeneExp.df)),
-  #
-  #   col_HMap
-  # ),
+  # set color
+  col = colorRamp2(
+    # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+    # c(min(Duc_EMT.df), 0 , max(Duc_EMT.df)),
+    c(-max(abs(Duc_EMT.df)),-max(abs(Duc_EMT.df))/2, 0 , max(abs(Duc_EMT.df)), max(abs(Duc_EMT.df))/2),
+    col_HMap
+  ),
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T,
   # right_annotation = ha_row
-  # width =  length(CellType.Order)*unit(7, "mm"),
-  # height = nrow( Duc_EMT.df)*unit(7, "mm"), # length(CellType.Order)*unit(15, "mm"),
+  width =  length(CellType.Order)*unit(7, "mm"),
+  height = ncol( Duc_EMT.df)*unit(7, "mm"), # length(CellType.Order)*unit(15, "mm"),
   column_title = paste0(SampleType,"_",GeneSetType),
   column_title_gp = gpar(fontsize = 20, fontface = "bold")
-) -> P.Heatmap_GeneExp
+) -> P.Heatmap_Anno
 
-P.Heatmap_GeneExp %>% print
+P.Heatmap_Anno %>% print
 
 
+#### Export ####
+## Export PDF
+pdf(file = paste0(SaveCC.Path,"/",Version,"_",GeneSetType,".pdf"),width = 10, height = 10 )
+P.Heatmap_Anno
+
+dev.off()
+
+
+## Export tsv
+write.table( Geneset_Anno.df  ,
+             file = paste0(SaveCC.Path,"/",Version,"_",GeneSetType,"_GeneSetID.tsv"),
+             sep = "\t",
+             quote = F,
+             row.names = F
+)
 
 
 
