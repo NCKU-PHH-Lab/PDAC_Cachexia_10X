@@ -101,12 +101,37 @@ FUN_GeneSetAnno <- function(scRNA.SeuObj,
 }
 
 
+## Example
 AnnoResult.lt <-FUN_GeneSetAnno(scRNA.SeuObj,
                                 Set_GeneSet = "GOBP_EPITHELIAL_TO_MESENCHYMAL_TRANSITION.v2022.1.Mm.tsv",
                                 Set_Path = paste0(getwd(),"/GSEA_Geneset/"))
 
 
-UMAP <- AnnoResult.lt$UMAP
+scRNA.SeuObj <- AnnoResult.lt$scRNA.SeuObj
+plot.UMAP <- AnnoResult.lt$UMAP
+plot.Violin <- AnnoResult.lt$Violin
+
+
+##### Run Multiple GeneSet  #####
+library(gtools)
+# target.dir <- list.dirs(InputFolder)[-1]
+InputFolder = paste0(getwd(),"/GSEA_Geneset/EMT/")
+list.files <- list.files(InputFolder,full.names = F)
+Nfiles = length(list.files)
+
+for(i in 1:Nfiles)
+{
+  AnnoResult.lt <-FUN_GeneSetAnno(scRNA.SeuObj,
+                                  Set_GeneSet = list.files[i],
+                                  Set_Path = InputFolder)
+  scRNA.SeuObj <- AnnoResult.lt$scRNA.SeuObj
+}
+
+
+rm(AnnoResult.lt,i)
+
+MetaData <- scRNA.SeuObj@meta.data
+EMT.df <- MetaData[,(ncol(MetaData)-Nfiles+1):ncol(MetaData)]
 
 
 
