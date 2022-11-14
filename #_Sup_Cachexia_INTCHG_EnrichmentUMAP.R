@@ -1,7 +1,8 @@
 
 
 ##### Load Data #####
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_SC_Main/06_Cell_type_annotation.RData")
+# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_SC_Main/06_Cell_type_annotation.RData")
+load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main/06_Cell_type_annotation.RData")
 
 ## INTCHG: Interchangeable
 ## SubType Setting
@@ -164,7 +165,7 @@ plot.Violin
 library(gtools)
 # target.dir <- list.dirs(InputFolder)[-1]
 
-GeneSetType <- "EMT"
+GeneSetType <- "CATs"
 InputFolder = paste0(getwd(),"/GSEA_Geneset/",GeneSetType,"/")
 list.files <- list.files(InputFolder,full.names = F)
 Nfiles = length(list.files)
@@ -199,34 +200,46 @@ EMT.df <- MetaData[,(ncol(MetaData)-Nfiles+1):ncol(MetaData)]
 library(ComplexHeatmap)
 library(circlize)
 
-Duc_Anno.df <- MetaData[grepl("Duc",MetaData$celltype), -(ncol(MetaData)-Nfiles+1):-ncol(MetaData)]
-Duc_Anno.df <- data.frame(CellID = rownames(Duc_Anno.df), Duc_Anno.df)
-Duc_Anno.df$celltype <- factor(Duc_Anno.df$celltype ,
-                               levels = c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6"))
+
+if(SampleType == "PBMC"){
+  # For PBMC
+  Sub_Anno.df <- MetaData
+  Sub_Anno.df <- data.frame(CellID = rownames(Sub_Anno.df), Sub_Anno.df)
+
+}else if(SampleType == "SC"){
+  # For SC
+  Sub_Anno.df <- MetaData[grepl("Duc",MetaData$celltype), -(ncol(MetaData)-Nfiles+1):-ncol(MetaData)]
+  Sub_Anno.df <- data.frame(CellID = rownames(Sub_Anno.df), Sub_Anno.df)
+  Sub_Anno.df$celltype <- factor(Sub_Anno.df$celltype ,
+                                 levels = c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6"))
+
+}
+
+
 
 
 EMT.df <- data.frame(CellID = rownames(EMT.df), EMT.df)
 
-Duc_EMT.df <- left_join(data.frame(CellID = Duc_Anno.df[,1]),EMT.df)
+Sub_EMT.df <- left_join(data.frame(CellID = Sub_Anno.df[,1]),EMT.df)
 
 
-rownames(Duc_EMT.df) <- Duc_EMT.df[,1]
-Duc_EMT.df <- Duc_EMT.df[,-1]
+rownames(Sub_EMT.df) <- Sub_EMT.df[,1]
+Sub_EMT.df <- Sub_EMT.df[,-1]
 
 ## Reoder Geneset_Anno.df
-Geneset_Anno.df <- left_join(data.frame(STANDARD_NAME=colnames(Duc_EMT.df)),Geneset_Anno.df)
+Geneset_Anno.df <- left_join(data.frame(STANDARD_NAME=colnames(Sub_EMT.df)),Geneset_Anno.df)
 
-colnames(Duc_EMT.df) <- Geneset_Anno.df$SYSTEMATIC_NAME
+colnames(Sub_EMT.df) <- Geneset_Anno.df$SYSTEMATIC_NAME
 
 # ## Try Basic Heatmap
-# Heatmap(Duc_EMT.df %>% t())
+# Heatmap(Sub_EMT.df %>% t())
 
 
 
 
 #### Set column annotation ####
 sample = c("#2267a4", "#3d85c6", "#d5a6bd", "#c27ba0")
-names(sample) <- Duc_Anno.df$sample %>% unique()
+names(sample) <- Sub_Anno.df$sample %>% unique()
 
 library(ggsci)
 library(ggplot2)
@@ -236,9 +249,9 @@ colCT <- col3[1:length(CellType.Order)]
 names(colCT) <- CellType.Order
 
 ha_column_T = HeatmapAnnotation(
-  Sample = Duc_Anno.df[,"sample"],  # anno_colum.df$sample_type,
-  Cachexia = Duc_Anno.df[,"Cachexia"], # anno_colum.df$gender,
-  Celltype = Duc_Anno.df[,"celltype"],
+  Sample = Sub_Anno.df[,"sample"],  # anno_colum.df$sample_type,
+  Cachexia = Sub_Anno.df[,"Cachexia"], # anno_colum.df$gender,
+  Celltype = Sub_Anno.df[,"celltype"],
   col = list(Sample = sample,
              Celltype = colCT ,#pal_npg(), #colCT ,
              Cachexia = c("EOCX"="#5b517d", "PreCX"="#a095c7")), #,"Medium"="#b57545"
@@ -260,26 +273,26 @@ col_HMap <- c("#1d520e","#308518", "#ffffff", "#c45a14","#eb7b31")
 ## Reorder Heatmap
 # https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#row-and_column_orders
 Heatmap(
-  Duc_EMT.df %>% t(),
+  Sub_EMT.df %>% t(),
   cluster_rows = F, # Heatmap with/without clustering by rows
   cluster_columns = F, # Heatmap with/without clustering by columns
-  column_order = order(Duc_Anno.df$celltype,Duc_Anno.df$Cachexia), ## Reorder Heatmap
+  column_order = order(Sub_Anno.df$celltype,Sub_Anno.df$Cachexia), ## Reorder Heatmap
   show_column_names = F,
   show_row_names = T,
   name = "Score",
   # set color
   col = colorRamp2(
     # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
-    # c(min(Duc_EMT.df), 0 , max(Duc_EMT.df)),
-    c(-max(abs(Duc_EMT.df)),-max(abs(Duc_EMT.df))/2, 0 , max(abs(Duc_EMT.df)), max(abs(Duc_EMT.df))/2),
+    # c(min(Sub_EMT.df), 0 , max(Sub_EMT.df)),
+    c(-max(abs(Sub_EMT.df)),-max(abs(Sub_EMT.df))/2, 0 , max(abs(Sub_EMT.df)), max(abs(Sub_EMT.df))/2),
     col_HMap
   ),
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T,
   # right_annotation = ha_row
-  width =  length(CellType.Order)*unit(7, "mm"),
-  height = ncol( Duc_EMT.df)*unit(7, "mm"), # length(CellType.Order)*unit(15, "mm"),
+  width =  length(CellType.Order)*unit(21, "mm"),
+  height = ncol( Sub_EMT.df)*unit(7, "mm"), # length(CellType.Order)*unit(15, "mm"),
   column_title = paste0(SampleType,"_",GeneSetType),
   column_title_gp = gpar(fontsize = 20, fontface = "bold")
 ) -> P.Heatmap_Anno
@@ -289,7 +302,7 @@ P.Heatmap_Anno %>% print
 
 #### Export ####
 ## Export PDF
-pdf(file = paste0(SaveCC.Path,"/",Version,"_",GeneSetType,".pdf"),width = 10, height = 10 )
+pdf(file = paste0(SaveCC.Path,"/",Version,"_",GeneSetType,".pdf"),width = 15, height = 15 )
 P.Heatmap_Anno
 
 dev.off()
