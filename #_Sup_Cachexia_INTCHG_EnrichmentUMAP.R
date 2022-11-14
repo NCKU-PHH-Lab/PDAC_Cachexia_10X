@@ -45,7 +45,8 @@ source("FUN_Beautify_UMAP.R")
 ##### Function (tsv)(New version of GSEA) #####
 FUN_GeneSetAnno <- function(scRNA.SeuObj,
                             Set_GeneSet = "GOBP_EPITHELIAL_TO_MESENCHYMAL_TRANSITION.v2022.1.Mm.tsv",
-                            Set_Path = paste0(getwd(),"/GSEA_Geneset/"))
+                            Set_Path = paste0(getwd(),"/GSEA_Geneset/"),
+                            Set_GeneSet_Species = "Mouse")
 {
   ## Load geneset
   GeneSet_Ori.set <- read.delim(paste0(Set_Path,Set_GeneSet),header=T, stringsAsFactors = FALSE)
@@ -61,7 +62,7 @@ FUN_GeneSetAnno <- function(scRNA.SeuObj,
 
 
   ## Convert Gene name
-  GeneSet_Species <- "Human" # c("Mouse","Human")
+  GeneSet_Species <- Set_GeneSet_Species # c("Mouse","Human")
 
   if(GeneSet_Species == "Mouse"){
     GeneSet.df_Mouse <- GeneSet.df[,1]
