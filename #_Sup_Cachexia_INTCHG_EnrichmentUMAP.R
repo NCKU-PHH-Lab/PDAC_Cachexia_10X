@@ -288,31 +288,53 @@ source("FUN_HSsymbol2MMsymbol.R")
   colnames(GeneSet.df) <- GeneSetName
 
 
-  GeneSet.df_Mouse <- HSsymbol2MMsymbol(GeneSet.df,GeneSetName)
-  GeneSet.df_Mouse <- unique(GeneSet.df_Mouse[,2])
+  ## Convert Gene name
+  GeneSet_Species <- "Human" # c("Mouse","Human")
+
+  if(GeneSet_Species == "Mouse"){
+    GeneSet.df_Mouse <- GeneSet.df[,1]
+  }else if(GeneSet_Species == "Human"){
+    GeneSet.df_Mouse <- HSsymbol2MMsymbol(GeneSet.df,GeneSetName)
+    GeneSet.df_Mouse <- unique(GeneSet.df_Mouse[,2])
+  }
+
   # FeaturePlot(scRNA.SeuObj, features = GeneSet.df_Mouse[1:24], min.cutoff = "q9")
-  # FeaturePlot(scRNA.SeuObj, features = GeneSet.df_Mouse[25:50], min.cutoff = "q9")
   # FeaturePlot(scRNA.SeuObj, features =c("Crip1","Arg1","Mt2","Tspo"), min.cutoff = "q9")
 
-  DefaultAssay(scRNA.SeuObj) <- "integrated"
+
+  ## AddModuleScore
+  # DefaultAssay(scRNA.SeuObj) <- "integrated"
+  DefaultAssay(scRNA.SeuObj) <- "RNA"
   scRNA.SeuObj <- AddModuleScore(object = scRNA.SeuObj, features = as.data.frame(GeneSet.df_Mouse),
                                  ctrl = 5, name = GeneSetName)
 
 
-  FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "Cachexia")+
-                       scale_colour_gradient2(low ="#0077b6", mid = "white", high = "#ef476f",
-                                              guide = "colourbar",midpoint = 0, labs(fill ="Exp"))
+  ## Plot UMAP
+  FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), pt.size =1)+
+              scale_colour_gradient2(low ="#0077b6", mid = "white", high = "#ef476f",
+                                     limits = c(-0.2, 0.2), # max(scRNA.SeuObj@meta.data[,paste0(GeneSetName,"1")])
+                                     guide = "colourbar",midpoint = 0, labs(fill ="Exp"))
+
+  # FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "sample",
+  #             cols = c("#0077b6", "grey",  "#ef476f"), pt.size =1)
+  #
+  # FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "Cachexia",
+  #             cols = c("#0077b6", "grey",  "#ef476f"), pt.size =1)
+  # FeaturePlot(object = scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "Cachexia")+
+  #   scale_colour_gradient2(low ="#0077b6", mid = "white", high = "#ef476f",
+  #                          guide = "colourbar",midpoint = 0, labs(fill ="Exp"))
 
 
-  FeaturePlot(object = scRNA.SeuObj, features = 'GeneSet.df1', split.by = "sample",
-              cols = c("#0077b6", "white",  "#ef476f"))
-  plots8 <- VlnPlot(scRNA.SeuObj, features = c("GeneSet.df1"), split.by = "sample", group.by = "celltype",
+  ## Plot Violin
+  plots8 <- VlnPlot(scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "sample", group.by = "celltype",
                     pt.size = 0, combine = FALSE,cols = c("#ef476f", "#e87993",  "#0077b6",  "#3c9ccf"))
   wrap_plots(plots8 = plots8, ncol = 1)
 
-  plots8 <- VlnPlot(scRNA.SeuObj, features = c("GeneSet.df1"), split.by = "Cachexia", group.by = "celltype",
+  plots8 <- VlnPlot(scRNA.SeuObj, features = paste0(GeneSetName,"1"), split.by = "Cachexia", group.by = "celltype",
                     pt.size = 0, combine = FALSE,cols = c("#ef476f",  "#0077b6"))
-  p8 <- wrap_plots(plots8 = plots8, ncol = 1) %>%  BeautifyggPlot(.,AspRat=1,LegPos = c(-0.08, -0.08),AxisTitleSize=1.7,
+  plots8
+
+  p8 <- wrap_plots(plots8 = plots8, ncol = 1) %>%  BeautifyggPlot(.,AspRat=1,LegPos = c(-0.12, -0.07),AxisTitleSize=1.7,
                                                                   XtextSize=18,  YtextSize=,18, xangle = 90,
                                                                   LegTextSize = 15)  +
     theme(panel.border = element_rect(fill=NA,color="black", size=2, linetype="solid"))
