@@ -1,21 +1,45 @@
-  # ## INTCHG: Interchangeable
-  # ## SubType Setting
-  # if(SampleType == "PBMC"){
-  #   # For PBMC
-  #   scRNA.SeuObj <- PBMC.combined
-  #
-  # }else if(SampleType == "SC"){
-  #   # For SC
-  #   scRNA.SeuObj <- SC.combined
-  #
-  # }
 
-library(Seurat)
-
-source("FUN_HSsymbol2MMsymbol.R")
 
 ##### Load Data #####
 load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_SC_Main/06_Cell_type_annotation.RData")
+
+## INTCHG: Interchangeable
+## SubType Setting
+if(SampleType == "PBMC"){
+  # For PBMC
+  scRNA.SeuObj <- PBMC.combined
+
+  # Order the cell type
+  CellType.Order = c("Mac1", "Mac2","Mac3","Neu","T","CD4+T","CD8+T","NK","B","Mast","Ery")
+  scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
+                                                 levels = CellType.Order)
+
+
+}else if(SampleType == "SC"){
+  # For SC
+  scRNA.SeuObj <- SC.combined
+
+  # Order the cell type
+  CellType.Order = c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6" , "Mac1", "Mac2", "Mac3", "Mac4", "Mac5",
+                     "Fib1", "Fib2", "Fib3")
+  scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
+                                                 levels = CellType.Order)
+
+}
+
+
+rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path","CellType.Order")))
+
+##### Load Package #####
+
+
+library(Seurat)
+library(tidyverse)
+library(patchwork)
+
+source("FUN_HSsymbol2MMsymbol.R")
+source("FUN_Beautify_ggplot.R")
+source("FUN_Beautify_UMAP.R")
 
 
 ##### Function (tsv)(New version of GSEA) #####
@@ -109,16 +133,24 @@ AnnoResult.lt <-FUN_GeneSetAnno(scRNA.SeuObj,
                                 Set_GeneSet = "GOBP_EPITHELIAL_TO_MESENCHYMAL_TRANSITION.v2022.1.Mm.tsv",
                                 Set_Path = paste0(getwd(),"/GSEA_Geneset/"))
 
+AnnoResult.lt <-FUN_GeneSetAnno(scRNA.SeuObj,
+                                Set_GeneSet = "REACTOME_RUNX1_REGULATES_GENES_INVOLVED_IN_MEGAKARYOCYTE_DIFFERENTIATION_AND_PLATELET_FUNCTION.v2022.1.Mm.tsv",
+                                Set_Path = paste0(getwd(),"/GSEA_Geneset/CATs/"))
+
 
 scRNA.SeuObj <- AnnoResult.lt$scRNA.SeuObj
 plot.UMAP <- AnnoResult.lt$UMAP
-plot.Violin <- AnnoResult.lt$Violin
+plot.UMAP
 
+plot.Violin <- AnnoResult.lt$Violin
+plot.Violin
 
 ##### Run Multiple GeneSet  #####
 library(gtools)
 # target.dir <- list.dirs(InputFolder)[-1]
-InputFolder = paste0(getwd(),"/GSEA_Geneset/EMT/")
+
+GeneSetType <- "EMT"
+InputFolder = paste0(getwd(),"/GSEA_Geneset/",GeneSetType,"/")
 list.files <- list.files(InputFolder,full.names = F)
 Nfiles = length(list.files)
 
@@ -137,6 +169,94 @@ MetaData <- scRNA.SeuObj@meta.data
 EMT.df <- MetaData[,(ncol(MetaData)-Nfiles+1):ncol(MetaData)]
 
 
+
+##### ComplexHeatmap #####
+## https://jokergoo.github.io/ComplexHeatmap-reference/book/
+library(ComplexHeatmap)
+library(circlize)
+
+Duc_Anno.df <- MetaData[grepl("Duc",MetaData$celltype), -(ncol(MetaData)-Nfiles+1):-ncol(MetaData)]
+Duc_Anno.df <- data.frame(CellID = rownames(Duc_Anno.df), Duc_Anno.df)
+Duc_Anno.df$celltype <- factor(Duc_Anno.df$celltype ,
+                               levels = c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6"))
+
+
+EMT.df <- data.frame(CellID = rownames(EMT.df), EMT.df)
+
+Duc_EMT.df <- left_join(data.frame(CellID = Duc_Anno.df[,1]),EMT.df)
+
+
+
+rownames(Duc_EMT.df) <- Duc_EMT.df[,1]
+Duc_EMT.df <- Duc_EMT.df[,-1]
+
+
+# ## Try Basic Heatmap
+# Heatmap(Duc_EMT.df %>% t())
+
+
+
+
+#### Set column annotation ####
+sample = c("#2267a4", "#3d85c6", "#d5a6bd", "#c27ba0")
+names(sample) <- Duc_Anno.df$sample %>% unique()
+
+library(ggsci)
+library(ggplot2)
+# vignette( "ggsci") #Check the color setting
+col3 = 	pal_d3("category20", alpha = 0.7)(length(CellType.Order))
+colCT <- col3[1:length(CellType.Order)]
+names(colCT) <- CellType.Order
+
+ha_column_T = HeatmapAnnotation(
+  Sample = Duc_Anno.df[,"sample"],  # anno_colum.df$sample_type,
+  Cachexia = Duc_Anno.df[,"Cachexia"], # anno_colum.df$gender,
+  Celltype = Duc_Anno.df[,"celltype"],
+  col = list(Sample = sample,
+             Celltype = colCT ,#pal_npg(), #colCT ,
+             Cachexia = c("EOCX"="#5b517d", "PreCX"="#a095c7")), #,"Medium"="#b57545"
+  show_legend = T,
+  show_annotation_name = F
+)
+
+
+
+
+#### Plot Heatmap ####
+# Set Heatmap color
+# col_HMap <- c("#f0f4fc", "#6e8cc2", "#37558c")
+col_HMap <- c( "#ffffff","#e697b3", "#c45e82")
+col_HMap <- c( "#ffffff","#d44c5f", "#520e17")
+
+### Plat GeneExpression Heatmap
+## Reorder Heatmap
+# https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#row-and_column_orders
+Heatmap(
+  Duc_EMT.df %>% t(),
+  cluster_rows = F, # Heatmap with/without clustering by rows
+  cluster_columns = F, # Heatmap with/without clustering by columns
+  column_order = order(Duc_Anno.df$celltype,Duc_Anno.df$Cachexia), ## Reorder Heatmap
+  show_column_names = F,
+  show_row_names = T,
+  name = "Score",
+  # # set color
+  # col = colorRamp2(
+  #   # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
+  #   c(min(GeneExp.df), max(GeneExp.df)*1/3 , max(GeneExp.df)),
+  #
+  #   col_HMap
+  # ),
+  show_heatmap_legend = T,
+  use_raster = F,
+  top_annotation = ha_column_T,
+  # right_annotation = ha_row
+  # width =  length(CellType.Order)*unit(7, "mm"),
+  # height = nrow( Duc_EMT.df)*unit(7, "mm"), # length(CellType.Order)*unit(15, "mm"),
+  column_title = paste0(SampleType,"_",GeneSetType),
+  column_title_gp = gpar(fontsize = 20, fontface = "bold")
+) -> P.Heatmap_GeneExp
+
+P.Heatmap_GeneExp %>% print
 
 
 
