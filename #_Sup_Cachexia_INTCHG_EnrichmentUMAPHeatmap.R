@@ -194,8 +194,7 @@ MetaData <- scRNA.SeuObj@meta.data
 EMT.df <- MetaData[,(ncol(MetaData)-Nfiles+1):ncol(MetaData)]
 
 
-
-##### ComplexHeatmap #####
+##### Extract subcluster #####
 ## https://jokergoo.github.io/ComplexHeatmap-reference/book/
 library(ComplexHeatmap)
 library(circlize)
@@ -222,7 +221,6 @@ EMT.df <- data.frame(CellID = rownames(EMT.df), EMT.df)
 
 Sub_EMT.df <- left_join(data.frame(CellID = Sub_Anno.df[,1]),EMT.df)
 
-
 rownames(Sub_EMT.df) <- Sub_EMT.df[,1]
 Sub_EMT.df <- Sub_EMT.df[,-1]
 
@@ -234,8 +232,43 @@ colnames(Sub_EMT.df) <- Geneset_Anno.df$SYSTEMATIC_NAME
 # ## Try Basic Heatmap
 # Heatmap(Sub_EMT.df %>% t())
 
+##### Wilcox test #####
+## Articles - ggpubr: Publication Ready Plots
+## Ref: http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
+
+## Unpaired Two-Samples Wilcoxon Test in R
+## Ref: http://www.sthda.com/english/wiki/unpaired-two-samples-wilcoxon-test-in-r
+
+## Install
+# if(!require(devtools)) install.packages("devtools")
+# devtools::install_github("kassambara/ggpubr")
+library(ggpubr)
+
+## Test Wilcoxon
+Sub_Anno.df
+TestWilcoxon.df <- compare_means(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia, data = Sub_Anno.df)
+TestWilcoxon1.df <- compare_means(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia,
+                                  data = Sub_Anno.df, group.by = "celltype")
 
 
+## Test Group by
+TestGroupBy.df <- Sub_Anno.df %>% group_by(celltype) %>% summarise(avg=mean(BIOCARTA_PLATELETAPP_PATHWAY))
+#Bug# TestGroupBy1.df <- Sub_Anno.df %>% group_by(celltype) %>% compare_means(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia, data = .)
+
+
+## convert string column name to name/symbol
+## Ref:https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
+f <- paste0(colnames(Sub_Anno.df)[18]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data = Sub_Anno.df, group.by = "celltype", method = "wilcox.test"))
+rm(f)
+
+
+
+
+##### ComplexHeatmap #####
+## https://jokergoo.github.io/ComplexHeatmap-reference/book/
+library(ComplexHeatmap)
+library(circlize)
 
 #### Set column annotation ####
 sample = c("#2267a4", "#3d85c6", "#d5a6bd", "#c27ba0")
@@ -300,6 +333,12 @@ Heatmap(
 P.Heatmap_Anno %>% print
 
 
+
+
+
+
+
+#### ********************************************************************** ####
 #### Export ####
 ## Export PDF
 pdf(file = paste0(SaveCC.Path,"/",Version,"_",GeneSetType,".pdf"),width = 15, height = 15 )
