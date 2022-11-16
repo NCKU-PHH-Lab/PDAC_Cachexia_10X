@@ -493,7 +493,7 @@ P.Heatmap_GenePath %>% print
 ### Plat Heatmap: LogFC and FDR
 
 
-### Plot FDR Heatmap
+### Plot LogFC Heatmap
 # Set column annotation
 library(ggsci)
 library(ggplot2)
@@ -528,7 +528,7 @@ pch_FDR2 = 0
 pchSize_FDR2 = 8
 pchLwd_FDR2 =2.5
 
-### Plot LogFC Heatmap
+
 # Set Heatmap color
 col_HMapLog <- c("#4a5aa8","#ffffff","#c270b0")
 # col_HMapLog <- c("#2c3b82","#ffffff","#b5489d")
