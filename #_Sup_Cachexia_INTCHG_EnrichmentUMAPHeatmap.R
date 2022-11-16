@@ -62,9 +62,9 @@ dir.create(SaveCC.Path)
 SetFDRThr1 <- 1.0e-2
 SetFDRThr2 <- 1.0e-7
 
-SetLogFCThr1 <- 0.1
-SetLogFCThr2 <- 0.2
-SetLogFCThr3 <- 0.3
+SetLogFCThr1 <- 0.01
+SetLogFCThr2 <- 0.05
+SetLogFCThr3 <- 0.1
 
 
 
@@ -227,17 +227,24 @@ if(SampleType == "PBMC")
   Sub_Anno.df <- data.frame(CellID = rownames(Sub_Anno.df), Sub_Anno.df)
 
 }else if(SampleType == "SC"){
-  # For SC
-  Sub_Anno.df <- MetaData[grepl("Duc",MetaData$celltype), -(ncol(MetaData)-Nfiles+1):-ncol(MetaData)]
+  # # For SC
+  # CellType.Order <- c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6")
+  # Sub_Anno.df <- MetaData[grepl("Duc",MetaData$celltype), -(ncol(MetaData)-Nfiles+1):-ncol(MetaData)]
+  # Sub_Anno.df <- data.frame(CellID = rownames(Sub_Anno.df), Sub_Anno.df)
+  # Sub_Anno.df$celltype <- factor(Sub_Anno.df$celltype ,
+  #                                levels = CellType.Order)
+
+  Sub_Anno.df <- MetaData
   Sub_Anno.df <- data.frame(CellID = rownames(Sub_Anno.df), Sub_Anno.df)
-  Sub_Anno.df$celltype <- factor(Sub_Anno.df$celltype ,
-                                 levels = c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6"))
+
 }
 
 
 EMT.df <- data.frame(CellID = rownames(EMT.df), EMT.df)
 
 Sub_EMT.df <- left_join(data.frame(CellID = Sub_Anno.df[,1]),EMT.df)
+Sub_Anno.df <- left_join(Sub_Anno.df,Sub_EMT.df)
+
 
 rownames(Sub_EMT.df) <- Sub_EMT.df[,1]
 Sub_EMT.df <- Sub_EMT.df[,-1]
@@ -246,6 +253,7 @@ Sub_EMT.df <- Sub_EMT.df[,-1]
 Geneset_Anno.df <- left_join(data.frame(STANDARD_NAME=colnames(Sub_EMT.df)),Geneset_Anno.df)
 
 colnames(Sub_EMT.df) <- Geneset_Anno.df$SYSTEMATIC_NAME
+
 
 # ## Try Basic Heatmap
 # Heatmap(Sub_EMT.df %>% t())
@@ -430,6 +438,7 @@ draw(ha_column_T)
 
 col_HMap <- c("#103561","#1c5aa3", "#ffffff","#940f44", "#cf155f")
 col_HMap <- c("#1d520e","#308518", "#ffffff", "#c45a14","#eb7b31")
+col_HMap <- c("#2e2e2e","#5e5d5d", "#ffffff", "#c44d4d","#990505")
 
 ### Plat GeneExpression Heatmap
 ## Reorder Heatmap
@@ -446,7 +455,7 @@ Heatmap(
   col = colorRamp2(
     # c(min(matrix.df), matrix.df %>% unlist() %>% mean() , max(matrix.df)),
     # c(min(Sub_EMT.df), 0 , max(Sub_EMT.df)),
-    c(-max(abs(Sub_EMT.df)),-max(abs(Sub_EMT.df))/2, 0 , max(abs(Sub_EMT.df)), max(abs(Sub_EMT.df))/2),
+    c(-max(abs(Sub_EMT.df)),-max(abs(Sub_EMT.df))/2, 0 , max(abs(Sub_EMT.df))/2, max(abs(Sub_EMT.df))),
     col_HMap
   ),
   show_heatmap_legend = T,
@@ -513,7 +522,7 @@ Heatmap(
   column_order = CellType.Order, ## Reorder Heatmap
   show_column_names = T,
   show_row_names = T,
-  name = "LogFC",
+  name = "Diff",
   # set color
   col = colorRamp2(
     c(-MaxAbs , -MaxAbs/2, 0, MaxAbs/2, MaxAbs),
@@ -581,8 +590,8 @@ P.Heatmap_Anno + P.Heatmap_LogFC
 #### Export ####
 ## Export PDF
 pdf(file = paste0(SaveCC.Path,"/",Version,"_",GeneSetType,".pdf"),width = 15, height = 15 )
-P.Heatmap_Anno
 P.Heatmap_Anno + P.Heatmap_LogFC
+P.Heatmap_Anno
 dev.off()
 
 
