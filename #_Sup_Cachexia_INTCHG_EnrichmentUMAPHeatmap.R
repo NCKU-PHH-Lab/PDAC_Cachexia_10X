@@ -463,24 +463,8 @@ P.Heatmap_Anno %>% print
 
 
 
-### Plot FDR Heatmap
-# Set column annotation
-library(ggsci)
-library(ggplot2)
-# vignette( "ggsci") #Check the color setting
-col3 = 	pal_d3("category20", alpha = 0.7)(length(CellType.Order))
-colCT <- col3[1:length(CellType.Order)]
-names(colCT) <- CellType.Order
 
-ha_column_ST = HeatmapAnnotation(
-  Celltype = colnames(statistics_FDR.mtx),
-  col = list( Celltype = colCT),
-  show_legend = F,
-  show_annotation_name = F
-)
-
-
-# Set Heatmap symbol
+### Set Heatmap symbol
 pch_LogFC1 = 1
 pchSize_LogFC1 = 2
 
