@@ -510,7 +510,7 @@ ha_column_ST = HeatmapAnnotation(
 )
 
 
-# Set Heatmap color
+# Set Heatmap symbol
 pch_LogFC1 = 1
 pchSize_LogFC1 = 2
 
