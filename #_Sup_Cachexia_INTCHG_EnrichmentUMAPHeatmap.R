@@ -1,12 +1,16 @@
-
+##### Presetting ######
+rm(list = ls()) # Clean variable
+memory.limit(150000)
 
 ##### Load Data #####
+# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main/08_2_Find_CCmarker_in_different_Cell_type_and_VolcanoPlot(SPA).RData")
 # load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_SC_Main/06_Cell_type_annotation.RData")
 load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main/06_Cell_type_annotation.RData")
 
 ## INTCHG: Interchangeable
 ## SubType Setting
-if(SampleType == "PBMC"){
+if(SampleType == "PBMC")
+{
   # For PBMC
   scRNA.SeuObj <- PBMC.combined
 
@@ -15,8 +19,8 @@ if(SampleType == "PBMC"){
   scRNA.SeuObj@meta.data[["celltype"]] <- factor(scRNA.SeuObj@meta.data[["celltype"]] ,
                                                  levels = CellType.Order)
 
-
-}else if(SampleType == "SC"){
+}else if(SampleType == "SC")
+{
   # For SC
   scRNA.SeuObj <- SC.combined
 
@@ -28,12 +32,16 @@ if(SampleType == "PBMC"){
 
 }
 
+State.Order = c("EOCX","PreCX")
+scRNA.SeuObj@meta.data[["Cachexia"]] <- factor(scRNA.SeuObj@meta.data[["Cachexia"]] ,
+                                               levels = State.Order)
 
-rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path","CellType.Order")))
+# # Clean up
+# rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path","CCDBType","CellType.Order","State.Order",
+#                         "CCMarker_Female.lt","CCMarker_Male.lt","CCMarker_SPA.lt")))
+rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path","CCDBType","CellType.Order","State.Order")))
 
 ##### Load Package #####
-
-
 library(Seurat)
 library(tidyverse)
 library(patchwork)
@@ -49,8 +57,19 @@ SaveCC.Path = paste0(Save.Path,"/",Version)
 dir.create(SaveCC.Path)
 
 
+##### Thr Setting #####
+## Set FDR Thr
+SetFDRThr1 <- 1.0e-2
+SetFDRThr2 <- 1.0e-7
+
+SetLogFCThr1 <- 0.1
+SetLogFCThr2 <- 0.2
+SetLogFCThr3 <- 0.3
+
+
 
 ##### Function (tsv)(New version of GSEA) #####
+##****************************************************************************##
 FUN_GeneSetAnno <- function(scRNA.SeuObj,
                             Set_GeneSet = "GOBP_EPITHELIAL_TO_MESENCHYMAL_TRANSITION.v2022.1.Mm.tsv",
                             Set_Path = paste0(getwd(),"/GSEA_Geneset/"),
@@ -72,7 +91,6 @@ FUN_GeneSetAnno <- function(scRNA.SeuObj,
   library(tidyr)
   GeneSet.df <- data.frame(strsplit(as.character(GeneSet.set), ","))
   colnames(GeneSet.df) <- GeneSetName
-
 
   ## Convert Gene name
   GeneSet_Species <- Set_GeneSet_Species # c("Mouse","Human")
@@ -144,24 +162,26 @@ FUN_GeneSetAnno <- function(scRNA.SeuObj,
 }
 
 
-## Example
-AnnoResult.lt <-FUN_GeneSetAnno(scRNA.SeuObj,
-                                Set_GeneSet = "GOBP_EPITHELIAL_TO_MESENCHYMAL_TRANSITION.v2022.1.Mm.tsv",
-                                Set_Path = paste0(getwd(),"/GSEA_Geneset/"))
+# ## Example
+# # AnnoResult.lt <-FUN_GeneSetAnno(scRNA.SeuObj,
+# #                                 Set_GeneSet = "GOBP_EPITHELIAL_TO_MESENCHYMAL_TRANSITION.v2022.1.Mm.tsv",
+# #                                 Set_Path = paste0(getwd(),"/GSEA_Geneset/"))
+# #
+# AnnoResult.lt <-FUN_GeneSetAnno(scRNA.SeuObj,
+#                                 Set_GeneSet = "REACTOME_RUNX1_REGULATES_GENES_INVOLVED_IN_MEGAKARYOCYTE_DIFFERENTIATION_AND_PLATELET_FUNCTION.v2022.1.Mm.tsv",
+#                                 Set_Path = paste0(getwd(),"/GSEA_Geneset/CATs/"))
+#
+#
+# scRNA.SeuObj <- AnnoResult.lt$scRNA.SeuObj
+# plot.UMAP <- AnnoResult.lt$UMAP
+# plot.UMAP
+#
+# plot.Violin <- AnnoResult.lt$Violin
+# plot.Violin
 
-AnnoResult.lt <-FUN_GeneSetAnno(scRNA.SeuObj,
-                                Set_GeneSet = "REACTOME_RUNX1_REGULATES_GENES_INVOLVED_IN_MEGAKARYOCYTE_DIFFERENTIATION_AND_PLATELET_FUNCTION.v2022.1.Mm.tsv",
-                                Set_Path = paste0(getwd(),"/GSEA_Geneset/CATs/"))
-
-
-scRNA.SeuObj <- AnnoResult.lt$scRNA.SeuObj
-plot.UMAP <- AnnoResult.lt$UMAP
-plot.UMAP
-
-plot.Violin <- AnnoResult.lt$Violin
-plot.Violin
 
 ##### Run Multiple GeneSet  #####
+##****************************************************************************##
 library(gtools)
 # target.dir <- list.dirs(InputFolder)[-1]
 
@@ -200,7 +220,8 @@ library(ComplexHeatmap)
 library(circlize)
 
 
-if(SampleType == "PBMC"){
+if(SampleType == "PBMC")
+{
   # For PBMC
   Sub_Anno.df <- MetaData
   Sub_Anno.df <- data.frame(CellID = rownames(Sub_Anno.df), Sub_Anno.df)
@@ -211,10 +232,7 @@ if(SampleType == "PBMC"){
   Sub_Anno.df <- data.frame(CellID = rownames(Sub_Anno.df), Sub_Anno.df)
   Sub_Anno.df$celltype <- factor(Sub_Anno.df$celltype ,
                                  levels = c("Duc1", "Duc2", "Duc3", "Duc4", "Duc5", "Duc6"))
-
 }
-
-
 
 
 EMT.df <- data.frame(CellID = rownames(EMT.df), EMT.df)
@@ -232,7 +250,9 @@ colnames(Sub_EMT.df) <- Geneset_Anno.df$SYSTEMATIC_NAME
 # ## Try Basic Heatmap
 # Heatmap(Sub_EMT.df %>% t())
 
+
 ##### Wilcox test #####
+##****************************************************************************##
 ## Articles - ggpubr: Publication Ready Plots
 ## Ref: http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
 
@@ -244,28 +264,136 @@ colnames(Sub_EMT.df) <- Geneset_Anno.df$SYSTEMATIC_NAME
 # devtools::install_github("kassambara/ggpubr")
 library(ggpubr)
 
-## Test Wilcoxon
-Sub_Anno.df
-TestWilcoxon.df <- compare_means(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia, data = Sub_Anno.df)
-TestWilcoxon1.df <- compare_means(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia,
-                                  data = Sub_Anno.df, group.by = "celltype")
+# ## Test Wilcoxon
+# Sub_Anno.df
+# TestWilcoxon.df <- compare_means(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia, data = Sub_Anno.df, method="wilcox.test")
+# TestWilcoxon1.df <- compare_means(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia,
+#                                   data = Sub_Anno.df, group.by = "celltype")
+
+# res <- wilcox.test(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia, data = Sub_Anno.df,
+#                    exact = FALSE)
+# res
 
 
-## Test Group by
-TestGroupBy.df <- Sub_Anno.df %>% group_by(celltype) %>% summarise(avg=mean(BIOCARTA_PLATELETAPP_PATHWAY))
-#Bug# TestGroupBy1.df <- Sub_Anno.df %>% group_by(celltype) %>% compare_means(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia, data = .)
+# ## Test Group by
+# TestGroupBy.df <- Sub_Anno.df %>% group_by(celltype) %>% summarise(avg=mean(BIOCARTA_PLATELETAPP_PATHWAY))
+# #Bug# TestGroupBy1.df <- Sub_Anno.df %>% group_by(celltype) %>% compare_means(BIOCARTA_PLATELETAPP_PATHWAY ~ Cachexia, data = .)
+#
+# ## convert string column name to name/symbol
+# ## Ref:https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
+# f <- paste0(colnames(Sub_Anno.df)[18]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+# SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data = Sub_Anno.df, group.by = "celltype", method = "wilcox.test"))
+# rm(f)
+
+##### Summarize all signal #####
+Pathways.set <- Geneset_Anno.df$STANDARD_NAME
+
+    ##### Summary Statistic Table #####
+    ## Wilcoxon test
+    SummaryTable.df <-  as.data.frame(matrix(nrow=0,ncol=9))
+    colnames(SummaryTable.df) <- c( "celltype", ".y.", "group1", "group2", "p", "p.adj", "p.format", "p.signif", "method"  )
 
 
-## convert string column name to name/symbol
-## Ref:https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
-f <- paste0(colnames(Sub_Anno.df)[18]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
-SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data = Sub_Anno.df, group.by = "celltype", method = "wilcox.test"))
-rm(f)
 
+
+    for (i in 1:length(Pathways.set)) {
+
+      try({
+
+        ## Wilcoxon test
+        # https://stackoverflow.com/questions/44776446/compare-means-must-resolve-to-integer-column-positions-not-a-symbol-when-u
+        # convert string column name to name/symbol
+        f <- paste0(Pathways.set[i]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+        SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data=Sub_Anno.df, group.by = "celltype", method = "wilcox.test"))
+        rm(f)
+        SummaryTable_Temp.df$celltype <- factor(SummaryTable_Temp.df$celltype  ,levels = CellType.Order)
+        SummaryTable_Temp.df <- SummaryTable_Temp.df[order(SummaryTable_Temp.df$celltype), ]
+
+
+
+        # ## Filter
+        # # if(c("****") %in% SummaryTable_Temp.df$p.signif || c("***") %in% SummaryTable_Temp.df$p.signif|| c("**") %in% SummaryTable_Temp.df$p.signif){
+        # # if(c("****") %in% SummaryTable_Temp.df$p.signif){
+        # # if(sum(SummaryTable_Temp.df$p.adj < SetFDRThr1)>=1){
+        # if(sum(SummaryTable_Temp.df$p.adj < 0.05)>=1){
+        #   SummaryTable.df <- rbind(SummaryTable.df,SummaryTable_Temp.df)
+        # }else{
+        #   SummaryTable.df <- SummaryTable.df
+        # }
+
+        ## Withot Filter
+        SummaryTable.df <- rbind(SummaryTable.df,SummaryTable_Temp.df)
+
+
+        rm(SummaryTable_Temp.df)
+
+      })
+    }
+
+rm(i)
+
+
+## LogFC.df
+LogFC.df <-  as.data.frame(matrix(nrow = 0,ncol= 5))
+colnames(LogFC.df) <- c("celltype", ".y.", "group1_Mean", "group2_Mean", "Diff")
+for (i in 1:length(Pathways.set))
+{
+
+  try({
+    # ## LogFC.df
+    # # Test
+    # LogFC_Temp.df <- Sub_Anno.df %>% group_by(celltype) %>% summarise(avg = mean(BIOCARTA_PLATELETAPP_PATHWAY))
+    # # LogFC_Temp.df <- Sub_Anno.df %>% group_by(celltype,Cachexia)%>% summarise(avg = mean(BIOCARTA_PLATELETAPP_PATHWAY))
+    #
+    # #bug#LogFC_Temp.df <- Sub_Anno.df %>% group_by(celltype) %>% summarise(avg = mean(Pathways.set[i]))
+
+
+    ## LogFC.df
+    Sub_Anno_Group1.df <- Sub_Anno.df[Sub_Anno.df$Cachexia == State.Order[1],]
+    #For Check# LogFC_Temp1.df <- Sub_Anno_Group1.df %>% group_by(celltype) %>% summarise(avg = mean(BIOCARTA_PLATELETAPP_PATHWAY))
+    Sub_Anno_Group2.df <- Sub_Anno.df[Sub_Anno.df$Cachexia == State.Order[2],]
+
+    LogFC_Temp.df <- as.data.frame(matrix(nrow = 0,ncol= 5))
+    colnames(LogFC_Temp.df) <- c("celltype", ".y.", "group1_Mean", "group2_Mean", "Diff")
+    for (j in 1:length(CellType.Order)) {
+
+      LogFC_Temp.df[j,"celltype"] <- CellType.Order[j]
+      LogFC_Temp.df[j,".y."] <- Pathways.set[i]
+
+      Sub_Anno_Group1_Temp.df <- Sub_Anno_Group1.df[Sub_Anno_Group1.df$celltype == CellType.Order[j],]
+      Sub_Anno_Group2_Temp.df <- Sub_Anno_Group2.df[Sub_Anno_Group2.df$celltype == CellType.Order[j],]
+
+      LogFC_Temp.df[j,"group1_Mean"] <- mean(Sub_Anno_Group1_Temp.df[,Pathways.set[i]])
+      LogFC_Temp.df[j,"group2_Mean"] <- mean(Sub_Anno_Group2_Temp.df[,Pathways.set[i]])
+    }
+
+    LogFC.df <- rbind(LogFC.df,LogFC_Temp.df)
+
+    rm(LogFC_Temp.df)
+
+  })
+}
+
+LogFC.df$Diff <- LogFC.df$group1_Mean - LogFC.df$group2_Mean
+
+SummaryTable.df <- left_join(SummaryTable.df,LogFC.df)
+colnames(SummaryTable.df)[2] <- "STANDARD_NAME"
+
+##### Create FDR & LogFC dataframe #####
+statistics_FDR.df <- SummaryTable.df[,c(1,2,6)] %>% pivot_wider(names_from = celltype, values_from = c("p.adj"))
+statistics_FDR.df <- left_join(Geneset_Anno.df,statistics_FDR.df)
+row.names(statistics_FDR.df) <- statistics_FDR.df$SYSTEMATIC_NAME
+statistics_FDR.mtx <- statistics_FDR.df[-1:-2] %>% as.matrix()
+
+statistics_LogFC.df <- SummaryTable.df[,c(1,2,12)] %>% pivot_wider(names_from = celltype, values_from = c("Diff"))
+statistics_LogFC.df <- left_join(Geneset_Anno.df,statistics_LogFC.df)
+row.names(statistics_LogFC.df) <- statistics_LogFC.df$SYSTEMATIC_NAME
+statistics_LogFC.mtx <- statistics_LogFC.df[-1:-2] %>% as.matrix()
 
 
 
 ##### ComplexHeatmap #####
+##****************************************************************************##
 ## https://jokergoo.github.io/ComplexHeatmap-reference/book/
 library(ComplexHeatmap)
 library(circlize)
@@ -292,6 +420,7 @@ ha_column_T = HeatmapAnnotation(
   show_annotation_name = F
 )
 
+draw(ha_column_T)
 
 
 
@@ -334,6 +463,116 @@ P.Heatmap_Anno %>% print
 
 
 
+### Plot FDR Heatmap
+# Set column annotation
+library(ggsci)
+library(ggplot2)
+# vignette( "ggsci") #Check the color setting
+col3 = 	pal_d3("category20", alpha = 0.7)(length(CellType.Order))
+colCT <- col3[1:length(CellType.Order)]
+names(colCT) <- CellType.Order
+
+ha_column_ST = HeatmapAnnotation(
+  Celltype = colnames(statistics_FDR.mtx),
+  col = list( Celltype = colCT),
+  show_legend = F,
+  show_annotation_name = F
+)
+
+
+# Set Heatmap symbol
+pch_LogFC1 = 1
+pchSize_LogFC1 = 2
+
+pch_LogFC2 = 16
+pchSize_LogFC2 = 2
+
+pch_LogFC3 = 16
+pchSize_LogFC3 = 4
+
+pch_FDR1 = 0
+pchSize_FDR1 = 8
+pchLwd_FDR1 =1
+
+pch_FDR2 = 0
+pchSize_FDR2 = 8
+pchLwd_FDR2 =2.5
+
+### Plot LogFC Heatmap
+# Set Heatmap color
+col_HMapLog <- c("#4a5aa8","#ffffff","#c270b0")
+# col_HMapLog <- c("#2c3b82","#ffffff","#b5489d")
+col_HMapLog <- c("#2c3b82","#4a5aa8","#ffffff","#c270b0","#b5489d")
+MaxAbs = max(abs(statistics_LogFC.mtx))
+
+Heatmap(
+  # row_km = nrow(statistics_LogFC.mtx)-1, column_km = c(ncol(statistics_LogFC.mtx)-1),
+  statistics_LogFC.mtx,
+  cluster_rows = F, # Heatmap with/without clustering by rows
+  cluster_columns = F, # Heatmap with/without clustering by columns
+  column_order = CellType.Order, ## Reorder Heatmap
+  show_column_names = T,
+  show_row_names = T,
+  name = "LogFC",
+  # set color
+  col = colorRamp2(
+    c(-MaxAbs , -MaxAbs/2, 0, MaxAbs/2, MaxAbs),
+    # c(-4,-2, 0 ,2, 4),
+    col_HMapLog
+  ),
+  show_heatmap_legend = T,
+  use_raster = F,
+  top_annotation = ha_column_ST,
+  # right_annotation = ha_row,
+  width =  unit( ncol( statistics_LogFC.mtx)*7,"mm"), # length(CellType.Order)*unit(6.8, "mm"), # SC: 6.8
+  height = unit( nrow( statistics_LogFC.mtx)*7,"mm"), # nrow( TarGeneAnno.mtx)*unit(5, "mm"), # length(CellType.Order)*unit(15, "mm"),
+
+  ## R plot pch symbols : The different point shapes available in R
+  ## Ref: http://www.sthda.com/english/wiki/r-plot-pch-symbols-the-different-point-shapes-available-in-r
+  ## Ref: https://r-coder.com/plot-r/
+
+  layer_fun = function(j, i, x, y, width, height, fill)
+  {
+    v1 = pindex(statistics_FDR.mtx, i, j)
+    v2 = pindex(statistics_LogFC.mtx, i, j)
+
+    try({
+      LogFC1 = abs(v2) > SetLogFCThr1 & abs(v2) <= SetLogFCThr2
+      grid.points(x[LogFC1], y[LogFC1], pch = pch_LogFC1, size = unit(pchSize_LogFC1, "mm"))
+    })
+
+    try({
+      LogFC2 = abs(v2) > SetLogFCThr2 & abs(v2) <= SetLogFCThr3
+      grid.points(x[LogFC2], y[LogFC2], pch = pch_LogFC2, size = unit(pchSize_LogFC2, "mm"))
+    })
+
+    try({
+      LogFC3 = abs(v2) > SetLogFCThr3
+      grid.points(x[LogFC3], y[LogFC3], pch = pch_LogFC3, size = unit(pchSize_LogFC3, "mm"))
+    })
+
+    try({
+      FDR1 = v1 <= SetFDRThr1 & v1 > SetFDRThr2
+      grid.points(x[FDR1], y[FDR1], pch = pch_FDR1, size = unit(pchSize_FDR1, "mm"), gp=gpar( lwd = pchLwd_FDR1))
+    })
+
+    try({
+      FDR2 = v1 <= SetFDRThr2
+      grid.points(x[FDR2], y[FDR2], pch = pch_FDR2, size = unit(pchSize_FDR2, "mm"), gp=gpar( lwd = pchLwd_FDR2))
+      # # grid.rect(x[FDR2], y[FDR2],gp = gpar(lwd = 2, fill = "transparent"))
+      # if(v1 <= SetFDRThr2) {
+      #   grid.rect(x[FDR2], y[FDR2],gp = gpar(lwd = 2, fill = "transparent"))
+      # }
+
+    })
+
+  }
+) -> P.Heatmap_LogFC
+
+P.Heatmap_LogFC %>% print
+
+#### Summary Plot ####
+P.Heatmap_Anno + P.Heatmap_LogFC
 
 
 
@@ -343,7 +582,7 @@ P.Heatmap_Anno %>% print
 ## Export PDF
 pdf(file = paste0(SaveCC.Path,"/",Version,"_",GeneSetType,".pdf"),width = 15, height = 15 )
 P.Heatmap_Anno
-
+P.Heatmap_Anno + P.Heatmap_LogFC
 dev.off()
 
 
