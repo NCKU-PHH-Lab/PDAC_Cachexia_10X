@@ -108,7 +108,7 @@ draw(ha_column_T)
 # col_HMap2 <- c("#5a6ce0", "#ffffff","#d63c8e")
 # col_HMap2 <- c("#646466","#5a6ce0","#d63c8e")
 col_HMap2 <- c("#ffffff","#d63c8e","#6e073d") #,"#9e135d"
-col_HMap2 <- c("#ffffff","#a19fa0","#1f1e1e") #,"#9e135d"
+col_HMap2 <- c("#ffffff","#ffffff","#ffffff","#666363","#1f1e1e") #,"#9e135d"
 
 GE_TarGene.mx <- GE_TarGene.df[,-1:-2] %>% t()
 GE_TarGene_Log.mx <- log10(GE_TarGene.mx+1e-5 %>% as.numeric())
@@ -126,7 +126,7 @@ Heatmap(
   name = "Log10GeneExp",
   # ## set color
   # col = col_HMap2,
-  col = colorRamp2(c(min(MTX), 0, max(MTX)), col_HMap2),
+  col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
   # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
 
   show_heatmap_legend = T,
@@ -150,7 +150,7 @@ Heatmap(
   name = "Log10GeneExp",
   # ## set color
   # col = col_HMap2,
-  col = colorRamp2(c(min(MTX), 0, max(MTX)), col_HMap2),
+  col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)),  col_HMap2),
   # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
 
   show_heatmap_legend = T,
