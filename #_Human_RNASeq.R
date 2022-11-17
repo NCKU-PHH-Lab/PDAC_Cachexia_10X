@@ -169,15 +169,23 @@ TarGene.df$Gene %>% unique() %>% sort()
 GeneList %>% sort()
 
 
+
+##***************************************************************************##
+##### Current path and new folder setting*  #####
+Version = paste0(Sys.Date(),"_Cachexia_12HumanRNAseq")
+SaveCC.Path = Version
+dir.create(SaveCC.Path)
+
+
 ##### Export PDF #####
-pdf(file = paste0("Cachexia_12HumanRNAseq.pdf"),width = 20, height = 12 )
+pdf(file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq.pdf"),width = 15, height = 12 )
 P.Heatmap_GeneEXP
 P.Heatmap_GeneEXP2
 dev.off()
 
 ##### Export TSV #####
 write.table( GE_TarGene.df ,
-             file = paste0("Cachexia_12HumanRNAseq_HeatmapMatrix.tsv"),
+             file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq_HeatmapMatrix.tsv"),
              sep = "\t",
              quote = F,
              row.names = F
