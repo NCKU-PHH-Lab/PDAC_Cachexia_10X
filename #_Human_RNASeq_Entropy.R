@@ -18,10 +18,17 @@ HumanSampleAnno.df <- read.delim("HumanRNA_SampleAnno.txt",header=T, stringsAsFa
 # Order_SampleID <- c("B1", "B3", "B4", "B6", "B7", "B8", "P1", "P2", "P3", "P4", "S5", "S6")
 Order_SampleID <- c("B6", "B3", "B4", "B8", "B1", "B7", "S5", "S6", "P1", "P2", "P3", "P4")
 
+## Order GE col
+GE.df <- GE.df[,c(colnames(GE.df)[1:2],Order_SampleID)]
+## Order HumanSampleAnno.df
+HumanSampleAnno.df <- left_join(data.frame(SampleID=Order_SampleID),HumanSampleAnno.df)
+
 ##### Filter data #####
 ## Filter by TarGene
 GE_TarGene.df <- GE.df[GE.df$Description %in% TarGene.df$Gene,]
 row.names(GE_TarGene.df) <- GE_TarGene.df$NAME
+colnames(GE_TarGene.df)
+
 
 ## Filter by Expression
 GE_Flt.set <- ""
@@ -65,6 +72,57 @@ HFactor <- rowSums(GE_MTX_DSum.df*GE_MTX_DSum_Log2.df)
 
 
 
+
+##***************************************************************************##
+### HF filter and sort
+
+### HF filter
+GE_TarGene_Sum.df <- GE_TarGene.df
+GE_TarGene_Sum.df$HF <- HFactor
+
+GE_TarGene_Sum_HFFlt.df <- GE_TarGene_Sum.df[GE_TarGene_Sum.df$HF > 0.5,]
+
+
+## Sort
+# GE_TarGene_Sum_HFFltTTT.df <- GE_TarGene_Sum_HFFlt.df[order(GE_TarGene_Sum_HFFlt.df$S5),]
+# GE_TarGene_Sum_HFFltTTT.df <- GE_TarGene_Sum_HFFlt.df[order(GE_TarGene_Sum_HFFlt.df[,3]),]
+
+# # GE_TarGeneTTT.df <- GE_TarGene.df[order(GE_TarGene.df[,3],GE_TarGene.df[,4],decreasing = T),]
+##Bug# GE_TarGeneTTT.df  <- apply(X = GE_TarGene.df, MARGIN = 2, FUN = sort)
+##Bug# GE_TarGene.df <- apply(X = GE_TarGene.df, MARGIN = 2, FUN = sort)
+
+GE_TarGene.df <- GE_TarGene.df[order(GE_TarGene.df[,3],GE_TarGene.df[,4],GE_TarGene.df[,5],
+                                     GE_TarGene.df[,6],GE_TarGene.df[,7],GE_TarGene.df[,8],
+                                     decreasing = T),]
+
+##****************************************************************************##
+## Create MTX
+GE_TarGene.mx <- GE_TarGene.df[,-1:-2] %>% t()
+GE_TarGene_Log.mx <- log10(GE_TarGene.mx+1e-5 %>% as.numeric())
+quantile(GE_TarGene.mx)
+
+MTX <- GE_TarGene_Log.mx
+
+
+# # str <- ""
+# # for (i in 3:ncol(GE_TarGene.df)) {
+# #   str <- paste0(str,"GE_TarGene.df[,",i,"],")
+# # }
+# #
+# # rm(i)
+# #
+# # formals(order)[names(str)] <- str
+# #
+# # GE_TarGeneTTT.df <- do.call("arrange", list(as.formula(str), .data=GE_TarGene.df[,-1:-2]))
+# # GE_TarGeneTTT.df <- GE_TarGene.df[do.call("order", as.formula(str)),]
+#
+# # f <- paste0(TarGene[i]," ~ Cachexia") # f <- "Vwf ~ Cachexia"
+# # SummaryTable_Temp.df <- do.call("compare_means", list(as.formula(f), data=Anno_Temp.df, group.by = "celltype", method = "wilcox.test"))
+# # rm(f)
+
+
+
+##***************************************************************************##
 
 ##### ComplexHeatmap #####
 ## https://jokergoo.github.io/ComplexHeatmap-reference/book/
@@ -151,12 +209,6 @@ draw(ha_column_T)
 col_HMap2 <- c("#ffffff","#d63c8e","#6e073d") #,"#9e135d"
 col_HMap2 <- c("#ffffff","#ffffff","#ffffff","#666363","#1f1e1e") #,"#9e135d"
 
-GE_TarGene.mx <- GE_TarGene.df[,-1:-2] %>% t()
-GE_TarGene_Log.mx <- log10(GE_TarGene.mx+1e-5 %>% as.numeric())
-quantile(GE_TarGene.mx)
-
-MTX <- GE_TarGene_Log.mx
-
 
 ## Order by HF
 Heatmap(
@@ -188,7 +240,7 @@ P.Heatmap_GeneEXP %>% print
 ## Order by cell type
 Heatmap(
   MTX  ,
-  cluster_rows = T,
+  cluster_rows = F,
   cluster_columns = F,
   # column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),,
   show_column_names = F,
