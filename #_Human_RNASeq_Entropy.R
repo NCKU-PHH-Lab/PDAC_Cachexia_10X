@@ -25,7 +25,8 @@ HumanSampleAnno.df <- left_join(data.frame(SampleID=Order_SampleID),HumanSampleA
 
 ##### Filter data #####
 ## Filter by TarGene
-GE_TarGene.df <- GE.df[GE.df$Description %in% TarGene.df$Gene,]
+# GE_TarGene.df <- GE.df[GE.df$Description %in% TarGene.df$Gene,]
+GE_TarGene.df <- GE.df
 row.names(GE_TarGene.df) <- GE_TarGene.df$NAME
 colnames(GE_TarGene.df)
 
@@ -99,11 +100,15 @@ GE_TarGene.df <- GE_TarGene.df[order(GE_TarGene.df[,3],GE_TarGene.df[,4],GE_TarG
 ##****************************************************************************##
 ## Create MTX
 GE_TarGene.mx <- GE_TarGene.df[,-1:-2] %>% t()
+GE_TarGene.mx <- GE_TarGene.mx[,-ncol(GE_TarGene.mx)]
+HFactor <- HFactor[1:(length(HFactor)-1)]
+
 GE_TarGene_Log.mx <- log10(GE_TarGene.mx+1e-5 %>% as.numeric())
+
 quantile(GE_TarGene.mx)
 
 MTX <- GE_TarGene_Log.mx
-
+# MTX <- GE_TarGene.mx
 
 # # str <- ""
 # # for (i in 3:ncol(GE_TarGene.df)) {
@@ -168,9 +173,11 @@ colHF <- c("#ffffff","#076e69","#0c5451")
 
 ha_column_T = HeatmapAnnotation(
   HF = HFactor,
-  GeneName = GE_TarGene.df$Description,  # anno_colum.df$sample_type,
-  col = list(HF = colorRamp2(c(0,0.8,1),colHF),
-             GeneName = colCT),
+  # GeneName = GE_TarGene.df$Description,  # anno_colum.df$sample_type,
+  col = list(
+             # GeneName = colCT,
+    HF = colorRamp2(c(0,0.8,1),colHF)
+             ),
   show_legend = T,
   show_annotation_name = F
 )
@@ -208,7 +215,8 @@ draw(ha_column_T)
 # col_HMap2 <- c("#5a6ce0", "#ffffff","#d63c8e")
 # col_HMap2 <- c("#646466","#5a6ce0","#d63c8e")
 col_HMap2 <- c("#ffffff","#d63c8e","#6e073d") #,"#9e135d"
-col_HMap2 <- c("#ffffff","#ffffff","#ffffff","#666363","#1f1e1e") #,"#9e135d"
+col_HMap2 <- c("#ffffff","#ffffff","#666363","#706f6f","#383636") #,"#9e135d"
+col_HMap2 <- c("#ffffff","#b3b1b1","#b3b1b1","#545353","#333232") #,"#9e135d"
 
 
 ## Order by HF
@@ -224,9 +232,14 @@ Heatmap(
   name = "Log10GeneExp",
   # ## set color
   # col = col_HMap2,
-  col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
-  # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
+  # col = colorRamp2(c(min(MTX), 0, (max(MTX)/20), (max(MTX)/10), max(MTX)), col_HMap2),
+  # col = colorRamp2(c(0, 1, (max(MTX)/8000), (max(MTX)/6000), max(MTX)), col_HMap2),
+  col = colorRamp2(c(quantile(MTX)[1], quantile(MTX)[2], quantile(MTX)[3],
+                     quantile(MTX)[4], quantile(MTX)[5]), col_HMap2),
 
+  # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
+  column_title = "Order by HF",
+  column_title_gp = gpar(fontsize = 17, fontface = "bold"),
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T,
@@ -240,6 +253,7 @@ P.Heatmap_GeneEXP %>% print
 
 ## Order by cell type
 Heatmap(
+  #333232  ,
   MTX  ,
   cluster_rows = F,
   cluster_columns = F,
@@ -249,9 +263,13 @@ Heatmap(
   name = "Log10GeneExp",
   # ## set color
   # col = col_HMap2,
-  col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
+  # col = colorRamp2(c(0, 0.5, (max(MTX)/5000), (max(MTX)/4000), max(MTX)), col_HMap2),
+  col = colorRamp2(c(quantile(MTX)[1], quantile(MTX)[2], quantile(MTX)[3],
+                     quantile(MTX)[4], quantile(MTX)[5]), col_HMap2),
+  # col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
   # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
-
+  column_title = "Order by cell type",
+  column_title_gp = gpar(fontsize = 17, fontface = "bold"),
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T,
@@ -265,7 +283,7 @@ P.Heatmap_GeneEXP2 %>% print
 ## Clustering
 Heatmap(
   MTX  ,
-  cluster_rows = T,
+  cluster_rows = F,
   cluster_columns = T,
   # column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
   show_column_names = F,
@@ -275,7 +293,8 @@ Heatmap(
   # col = col_HMap2,
   col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)),  col_HMap2),
   # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
-
+  column_title = "Order by Clustering",
+  column_title_gp = gpar(fontsize = 17, fontface = "bold"),
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T,
@@ -301,7 +320,7 @@ dir.create(SaveCC.Path)
 
 
 ##### Export PDF #####
-pdf(file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq.pdf"),width = 15, height = 12 )
+pdf(file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq.pdf"),width = 12, height = 9 )
 P.Heatmap_GeneEXP
 P.Heatmap_GeneEXP2
 P.Heatmap_GeneEXP3
