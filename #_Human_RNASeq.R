@@ -15,8 +15,19 @@ HumanSampleAnno.df <- read.delim("HumanRNA_SampleAnno.txt",header=T, stringsAsFa
 
 
 ##### Filter data #####
+## Filter by TarGene
 GE_TarGene.df <- GE.df[GE.df$Description %in% TarGene.df$Gene,]
 row.names(GE_TarGene.df) <- GE_TarGene.df$NAME
+
+## Filter by Expression
+GE_Flt.set <- ""
+for (i in 1:nrow(GE_TarGene.df)){
+  GE_Flt.set[i]<- any(GE_TarGene.df[i,-1:-2] > 1)
+  }
+
+
+GE_TarGene.df <- GE_TarGene.df[which(GE_Flt.set =="TRUE" ),]
+
 
 
 ##### ComplexHeatmap #####
