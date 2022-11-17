@@ -13,6 +13,10 @@ GE.df <- read.delim("HumanRNA_12RNASeqCutoffIS1.gct.txt",header=T, stringsAsFact
 TarGene.df <- read.delim("HumanRNA_TargetGene.txt",header=T, stringsAsFactors = FALSE)
 HumanSampleAnno.df <- read.delim("HumanRNA_SampleAnno.txt",header=T, stringsAsFactors = FALSE)
 
+##### Order setting #####
+# Order_SampleID <- HumanSampleAnno.df$SampleID %>% sort()
+# Order_SampleID <- c("B1", "B3", "B4", "B6", "B7", "B8", "P1", "P2", "P3", "P4", "S5", "S6")
+Order_SampleID <- c("B6", "B3", "B4", "B8", "B1", "B7", "S5", "S6", "P1", "P2", "P3", "P4")
 
 ##### Filter data #####
 ## Filter by TarGene
@@ -67,8 +71,9 @@ HFactor <- rowSums(GE_MTX_DSum.df*GE_MTX_DSum_Log2.df)
 library(ComplexHeatmap)
 library(circlize)
 
-Heatmap(GE_TarGene.df[,-1:-2])
-Heatmap(GE_TarGene.df[,-1:-2] %>% t())
+## Try Heatmap
+# Heatmap(GE_TarGene.df[,-1:-2])
+# Heatmap(GE_TarGene.df[,-1:-2] %>% t())
 
 
 #### Set row annotation ####
@@ -98,14 +103,14 @@ col3 = 	c(pal_d3("category20", alpha = 0.7)(20),
           pal_d3("category10", alpha = 0.7)(10))
 colCT <- col3[1:length(GeneList)]
 names(colCT) <- GeneList
-colHF <- c("#ffffff","#076e69","#0c5451")
 
+colHF <- c("#ffffff","#076e69","#0c5451")
 
 
 ha_column_T = HeatmapAnnotation(
   HF = HFactor,
   GeneName = GE_TarGene.df$Description,  # anno_colum.df$sample_type,
-  col = list(HF = colorRamp2(c(0,0.5,1),colHF),
+  col = list(HF = colorRamp2(c(0,0.8,1),colHF),
              GeneName = colCT),
   show_legend = T,
   show_annotation_name = F
@@ -152,12 +157,15 @@ quantile(GE_TarGene.mx)
 
 MTX <- GE_TarGene_Log.mx
 
+
+## Order by HF
 Heatmap(
   MTX  ,
-  cluster_rows = T,
+  cluster_rows = F,
   cluster_columns = F,
   # column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
   column_order = order(HFactor),
+  row_order = Order_SampleID,
   show_column_names = F,
   show_row_names = T,
   name = "Log10GeneExp",
@@ -175,6 +183,31 @@ Heatmap(
 ) -> P.Heatmap_GeneEXP
 
 P.Heatmap_GeneEXP %>% print
+
+
+## Order by cell type
+Heatmap(
+  MTX  ,
+  cluster_rows = T,
+  cluster_columns = F,
+  # column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),,
+  show_column_names = F,
+  show_row_names = T,
+  name = "Log10GeneExp",
+  # ## set color
+  # col = col_HMap2,
+  col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
+  # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
+
+  show_heatmap_legend = T,
+  use_raster = F,
+  top_annotation = ha_column_T,
+  right_annotation = ha_row,
+  # width = ncol( TarGeneAnno.mtx)*unit(5, "mm"), # length(CellType.Order)*unit(6, "mm")
+  # height = nrow( TarGeneAnno.mtx)*unit(5, "mm") # length(CellType.Order)*unit(15, "mm"),
+) -> P.Heatmap_GeneEXP2
+
+P.Heatmap_GeneEXP2 %>% print
 
 ## Clustering
 Heatmap(
@@ -196,9 +229,9 @@ Heatmap(
   right_annotation = ha_row,
   # width = ncol( TarGeneAnno.mtx)*unit(5, "mm"), # length(CellType.Order)*unit(6, "mm")
   # height = nrow( TarGeneAnno.mtx)*unit(5, "mm") # length(CellType.Order)*unit(15, "mm"),
-) -> P.Heatmap_GeneEXP2
+) -> P.Heatmap_GeneEXP3
 
-P.Heatmap_GeneEXP2 %>% print
+P.Heatmap_GeneEXP3 %>% print
 
 
 ## Check
@@ -218,6 +251,7 @@ dir.create(SaveCC.Path)
 pdf(file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq.pdf"),width = 15, height = 12 )
 P.Heatmap_GeneEXP
 P.Heatmap_GeneEXP2
+P.Heatmap_GeneEXP3
 dev.off()
 
 ##### Export TSV #####
