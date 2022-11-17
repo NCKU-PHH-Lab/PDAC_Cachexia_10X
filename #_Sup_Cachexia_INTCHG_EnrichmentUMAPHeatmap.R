@@ -589,7 +589,7 @@ P.Heatmap_Anno + P.Heatmap_LogFC
 #### ********************************************************************** ####
 #### Export ####
 ## Export PDF
-pdf(file = paste0(SaveCC.Path,"/",Version,"_",GeneSetType,".pdf"),width = 15, height = 15 )
+pdf(file = paste0(SaveCC.Path,"/",Version,"_",GeneSetType,".pdf"),width = 20, height = 15 )
 P.Heatmap_Anno + P.Heatmap_LogFC
 P.Heatmap_Anno
 dev.off()
