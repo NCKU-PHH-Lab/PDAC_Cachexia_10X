@@ -80,8 +80,9 @@ HFactor <- rowSums(GE_MTX_DSum.df*GE_MTX_DSum_Log2.df)
 GE_TarGene_Sum.df <- GE_TarGene.df
 GE_TarGene_Sum.df$HF <- HFactor
 
-GE_TarGene_Sum_HFFlt.df <- GE_TarGene_Sum.df[GE_TarGene_Sum.df$HF > 0.5,]
-
+GE_TarGene_Sum_HFFlt.df <- GE_TarGene_Sum.df[GE_TarGene_Sum.df$HF > 0.6,]
+GE_TarGene.df  <- GE_TarGene_Sum_HFFlt.df[,-ncol(GE_TarGene_Sum_HFFlt.df)]
+HFactor <- GE_TarGene_Sum_HFFlt.df$HF
 
 ## Sort
 # GE_TarGene_Sum_HFFltTTT.df <- GE_TarGene_Sum_HFFlt.df[order(GE_TarGene_Sum_HFFlt.df$S5),]
