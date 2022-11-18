@@ -13,6 +13,9 @@ GE.df <- read.delim("HumanRNA_12RNASeqCutoffIS1.gct.txt",header=T, stringsAsFact
 TarGene.df <- read.delim("HumanRNA_TargetGene.txt",header=T, stringsAsFactors = FALSE)
 HumanSampleAnno.df <- read.delim("HumanRNA_SampleAnno.txt",header=T, stringsAsFactors = FALSE)
 
+##### Parameter setting #####
+HF.Thr = 0.8
+
 ##### Order setting #####
 # Order_SampleID <- HumanSampleAnno.df$SampleID %>% sort()
 # Order_SampleID <- c("B1", "B3", "B4", "B6", "B7", "B8", "P1", "P2", "P3", "P4", "S5", "S6")
@@ -46,7 +49,9 @@ GE_TarGene.df <- GE_TarGene.df[which(GE_Flt.set =="TRUE" ),]
 ## Ref: https://pubmed.ncbi.nlm.nih.gov/23664764/
 
 # GE_TarGene.df$Sum <- rowSums(GE_TarGene.df[,-1:-2])
-GE_MTX.df <-  GE_TarGene.df[,-1:-2]
+
+# GE_MTX.df <-  GE_TarGene.df[,-1:-2]
+GE_MTX.df <-  GE_TarGene.df[,c("B6", "B3", "B4", "B8", "B1", "B7")]+1e-20
 GE_MTX_RowSum <- rowSums(GE_MTX.df)
 
 
@@ -81,7 +86,7 @@ HFactor <- rowSums(GE_MTX_DSum.df*GE_MTX_DSum_Log2.df)
 GE_TarGene_Sum.df <- GE_TarGene.df
 GE_TarGene_Sum.df$HF <- HFactor
 
-GE_TarGene_Sum_HFFlt.df <- GE_TarGene_Sum.df[GE_TarGene_Sum.df$HF > 0.6,]
+GE_TarGene_Sum_HFFlt.df <- GE_TarGene_Sum.df[GE_TarGene_Sum.df$HF > HF.Thr,]
 GE_TarGene.df  <- GE_TarGene_Sum_HFFlt.df[,-ncol(GE_TarGene_Sum_HFFlt.df)]
 HFactor <- GE_TarGene_Sum_HFFlt.df$HF
 
@@ -215,8 +220,8 @@ draw(ha_column_T)
 # col_HMap2 <- c("#5a6ce0", "#ffffff","#d63c8e")
 # col_HMap2 <- c("#646466","#5a6ce0","#d63c8e")
 col_HMap2 <- c("#ffffff","#d63c8e","#6e073d") #,"#9e135d"
-col_HMap2 <- c("#ffffff","#ffffff","#666363","#706f6f","#383636") #,"#9e135d"
-col_HMap2 <- c("#ffffff","#b3b1b1","#b3b1b1","#545353","#333232") #,"#9e135d"
+col_HMap2 <- c("#ffffff","#ffffff","#706f6f","#666363","#383636") #,"#9e135d"
+# col_HMap2 <- c("#ffffff","#b3b1b1","#b3b1b1","#545353","#333232") #,"#9e135d"
 
 
 ## Order by HF
@@ -232,11 +237,10 @@ Heatmap(
   name = "Log10GeneExp",
   # ## set color
   # col = col_HMap2,
-  # col = colorRamp2(c(min(MTX), 0, (max(MTX)/20), (max(MTX)/10), max(MTX)), col_HMap2),
   # col = colorRamp2(c(0, 1, (max(MTX)/8000), (max(MTX)/6000), max(MTX)), col_HMap2),
-  col = colorRamp2(c(quantile(MTX)[1], quantile(MTX)[2], quantile(MTX)[3],
-                     quantile(MTX)[4], quantile(MTX)[5]), col_HMap2),
-
+  # col = colorRamp2(c(quantile(MTX)[1], quantile(MTX)[2], quantile(MTX)[3],
+  #                    quantile(MTX)[4], quantile(MTX)[5]), col_HMap2),
+  col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
   # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
   column_title = "Order by HF",
   column_title_gp = gpar(fontsize = 17, fontface = "bold"),
@@ -251,7 +255,7 @@ Heatmap(
 P.Heatmap_GeneEXP %>% print
 
 
-## Order by cell type
+## Order by Sample
 Heatmap(
   #333232  ,
   MTX  ,
@@ -264,11 +268,10 @@ Heatmap(
   # ## set color
   # col = col_HMap2,
   # col = colorRamp2(c(0, 0.5, (max(MTX)/5000), (max(MTX)/4000), max(MTX)), col_HMap2),
-  col = colorRamp2(c(quantile(MTX)[1], quantile(MTX)[2], quantile(MTX)[3],
-                     quantile(MTX)[4], quantile(MTX)[5]), col_HMap2),
-  # col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
-  # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
-  column_title = "Order by cell type",
+  # col = colorRamp2(c(quantile(MTX)[1], quantile(MTX)[2], quantile(MTX)[3],
+  #                    quantile(MTX)[4], quantile(MTX)[5]), col_HMap2),
+  col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
+  column_title = "Order by Sample",
   column_title_gp = gpar(fontsize = 17, fontface = "bold"),
   show_heatmap_legend = T,
   use_raster = F,
@@ -314,21 +317,22 @@ GeneList %>% sort()
 
 ##***************************************************************************##
 ##### Current path and new folder setting*  #####
-Version = paste0(Sys.Date(),"_Cachexia_12HumanRNAseq_Entropy")
+Version = paste0(Sys.Date(),"_Cachexia_12HumanRNAseq_Entropy","_HFThr",HF.Thr)
 SaveCC.Path = Version
 dir.create(SaveCC.Path)
 
 
 ##### Export PDF #####
-pdf(file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq.pdf"),width = 12, height = 9 )
-P.Heatmap_GeneEXP
+pdf(file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq","_HFThr",HF.Thr,".pdf"),width = 12, height = 9 )
 P.Heatmap_GeneEXP2
+P.Heatmap_GeneEXP
 P.Heatmap_GeneEXP3
 dev.off()
 
+
 ##### Export TSV #####
-write.table( GE_TarGene.df ,
-             file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq_HeatmapMatrix.tsv"),
+write.table( data.frame(SampleID=row.names(MTX),MTX) ,
+             file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq_HeatmapMatrix","_HFThr",HF.Thr,".tsv"),
              sep = "\t",
              quote = F,
              row.names = F

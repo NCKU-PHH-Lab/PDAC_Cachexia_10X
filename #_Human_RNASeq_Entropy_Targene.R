@@ -13,6 +13,10 @@ GE.df <- read.delim("HumanRNA_12RNASeqCutoffIS1.gct.txt",header=T, stringsAsFact
 TarGene.df <- read.delim("HumanRNA_TargetGene.txt",header=T, stringsAsFactors = FALSE)
 HumanSampleAnno.df <- read.delim("HumanRNA_SampleAnno.txt",header=T, stringsAsFactors = FALSE)
 
+##### Parameter setting #####
+HF.Thr = 0.6
+
+
 ##### Order setting #####
 # Order_SampleID <- HumanSampleAnno.df$SampleID %>% sort()
 # Order_SampleID <- c("B1", "B3", "B4", "B6", "B7", "B8", "P1", "P2", "P3", "P4", "S5", "S6")
@@ -40,12 +44,14 @@ for (i in 1:nrow(GE_TarGene.df)){
 GE_TarGene.df <- GE_TarGene.df[which(GE_Flt.set =="TRUE" ),]
 
 
+
 ##### Entropy base heatmap #####
 ## PMID: 23664764
 ## Ref: https://pubmed.ncbi.nlm.nih.gov/23664764/
 
 # GE_TarGene.df$Sum <- rowSums(GE_TarGene.df[,-1:-2])
-GE_MTX.df <-  GE_TarGene.df[,-1:-2]
+# GE_MTX.df <-  GE_TarGene.df[,-1:-2]
+GE_MTX.df <-  GE_TarGene.df[,c("B6", "B3", "B4", "B8", "B1", "B7")]+1e-20
 GE_MTX_RowSum <- rowSums(GE_MTX.df)
 
 
@@ -80,7 +86,7 @@ HFactor <- rowSums(GE_MTX_DSum.df*GE_MTX_DSum_Log2.df)
 GE_TarGene_Sum.df <- GE_TarGene.df
 GE_TarGene_Sum.df$HF <- HFactor
 
-GE_TarGene_Sum_HFFlt.df <- GE_TarGene_Sum.df[GE_TarGene_Sum.df$HF > 0.6,]
+GE_TarGene_Sum_HFFlt.df <- GE_TarGene_Sum.df[GE_TarGene_Sum.df$HF > HF.Thr,]
 GE_TarGene.df  <- GE_TarGene_Sum_HFFlt.df[,-ncol(GE_TarGene_Sum_HFFlt.df)]
 HFactor <- GE_TarGene_Sum_HFFlt.df$HF
 
@@ -226,7 +232,8 @@ Heatmap(
   # col = col_HMap2,
   col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
   # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
-
+  column_title = "Order by HF",
+  column_title_gp = gpar(fontsize = 17, fontface = "bold"),
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T,
@@ -238,7 +245,7 @@ Heatmap(
 P.Heatmap_GeneEXP %>% print
 
 
-## Order by cell type
+## Order by Sample
 Heatmap(
   MTX  ,
   cluster_rows = F,
@@ -251,7 +258,8 @@ Heatmap(
   # col = col_HMap2,
   col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)), col_HMap2),
   # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
-
+  column_title = "Order by Sample",
+  column_title_gp = gpar(fontsize = 17, fontface = "bold"),
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T,
@@ -265,7 +273,7 @@ P.Heatmap_GeneEXP2 %>% print
 ## Clustering
 Heatmap(
   MTX  ,
-  cluster_rows = T,
+  cluster_rows = F,
   cluster_columns = T,
   # column_order = order(Anno_Cell.df$celltype,Anno_Cell.df$Cachexia),
   show_column_names = F,
@@ -275,7 +283,8 @@ Heatmap(
   # col = col_HMap2,
   col = colorRamp2(c(min(MTX),(min(MTX)/2), 0, (max(MTX)/2), max(MTX)),  col_HMap2),
   # col = colorRamp2(c(-max(GE_TarGene_Log.mx), 0, max(GE_TarGene_Log.mx)), col_HMap2),
-
+  column_title = "Order by Clustering",
+  column_title_gp = gpar(fontsize = 17, fontface = "bold"),
   show_heatmap_legend = T,
   use_raster = F,
   top_annotation = ha_column_T,
@@ -295,21 +304,22 @@ GeneList %>% sort()
 
 ##***************************************************************************##
 ##### Current path and new folder setting*  #####
-Version = paste0(Sys.Date(),"_Cachexia_12HumanRNAseq_Entropy")
+Version = paste0(Sys.Date(),"_Cachexia_12HumanRNAseq_Entropy_Targene","_HFThr",HF.Thr)
 SaveCC.Path = Version
 dir.create(SaveCC.Path)
 
 
 ##### Export PDF #####
-pdf(file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq.pdf"),width = 15, height = 12 )
-P.Heatmap_GeneEXP
+pdf(file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq_Targene","_HFThr",HF.Thr,".pdf"),width = 12, height = 9 )
 P.Heatmap_GeneEXP2
+P.Heatmap_GeneEXP
 P.Heatmap_GeneEXP3
 dev.off()
 
+
 ##### Export TSV #####
-write.table( GE_TarGene.df ,
-             file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq_HeatmapMatrix.tsv"),
+write.table( data.frame(SampleID=row.names(MTX),MTX) ,
+             file = paste0(SaveCC.Path,"/",Sys.Date(),"_", "Cachexia_12HumanRNAseq_HeatmapMatrix_Targene","_HFThr",HF.Thr,".tsv"),
              sep = "\t",
              quote = F,
              row.names = F
