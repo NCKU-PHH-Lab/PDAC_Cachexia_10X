@@ -276,8 +276,8 @@ pdf(file = paste0(SaveSup.Path,"/",Version,"_UMAP.pdf"),width = 15, height = 10 
   plt.UMAP4 %>% print()
 dev.off()
 
-##### Save RData #####
-save.image(paste0(Save.Path,"/",Version,".RData"))
+# ##### Save RData #####
+# save.image(paste0(Save.Path,"/",Version,".RData"))
 
 # ## Example
 # # Load myeloma data from GitHub
