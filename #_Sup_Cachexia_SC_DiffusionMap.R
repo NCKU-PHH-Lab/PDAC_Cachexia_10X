@@ -195,10 +195,13 @@
 #### Try Duc #####
   SPCellTypeID.set <- Meta.data[grepl("Duc", Meta.data$celltype ),]$ID
   GeneExp_Sub.mtx <- GeneExp.mtx[,colnames(GeneExp.mtx) %in% SPCellTypeID.set]
+
+  GeneExp_Sub.mtx <- GeneExp.mtx
   dm <- DiffusionMap(t(GeneExp_Sub.mtx))
 
-  Meta_Sub.df <- Meta.data[Meta.data$ID %in% SPCellTypeID.set,]
 
+  Meta_Sub.df <- Meta.data[Meta.data$ID %in% SPCellTypeID.set,]
+  Meta_Sub.df <- Meta.data
   # Plot diffusion component 1 vs diffusion component 2 (DC1 vs DC2).
   tmp <- data.frame(DC1 = eigenvectors(dm)[, 1],
                     DC2 = eigenvectors(dm)[, 2],
