@@ -7,7 +7,7 @@ if(!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
 if(!require("Seurat")) install.packages("Seurat"); library(Seurat)
 if(!require("AUCell")) install.packages("AUCell"); library(AUCell)
 
-if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
+if(!require("patchwork")) install.packages("patchwork"); library(patchwork)  # 使用 patchwork 组合多个图形
 
 ##### Set Para #####
 ## Set Export
@@ -146,7 +146,7 @@ colnames(seuratObject@meta.data) <- gsub("\\.", " ", colnames(seuratObject@meta.
 
 
 ##### Visualization #####
-# 绘制带有 AUCell 分数的 UMAP 组合图
+#### UMAP ####
 plots <- list()
 for(subset in names(subset_scores)) {
   try({
@@ -159,18 +159,11 @@ for(subset in names(subset_scores)) {
 if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
 
 plot_combined_UMAP_Score <- wrap_plots(plots, ncol = 3)  # 根据需要调整列数
-
-# 显示组合图
 plot_combined_UMAP_Score
 
 
-
-
-#############################################
-
-
-# 定义要绘制的聚类
-clusters_to_plot <- Set_clusters_to_plot
+#### VlnPlot ####
+clusters_to_plot <- Set_clusters_to_plot # 定义要绘制的聚类
 
 # 对于每个子集，绘制特定聚类的 AUCell 分数分布图
 plots_2 <- list()
@@ -186,18 +179,15 @@ for(subset in names(subset_scores)) {
 if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
 
 plot_combined_Vln_Score <- wrap_plots(plots_2, ncol = 2)  # 根据需要调整列数
-
-# 显示组合图
 plot_combined_Vln_Score
 
-
+#### Export PDF ####
 pdf(paste0(Name_ExportFolder, "/", Name_Export, "_MainResult_AUCell.pdf"),
     width = 10, height = 10)
 print(plot_combined_UMAP)
 print(plot_combined_UMAP_Score)
 print(plot_combined_Vln_Score)
 dev.off()
-
 
 
 ####################################################################
@@ -230,7 +220,7 @@ colnames(seuratObject@meta.data) <- gsub("\\.\\.", "+ ", colnames(seuratObject@m
 colnames(seuratObject@meta.data) <- gsub("\\.", " ", colnames(seuratObject@meta.data))
 colnames(seuratObject@meta.data) <- gsub("_ModuleScore1", "_ModuleScore", colnames(seuratObject@meta.data))
 
-
+#### UMAP ####
 # Example visualization of Module Scores on UMAP
 plot_module_scores <- list()
 for(subset in names(standard_list)) {
@@ -242,13 +232,13 @@ for(subset in names(standard_list)) {
 
 }
 
-# Combine and display the plots
-plot_combined_UMAP_ModuleScore <- wrap_plots(plot_module_scores, ncol = 3)
+if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
+plot_combined_UMAP_ModuleScore <- wrap_plots(plot_module_scores, ncol = 3) # Combine and display the plots
 plot_combined_UMAP_ModuleScore
 
 
-# 定义要绘制的聚类
-clusters_to_plot <- Set_clusters_to_plot
+#### VlnPlot ####
+clusters_to_plot <- Set_clusters_to_plot # 定义要绘制的聚类
 
 # 对于每个子集，绘制特定聚类的 Module Score 分布图
 plots_module_score <- list()
@@ -262,19 +252,16 @@ for(subset in names(standard_list)) {
   })
 }
 
-# 使用 patchwork 组合多个图形
-if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
 plot_combined_Vln_ModuleScore <- wrap_plots(plots_module_score, ncol = 2)  # 根据需要调整列数
-
 plot_combined_Vln_ModuleScore
 
+#### Export PDF ####
 pdf(paste0(Name_ExportFolder, "/", Name_Export, "_MainResult_AUCell.pdf"),
     width = 10, height = 10)
 print(plot_combined_UMAP)
 print(plot_combined_UMAP_ModuleScore)
 print(plot_combined_Vln_ModuleScore)
 dev.off()
-
 
 
 ##### Export RData #####
