@@ -267,8 +267,8 @@ plot_combined_Vln_ModuleScore <- wrap_plots(plots_module_score, ncol = 2)  # 根
 plot_combined_Vln_ModuleScore
 
 #### Export PDF ####
-pdf(paste0(Name_ExportFolder, "/", Name_Export, "_MainResult_AUCell.pdf"),
-    width = 10, height = 10)
+pdf(paste0(Name_ExportFolder, "/", Name_Export, "_MainResult_ModuleScore.pdf"),
+    width = 12, height = 10)
 print(plot_combined_UMAP)
 print(plot_combined_UMAP_ModuleScore)
 print(plot_combined_Vln_ModuleScore)
