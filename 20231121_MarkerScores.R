@@ -29,7 +29,7 @@ p3 <- DimPlot(seuratObject, reduction = "umap", group.by = "seurat_clusters", la
 p4 <- DimPlot(seuratObject, reduction = "umap", group.by = "Cachexia") # %>% BeautifyggPlot(.,LegPos = c(0.85, 0.15),AxisTitleSize=1.1)
 p1 + p2 + p3 + p4
 
-## load markers
+#### load markers ####
 file_path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/Input_Markers/PMID37914939/41586_2023_6685_MOESM4_ESM_HumanMouse_conserved_TAMsubsets.txt"
 data <- read.table(file_path, header=TRUE, sep="\t", skip = 1)  # 跳过第一行
 
@@ -46,7 +46,7 @@ subset_genes <- data %>%
 
 # print(subset_genes)
 
-## Turn to list
+# ## Turn to list
 # ## Method1
 # if(!require("purrr")) install.packages("purrr"); library(purrr)
 # standard_list <- purrr::map(subset_genes$Genes, ~ .x)
@@ -54,6 +54,7 @@ subset_genes <- data %>%
 # ## Method2
 # standard_list <- lapply(subset_genes$Genes, function(x) x)
 
+## Turn to list
 ## Method3
 standard_list <- setNames(subset_genes$Genes, subset_genes$Subset)
 
@@ -82,8 +83,8 @@ for(subset in names(standard_list)) {
   }
 }
 
+## Error ## print(subset_scores) # 检查计算结果
 
-print(subset_scores) # 检查计算结果
 # 逐个检查每个子集的 AUCell 分数
 for(subset in names(subset_scores)) {
   cat("Subset:", subset, "\n")
@@ -94,8 +95,8 @@ for(subset in names(subset_scores)) {
 write.table(subset_scores, file = "subset_scores.txt", sep = "\t", quote = FALSE)
 
 
-
-# # 将 AUCell 分数添加到 Seurat 对象的元数据中
+# ## 将 AUCell 分数添加到 Seurat 对象的元数据中
+# ## Method1
 # for(subset in names(subset_scores)) {
 #   # 假设 subset_scores[[subset]] 是一个向量，包含每个细胞的 AUCell 分数
 #   # seuratObject <- AddMetaData(seuratObject, metadata = subset_scores[[subset]], col.name = paste0(subset, "_AUCell"))
@@ -103,7 +104,8 @@ write.table(subset_scores, file = "subset_scores.txt", sep = "\t", quote = FALSE
 #
 # }
 
-# 将 AUCell 分数添加到 Seurat 对象的元数据中
+## 将 AUCell 分数添加到 Seurat 对象的元数据中
+## Method2
 for(subset in names(subset_scores)) {
   # 提取 AUCell 分数和细胞 ID
   auc_data <- subset_scores[[subset]]@assays@data@listData[["AUC"]]
@@ -122,12 +124,14 @@ for(subset in names(subset_scores)) {
   }
 }
 
-# 检查添加结果
 head(seuratObject@meta.data)
 
 colnames(seuratObject@meta.data) <- gsub("\\.\\.", "+ ", colnames(seuratObject@meta.data))
 colnames(seuratObject@meta.data) <- gsub("\\.", " ", colnames(seuratObject@meta.data))
 
+
+
+##### Visualization #####
 # 绘制带有 AUCell 分数的 UMAP 组合图
 plots <- list()
 for(subset in names(subset_scores)) {
@@ -174,3 +178,8 @@ combined_plot_2 <- wrap_plots(plots_2, ncol = 2)  # 根据需要调整列数
 
 # 显示组合图
 combined_plot_2
+
+##### Export #####
+
+
+
