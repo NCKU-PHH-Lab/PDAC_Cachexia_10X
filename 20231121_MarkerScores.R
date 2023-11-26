@@ -195,3 +195,78 @@ print(plot_combined_UMAP)
 print(plot_combined_UMAP_Score)
 print(plot_combined_Vln_Score)
 dev.off()
+
+
+
+####################################################################
+#### Module Scores ####
+# Add Module Scores to Seurat object
+for(subset in names(standard_list)) {
+  gene_set <- standard_list[[subset]]
+  valid_genes <- gene_set %in% rownames(seuratObject)
+
+  if (sum(valid_genes) >= 2) {  # Ensure there are at least two valid genes
+    gene_set <- gene_set[valid_genes]
+
+    # Further reduce the ctrl parameter value
+    ctrl_size <- min(min(length(gene_set), 50), nrow(seuratObject) / 2)
+
+    features_list <- list(gene_set)
+
+    # Try to add module score and catch any errors
+    tryCatch({
+      seuratObject <- AddModuleScore(seuratObject, features = features_list, name = paste0(subset, "_ModuleScore"), ctrl = ctrl_size)
+    }, error = function(e) {
+      warning(paste("Error occurred while processing gene set", subset, ":", e$message))
+    })
+  } else {
+    warning(paste("Gene set", subset, "has too few genes for Module Score calculation"))
+  }
+}
+
+colnames(seuratObject@meta.data) <- gsub("\\.\\.", "+ ", colnames(seuratObject@meta.data))
+colnames(seuratObject@meta.data) <- gsub("\\.", " ", colnames(seuratObject@meta.data))
+colnames(seuratObject@meta.data) <- gsub("_ModuleScore1", "_ModuleScore", colnames(seuratObject@meta.data))
+
+
+# Example visualization of Module Scores on UMAP
+plot_module_scores <- list()
+for(subset in names(standard_list)) {
+  try({
+    feature_to_plot <- paste0(subset, "_ModuleScore") # The suffix "1" is added by Seurat to the Module Score names
+    p <- FeaturePlot(seuratObject, features = feature_to_plot, reduction = "umap")
+    plot_module_scores[[subset]] <- p
+  })
+
+}
+
+# Combine and display the plots
+plot_combined_Module_Score <- wrap_plots(plot_module_scores, ncol = 3)
+plot_combined_Module_Score
+
+
+# 定义要绘制的聚类
+clusters_to_plot <- c("4", "5", "8", "10", "11")
+
+# 对于每个子集，绘制特定聚类的 Module Score 分布图
+plots_module_score <- list()
+for(subset in names(standard_list)) {
+  try({
+    feature_to_plot <- paste0(subset, "_ModuleScore") # Module Score特征的名称
+    # 创建符合条件的子 Seurat 对象
+    subset_seuratObject <- subset(seuratObject, subset = seurat_clusters %in% clusters_to_plot)
+    p <- VlnPlot(subset_seuratObject, features = feature_to_plot, group.by = "seurat_clusters")
+    plots_module_score[[subset]] <- p
+  })
+}
+
+# 使用 patchwork 组合多个图形
+if(!require("patchwork")) {
+  install.packages("patchwork")
+  library(patchwork)
+}
+plot_combined_Module_Score <- wrap_plots(plots_module_score, ncol = 2)  # 根据需要调整列数
+
+# 显示组合图
+plot_combined_Module_Score
+
