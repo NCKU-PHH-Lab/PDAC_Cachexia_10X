@@ -7,6 +7,18 @@ if(!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
 if(!require("Seurat")) install.packages("Seurat"); library(Seurat)
 if(!require("AUCell")) install.packages("AUCell"); library(AUCell)
 
+if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
+
+##### Set Para #####
+## Set Export
+Name_time_wo_micro <- substr(gsub("[- :]", "", as.character(Sys.time())), 1, 14)
+Name_Export <- paste0(Name_time_wo_micro,"_MarkerScore")
+Name_ExportFolder <- paste0("Export")
+if (!dir.exists(Name_ExportFolder)){dir.create(Name_ExportFolder)}   ## Create new folder
+
+## Set Para
+Set_clusters_to_plot <- c("4", "5", "8", "10", "11")
+
 
 #### Load data ####
 ## load seuratObject
@@ -93,8 +105,8 @@ for(subset in names(subset_scores)) {
   print(head(subset_scores[[subset]]))  # 只打印每个子集的前几个分数
 }
 
-## Export txt
-write.table(subset_scores, file = "subset_scores.txt", sep = "\t", quote = FALSE)
+# ## Export txt
+# write.table(subset_scores, file = "subset_scores.txt", sep = "\t", quote = FALSE)
 
 
 # ## 将 AUCell 分数添加到 Seurat 对象的元数据中
@@ -158,7 +170,7 @@ plot_combined_UMAP_Score
 
 
 # 定义要绘制的聚类
-clusters_to_plot <- c("4", "5", "8", "10", "11")
+clusters_to_plot <- Set_clusters_to_plot
 
 # 对于每个子集，绘制特定聚类的 AUCell 分数分布图
 plots_2 <- list()
@@ -171,25 +183,15 @@ for(subset in names(subset_scores)) {
 }
 
 # 使用 patchwork 组合多个图形
-if(!require("patchwork")) {
-  install.packages("patchwork")
-  library(patchwork)
-}
+if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
+
 plot_combined_Vln_Score <- wrap_plots(plots_2, ncol = 2)  # 根据需要调整列数
 
 # 显示组合图
 plot_combined_Vln_Score
 
-##### Export #####
-Name_time_wo_micro <- substr(gsub("[- :]", "", as.character(Sys.time())), 1, 14)
-Name_Export <- paste0(Name_time_wo_micro,"_MarkerScore")
-Name_ExportFolder <- paste0("Export")
-if (!dir.exists(Name_ExportFolder)){dir.create(Name_ExportFolder)}   ## Create new folder
 
-# save.image(paste0(Name_ExportFolder,"/",Name_Export,".RData"))
-save(seuratObject, file = paste0(Name_ExportFolder,"/",Name_Export,".RData"))
-
-pdf(paste0(Name_ExportFolder, "/", Name_Export, "_MainResult.pdf"),
+pdf(paste0(Name_ExportFolder, "/", Name_Export, "_MainResult_AUCell.pdf"),
     width = 10, height = 10)
 print(plot_combined_UMAP)
 print(plot_combined_UMAP_Score)
@@ -241,12 +243,12 @@ for(subset in names(standard_list)) {
 }
 
 # Combine and display the plots
-plot_combined_Module_Score <- wrap_plots(plot_module_scores, ncol = 3)
-plot_combined_Module_Score
+plot_combined_UMAP_ModuleScore <- wrap_plots(plot_module_scores, ncol = 3)
+plot_combined_UMAP_ModuleScore
 
 
 # 定义要绘制的聚类
-clusters_to_plot <- c("4", "5", "8", "10", "11")
+clusters_to_plot <- Set_clusters_to_plot
 
 # 对于每个子集，绘制特定聚类的 Module Score 分布图
 plots_module_score <- list()
@@ -261,12 +263,21 @@ for(subset in names(standard_list)) {
 }
 
 # 使用 patchwork 组合多个图形
-if(!require("patchwork")) {
-  install.packages("patchwork")
-  library(patchwork)
-}
-plot_combined_Module_Score <- wrap_plots(plots_module_score, ncol = 2)  # 根据需要调整列数
+if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
+plot_combined_Vln_ModuleScore <- wrap_plots(plots_module_score, ncol = 2)  # 根据需要调整列数
 
-# 显示组合图
-plot_combined_Module_Score
+plot_combined_Vln_ModuleScore
+
+pdf(paste0(Name_ExportFolder, "/", Name_Export, "_MainResult_AUCell.pdf"),
+    width = 10, height = 10)
+print(plot_combined_UMAP)
+print(plot_combined_UMAP_ModuleScore)
+print(plot_combined_Vln_ModuleScore)
+dev.off()
+
+
+
+##### Export RData #####
+# save.image(paste0(Name_ExportFolder,"/",Name_Export,".RData"))
+save(seuratObject, file = paste0(Name_ExportFolder,"/",Name_Export,".RData"))
 
