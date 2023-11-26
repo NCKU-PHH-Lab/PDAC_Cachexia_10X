@@ -10,23 +10,27 @@ if(!require("AUCell")) install.packages("AUCell"); library(AUCell)
 if(!require("patchwork")) install.packages("patchwork"); library(patchwork)  # 使用 patchwork 组合多个图形
 
 ##### Set Para #####
-## Set Export
-Name_time_wo_micro <- substr(gsub("[- :]", "", as.character(Sys.time())), 1, 14)
-Name_Export <- paste0(Name_time_wo_micro,"_MarkerScore")
-Name_ExportFolder <- paste0("Export")
-if (!dir.exists(Name_ExportFolder)){dir.create(Name_ExportFolder)}   ## Create new folder
-
 ## Set Para
 Set_clusters_to_plot <- c("4", "5", "8", "10", "11")
+Set_Dataset <- "SC" # "PBMC" # "SC"
+Set_MarkerFile <- "KPCTAMs" # "KPCTAMs" # "HmMuConTAMs"
+
+## Set Export
+Name_time_wo_micro <- substr(gsub("[- :]", "", as.character(Sys.time())), 1, 14)
+Name_Export <- paste0(Name_time_wo_micro,"_",Set_Dataset,"_",Set_MarkerFile,"_MarkerScore")
+Name_ExportFolder <- paste0("Export")
+if (!dir.exists(Name_ExportFolder)){dir.create(Name_ExportFolder)}   ## Create new folder
 
 
 #### Load data ####
 ## load seuratObject
-# load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-12_Results_FollowUpAnalysis/2022-10-17_PBMC_Main/06_Cell_type_annotation.RData")
-# seuratObject <- PBMC.combined
-
-load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-12_Results_FollowUpAnalysis/2022-10-17_SC_Main/06_Cell_type_annotation.RData")
-seuratObject <- SC.combined
+if(Set_Dataset == "PBMC"){
+  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-12_Results_FollowUpAnalysis/2022-10-17_PBMC_Main/06_Cell_type_annotation.RData")
+  seuratObject <- PBMC.combined
+}else if(Set_Dataset == "SC"){
+  load("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-12_Results_FollowUpAnalysis/2022-10-17_SC_Main/06_Cell_type_annotation.RData")
+  seuratObject <- SC.combined
+}
 
 rm(list = setdiff(ls(), "seuratObject"))
 
@@ -44,14 +48,18 @@ plot_combined_UMAP <- wrap_plots(list(p1,p2,p3,p4), ncol = 2)  # 根据需要调
 plot_combined_UMAP
 
 #### load markers ####
-file_path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/Input_Markers/PMID37914939/41586_2023_6685_MOESM4_ESM_HumanMouse_conserved_TAMsubsets.txt"
-data <- read.table(file_path, header=TRUE, sep="\t", skip = 1)  # 跳过第一行
+if(Set_MarkerFile == "HmMuConTAMs"){
+  file_path_Marker <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/Input_Markers/PMID37914939/41586_2023_6685_MOESM4_ESM_HumanMouse_conserved_TAMsubsets.txt"
+  data <- read.table(file_path_Marker, header=TRUE, sep="\t", skip = 1)  # 跳过第一行
 
-file_path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/Input_Markers/PMID37914939/41586_2023_6685_MOESM4_ESM_scRNAseq_KPC_TAMs_Markers.txt"
-data <- read.table(file_path, header=TRUE, sep="\t")
-data <- data %>%
-  dplyr::rename(Subset = Cell_population) %>%
-  dplyr::rename(Gene_Mouse = Gene)
+}else if(Set_MarkerFile == "KPCTAMs"){
+  file_path_Marker <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/Input_Markers/PMID37914939/41586_2023_6685_MOESM4_ESM_scRNAseq_KPC_TAMs_Markers.txt"
+  data <- read.table(file_path_Marker, header=TRUE, sep="\t")
+  data <- data %>%
+    dplyr::rename(Subset = Cell_population) %>%
+    dplyr::rename(Gene_Mouse = Gene)
+}
+
 
 subset_genes <- data %>%
   dplyr::select(Subset, Gene_Mouse) %>%
