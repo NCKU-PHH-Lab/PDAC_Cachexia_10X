@@ -32,7 +32,10 @@ if(Set_Dataset == "PBMC"){
   seuratObject <- SC.combined
 }
 
-rm(list = setdiff(ls(), "seuratObject"))
+keep_lst <- c("Set_clusters_to_plot","Set_Dataset","Set_MarkerFile",
+              "Name_time_wo_micro","Name_Export","Name_ExportFolder",
+              "seuratObject")
+rm(list = setdiff(ls(), keep_lst))
 
 colnames(seuratObject@meta.data)[colnames(seuratObject@meta.data) == "celltype"] <- "Cell_Type"
 
