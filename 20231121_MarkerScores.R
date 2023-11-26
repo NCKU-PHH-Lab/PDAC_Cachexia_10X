@@ -27,7 +27,9 @@ p1 <- DimPlot(seuratObject, reduction = "umap", group.by = "sample") # %>% Beaut
 p2 <- DimPlot(seuratObject, reduction = "umap", group.by = "Cell_Type", label = TRUE) # %>% BeautifyggPlot(.,LegPos = c(0.85, 0.15),AxisTitleSize=1.1)
 p3 <- DimPlot(seuratObject, reduction = "umap", group.by = "seurat_clusters", label = TRUE) # %>% BeautifyggPlot(.,LegPos = c(0.85, 0.15),AxisTitleSize=1.1)
 p4 <- DimPlot(seuratObject, reduction = "umap", group.by = "Cachexia") # %>% BeautifyggPlot(.,LegPos = c(0.85, 0.15),AxisTitleSize=1.1)
-p1 + p2 + p3 + p4
+# p1 + p2 + p3 + p4
+plot_combined_UMAP <- wrap_plots(list(p1,p2,p3,p4), ncol = 2)  # 根据需要调整列数
+plot_combined_UMAP
 
 #### load markers ####
 file_path <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/Input_Markers/PMID37914939/41586_2023_6685_MOESM4_ESM_HumanMouse_conserved_TAMsubsets.txt"
@@ -144,13 +146,12 @@ for(subset in names(subset_scores)) {
 # 使用 patchwork 组合多个图形
 if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
 
-combined_plot <- wrap_plots(plots, ncol = 3)  # 根据需要调整列数
+plot_combined_UMAP_Score <- wrap_plots(plots, ncol = 3)  # 根据需要调整列数
 
 # 显示组合图
-combined_plot
+plot_combined_UMAP_Score
 
-combined_plot2 <- wrap_plots(list(p1,p2,p3,p4), ncol = 2)  # 根据需要调整列数
-combined_plot2
+
 
 
 #############################################
@@ -174,12 +175,23 @@ if(!require("patchwork")) {
   install.packages("patchwork")
   library(patchwork)
 }
-combined_plot_2 <- wrap_plots(plots_2, ncol = 2)  # 根据需要调整列数
+plot_combined_Vln_Score <- wrap_plots(plots_2, ncol = 2)  # 根据需要调整列数
 
 # 显示组合图
-combined_plot_2
+plot_combined_Vln_Score
 
 ##### Export #####
+Name_time_wo_micro <- substr(gsub("[- :]", "", as.character(Sys.time())), 1, 14)
+Name_Export <- paste0(Name_time_wo_micro,"_MarkerScore")
+Name_ExportFolder <- paste0("Export")
+if (!dir.exists(Name_ExportFolder)){dir.create(Name_ExportFolder)}   ## Create new folder
 
+# save.image(paste0(Name_ExportFolder,"/",Name_Export,".RData"))
+save(seuratObject, file = paste0(Name_ExportFolder,"/",Name_Export,".RData"))
 
-
+pdf(paste0(Name_ExportFolder, "/", Name_Export, "_MainResult.pdf"),
+    width = 10, height = 10)
+print(plot_combined_UMAP)
+print(plot_combined_UMAP_Score)
+print(plot_combined_Vln_Score)
+dev.off()
