@@ -11,9 +11,14 @@ if(!require("patchwork")) install.packages("patchwork"); library(patchwork)  # �
 
 ##### Set Para #####
 ## Set Para
-Set_clusters_to_plot <- c("4", "5", "8", "10", "11")
-Set_Dataset <- "SC" # "PBMC" # "SC"
+Set_Dataset <- "PBMC" # "PBMC" # "SC"
 Set_MarkerFile <- "KPCTAMs" # "KPCTAMs" # "HmMuConTAMs"
+
+if(Set_Dataset == "SC"){
+  Set_clusters_to_plot <- c("4", "5", "8", "10", "11")
+}if(Set_Dataset == "PBMC"){
+  Set_clusters_to_plot <- c("2", "6", "13")
+}
 
 ## Set Export
 Name_time_wo_micro <- substr(gsub("[- :]", "", as.character(Sys.time())), 1, 14)
@@ -169,7 +174,7 @@ for(subset in names(subset_scores)) {
 # 使用 patchwork 组合多个图形
 if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
 
-plot_combined_UMAP_Score <- wrap_plots(plots, ncol = 3)  # 根据需要调整列数
+plot_combined_UMAP_Score <- wrap_plots(plots, ncol = 2)  # 根据需要调整列数
 plot_combined_UMAP_Score
 
 
@@ -244,7 +249,7 @@ for(subset in names(standard_list)) {
 }
 
 if(!require("patchwork")) install.packages("patchwork"); library(patchwork)
-plot_combined_UMAP_ModuleScore <- wrap_plots(plot_module_scores, ncol = 3) # Combine and display the plots
+plot_combined_UMAP_ModuleScore <- wrap_plots(plot_module_scores, ncol = 2) # Combine and display the plots
 plot_combined_UMAP_ModuleScore
 
 
