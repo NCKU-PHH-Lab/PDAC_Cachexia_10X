@@ -8,15 +8,17 @@ if(!require("Seurat")) install.packages("Seurat"); library(Seurat)
 if(!require("AUCell")) install.packages("AUCell"); library(AUCell)
 
 if(!require("patchwork")) install.packages("patchwork"); library(patchwork)  # 使用 patchwork 组合多个图形
+if(!require("Hmisc")) install.packages("Hmisc"); library(Hmisc)
 
 ##### Set Para #####
 ## Set Para
-Set_Dataset <- "SC" # "PBMC" # "SC"
-Set_MarkerFile <- "KPCTAMs" # "KPCTAMs" # "HmMuConTAMs"
+Set_Dataset <- "PBMC" # "PBMC" # "SC"
+Set_MarkerFile <- "PMID36352227_Mph" # "PMID36352227_Mph" # "KPCTAMs" # "HmMuConTAMs"
+Set_ConvertGeneName = TRUE
 
 if(Set_Dataset == "SC"){
   Set_clusters_to_plot <- c("4", "5", "8", "10", "11")
-}if(Set_Dataset == "PBMC"){
+}else if(Set_Dataset == "PBMC"){
   Set_clusters_to_plot <- c("2", "6", "13")
 }
 
@@ -39,6 +41,7 @@ if(Set_Dataset == "PBMC"){
 
 keep_lst <- c("Set_clusters_to_plot","Set_Dataset","Set_MarkerFile",
               "Name_time_wo_micro","Name_Export","Name_ExportFolder",
+              "Set_ConvertGeneName",
               "seuratObject")
 rm(list = setdiff(ls(), keep_lst))
 
@@ -66,13 +69,26 @@ if(Set_MarkerFile == "HmMuConTAMs"){
   data <- data %>%
     dplyr::rename(Subset = Cell_population) %>%
     dplyr::rename(Gene_Mouse = Gene)
+
+}else if(Set_MarkerFile == "PMID36352227_Mph"){
+  file_path_Marker <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/Input_Markers/PMID36352227/PMID36352227_signature of clusters.txt"
+  data <- read.table(file_path_Marker, header=TRUE, sep="\t")
+  data <- data %>%
+    dplyr::rename(Subset = Cell.cluster) %>%
+    dplyr::rename(Gene_Mouse = Gene)
+  data <- data %>% dplyr::filter(grepl("^Mph_", Subset))
 }
 
+if(Set_ConvertGeneName){
+  library(Hmisc)
+  data$Gene_Mouse <- capitalize(tolower(data$Gene_Mouse))
+}
 
 subset_genes <- data %>%
   dplyr::select(Subset, Gene_Mouse) %>%
   group_by(Subset) %>%
-  summarize(Genes = list(Gene_Mouse))
+  # summarize(Genes = list(Gene_Mouse))
+  dplyr::summarize(Genes = list(Gene_Mouse))
 
 # print(subset_genes)
 
@@ -187,7 +203,8 @@ for(subset in names(subset_scores)) {
   feature_to_plot <- paste0(subset, "_AUCell")
   # 创建符合条件的子 Seurat 对象
   subset_seuratObject <- subset(seuratObject, subset = seurat_clusters %in% clusters_to_plot)
-  p <- VlnPlot(subset_seuratObject, features = feature_to_plot, group.by = "seurat_clusters")
+  # p <- VlnPlot(subset_seuratObject, features = feature_to_plot, group.by = "seurat_clusters")
+  p <- VlnPlot(subset_seuratObject, features = feature_to_plot)
   plots_2[[subset]] <- p
 }
 
@@ -263,7 +280,8 @@ for(subset in names(standard_list)) {
     feature_to_plot <- paste0(subset, "_ModuleScore") # Module Score特征的名称
     # 创建符合条件的子 Seurat 对象
     subset_seuratObject <- subset(seuratObject, subset = seurat_clusters %in% clusters_to_plot)
-    p <- VlnPlot(subset_seuratObject, features = feature_to_plot, group.by = "seurat_clusters")
+    # p <- VlnPlot(subset_seuratObject, features = feature_to_plot, group.by = "seurat_clusters")
+    p <- VlnPlot(subset_seuratObject, features = feature_to_plot)
     plots_module_score[[subset]] <- p
   })
 }
@@ -284,3 +302,12 @@ dev.off()
 # save.image(paste0(Name_ExportFolder,"/",Name_Export,".RData"))
 save(seuratObject, file = paste0(Name_ExportFolder,"/",Name_Export,".RData"))
 
+
+
+################################################################################
+## 20231128
+Check_genes <- c("Cux2", "Hoxa9")
+Check_genes <- c("Il1b")
+FeaturePlot(seuratObject, features = Check_genes)/VlnPlot(seuratObject, features = Check_genes)
+FeaturePlot(seuratObject, features = Check_genes)
+VlnPlot(seuratObject, features = Check_genes)
