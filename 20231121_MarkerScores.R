@@ -11,7 +11,7 @@ if(!require("patchwork")) install.packages("patchwork"); library(patchwork)  # ä
 
 ##### Set Para #####
 ## Set Para
-Set_Dataset <- "PBMC" # "PBMC" # "SC"
+Set_Dataset <- "SC" # "PBMC" # "SC"
 Set_MarkerFile <- "KPCTAMs" # "KPCTAMs" # "HmMuConTAMs"
 
 if(Set_Dataset == "SC"){
