@@ -13,7 +13,7 @@ if(!require("Hmisc")) install.packages("Hmisc"); library(Hmisc)
 ##### Set Para #####
 ## Set Para
 Set_Dataset <- "SC" # "PBMC" # "SC"
-Set_MarkerFile <- "PMID36781852_Mph" # "PMID36781852_Mph"  # "PMID36352227_Mph" # "KPCTAMs" # "HmMuConTAMs"
+Set_MarkerFile <- "PMID36781852_Mph" # "PMID36781852_Mph" # "PMID36781852_Mph"  # "PMID36352227_Mph" # "KPCTAMs" # "HmMuConTAMs"
 Set_ConvertGeneName = TRUE
 
 if(Set_Dataset == "SC"){
@@ -77,8 +77,16 @@ if(Set_MarkerFile == "HmMuConTAMs"){
     dplyr::rename(Subset = Cell.cluster) %>%
     dplyr::rename(Gene_Mouse = Gene)
   data <- data %>% dplyr::filter(grepl("^Mph_", Subset))
+
 }else if(Set_MarkerFile == "PMID36781852_Mph"){
   file_path_Marker <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/Input_Markers/PMID36781852/PMID36781852_Mph.txt"
+  data <- read.table(file_path_Marker, header=TRUE, sep="\t")
+  data <- data %>%
+    dplyr::rename(Subset = clusterID) %>%
+    dplyr::rename(Gene_Mouse = gene)
+
+}else if(Set_MarkerFile == "PMID37440641_Mph"){
+  file_path_Marker <- "D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/Input_Markers/PMID37440641"
   data <- read.table(file_path_Marker, header=TRUE, sep="\t")
   data <- data %>%
     dplyr::rename(Subset = CellType) %>%
