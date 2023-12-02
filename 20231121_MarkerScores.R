@@ -12,8 +12,8 @@ if(!require("Hmisc")) install.packages("Hmisc"); library(Hmisc)
 
 ##### Set Para #####
 ## Set Para
-Set_Dataset <- "SC" # "PBMC" # "SC"
-Set_MarkerFile <- "PMID37440641_Mph" # "PMID37440641_Mph" # "PMID36781852_Mph"  # "PMID36352227_Mph" # "KPCTAMs" # "HmMuConTAMs"
+Set_Dataset <- "PBMC" # "PBMC" # "SC"
+Set_MarkerFile <- "KPCTAMs" # "PMID37440641_Mph" # "PMID36781852_Mph"  # "PMID36352227_Mph" # "KPCTAMs" # "HmMuConTAMs"
 Set_ConvertGeneName = TRUE
 
 if(Set_Dataset == "SC"){
