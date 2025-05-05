@@ -57,7 +57,7 @@ rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path", "CellType.Order
 
 
 ##### Current path and new folder setting  #####
-TarGene <- "Il13ra1"
+TarGene <- "Il4"
 Version = paste0(Sys.Date(),"_",SampleType,"_Barplot_PVal_",TarGene)
 SaveSup.Path = paste0(getwd(),"/",Version)
 dir.create(SaveSup.Path)
