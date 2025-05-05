@@ -9,7 +9,8 @@
 rm(list = ls()) # Clean variable
 memory.limit(150000)
 
-Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
+# Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-10-17_PBMC_Main")
+Save.Path <- c("D:/Dropbox/##_GitHub/##_PHH_Lab/PDAC_Cachexia_10X/2022-12_Results_FollowUpAnalysis/2022-10-17_PBMC_Main")
 
 
 ##### Load Packages #####
@@ -56,7 +57,7 @@ rm(list=setdiff(ls(), c("scRNA.SeuObj","SampleType","Save.Path", "CellType.Order
 
 
 ##### Current path and new folder setting  #####
-TarGene <- "Chil3"
+TarGene <- "Il13ra1"
 Version = paste0(Sys.Date(),"_",SampleType,"_Barplot_PVal_",TarGene)
 SaveSup.Path = paste0(getwd(),"/",Version)
 dir.create(SaveSup.Path)
